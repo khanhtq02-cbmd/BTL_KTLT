@@ -1,0 +1,66 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "type": "cppbuild",
+            "label": "C/C++: g++ build active file",
+            "command": "/usr/bin/g++",
+            "args": [
+                "-std=c++11",
+                "-Wall",
+                "-Wextra",
+                "-g",
+                "-I${workspaceFolder}/src",
+                "-I${workspaceFolder}/src/lib",
+                "-I${workspaceFolder}/src/lib/shared",
+                "-I${workspaceFolder}/src/lib/models",
+                "-I${workspaceFolder}/src/lib/menus",
+                "-I${workspaceFolder}/src/lib/stubs",
+                "${workspaceFolder}/src/main.cpp",
+                "${workspaceFolder}/src/lib/shared/Date.cpp",
+                "${workspaceFolder}/src/lib/shared/InputHelper.cpp",
+                "${workspaceFolder}/src/lib/shared/fileio.cpp",
+                "${workspaceFolder}/src/lib/models/hopdong.cpp",
+                "${workspaceFolder}/src/lib/models/imei.cpp",
+                "${workspaceFolder}/src/lib/menus/HopDongMenu.cpp",
+                "${workspaceFolder}/src/lib/menus/ThietBiIMEIMenu.cpp",
+                "-o",
+                "${workspaceFolder}/quanlythuebao"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "detail": "Compiler: /usr/bin/g++ compiling all project sources"
+        },
+        {
+            "label": "Build Project (make)",
+            "type": "shell",
+            "command": "make",
+            "group": "build",
+            "problemMatcher": ["$gcc"]
+        },
+        {
+            "label": "Run Application (make run)",
+            "type": "shell",
+            "command": "make run",
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            },
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": true,
+                "panel": "shared"
+            },
+            "problemMatcher": []
+        }
+    ]
+}
