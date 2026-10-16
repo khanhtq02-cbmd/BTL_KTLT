@@ -19,3 +19,4 @@ graphify-out/
 .DS_Store
 *.tmp
 .cache/
+.vscode/
