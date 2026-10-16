@@ -36,7 +36,7 @@ public:
 class InvalidPhoneNumberException : public AppException {
 public:
     explicit InvalidPhoneNumberException(const std::string& phone)
-        : AppException("Loi so dien thoai: '" + phone + "' khong dung dinh dang thue bao di dong cua nha mang VNPT") {}
+        : AppException("Loi so dien thoai: '" + phone + "' khong dung dinh dang thue bao di dong cua nha mang") {}
 };
 
 class FileIOException : public AppException {

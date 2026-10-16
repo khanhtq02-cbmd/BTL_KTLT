@@ -3,6 +3,7 @@
 
 #include <string>
 #include "Date.h"
+#include "Normalized.h"
 
 namespace InputLimits {
     const int DEFAULT_MIN_INT = -2147483647;//32 bits
@@ -24,7 +25,6 @@ public:
     static Date getBirthDate(const std::string& prompt,
                              int minAge = CalendarConstants::DEFAULT_MIN_SUBSCRIBER_AGE,
                              int maxAge = CalendarConstants::DEFAULT_MAX_SUBSCRIBER_AGE);
-    static bool isValidPhoneNumber(const std::string& phone, bool allowUnassigned = false);
     static std::string getPhoneNumber(const std::string& prompt, bool allowUnassigned = false);
     static bool getConfirm(const std::string& prompt);
     static void pause(const std::string& message = "Nhan Enter de tiep tuc...");

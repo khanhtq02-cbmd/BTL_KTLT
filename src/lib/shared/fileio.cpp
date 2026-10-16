@@ -1,4 +1,5 @@
 #include "fileio.h"
+#include "Normalized.h"
 #include <sstream>
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -8,19 +9,12 @@ std::vector<std::string> FileIO::split(const std::string& s, char delimiter) {
     std::string token;
     std::istringstream tokenStream(s);
     while (std::getline(tokenStream, token, delimiter)) {
-        tokens.push_back(trim(token));
+        tokens.push_back(Normalized::trim(token));
     }
     if (!s.empty() && s.back() == delimiter) {
         tokens.push_back("");
     }
     return tokens;
-}
-
-std::string FileIO::trim(const std::string& s) {
-    size_t start = s.find_first_not_of(" \t\r\n");
-    if (start == std::string::npos) return "";
-    size_t end = s.find_last_not_of(" \t\r\n");
-    return s.substr(start, end - start + 1);
 }
 
 bool FileIO::ensureDirectoryExists(const std::string& filepath) {

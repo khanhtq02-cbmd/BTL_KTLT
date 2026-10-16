@@ -1,7 +1,8 @@
 #include "hopdong.h"
 #include "Exceptions.h"
 #include "fileio.h"
-#include "InputHelper.h"
+#include "Normalized.h"
+#include "DisplayHelper.h"
 #include <iostream>
 #include <iomanip>
 #include <sstream>
@@ -40,7 +41,7 @@ HopDong::HopDong(const std::string& maHD,
     if (ngayHetHan < ngayDangKy) {
         throw InvalidDateException("Ngay het han khong duoc nho hon ngay dang ky!");
     }
-    if (!soDienThoai.empty() && !InputHelper::isValidPhoneNumber(soDienThoai)) {
+    if (!soDienThoai.empty() && !Normalized::isValidPhoneNumber(soDienThoai)) {
         throw InvalidPhoneNumberException(soDienThoai);
     }
     if (giaTriGoi < 0.0) {
@@ -55,7 +56,7 @@ HopDong::HopDong(const std::string& maHD,
 }
 
 void HopDong::setSoDienThoai(const std::string& sdt) {
-    if (!sdt.empty() && !InputHelper::isValidPhoneNumber(sdt)) {
+    if (!sdt.empty() && !Normalized::isValidPhoneNumber(sdt)) {
         throw InvalidPhoneNumberException(sdt);
     }
     soDienThoai = sdt;
@@ -114,65 +115,37 @@ void HopDong::kichHoatLai() {
 }
 
 void HopDong::displayHeader() const {
-    std::cout << "+"
-              << std::string(COL_WIDTH_ID, '-') << "+"
-              << std::string(COL_WIDTH_CUST, '-') << "+"
-              << std::string(COL_WIDTH_PHONE, '-') << "+"
-              << std::string(COL_WIDTH_PACKAGE, '-') << "+"
-              << std::string(COL_WIDTH_DATE, '-') << "+"
-              << std::string(COL_WIDTH_DATE, '-') << "+"
-              << std::string(COL_WIDTH_TYPE, '-') << "+"
-              << std::string(COL_WIDTH_STATUS, '-') << "+"
-              << std::string(COL_WIDTH_PRICE, '-') << "+\n";
-
-    std::cout << "|"
-              << std::left << std::setw(COL_WIDTH_ID) << " Ma HD" << "|"
-              << std::left << std::setw(COL_WIDTH_CUST) << " Ma KH" << "|"
-              << std::left << std::setw(COL_WIDTH_PHONE) << " So Dien Thoai" << "|"
-              << std::left << std::setw(COL_WIDTH_PACKAGE) << " Ma Goi" << "|"
-              << std::left << std::setw(COL_WIDTH_DATE) << " Ngay DK" << "|"
-              << std::left << std::setw(COL_WIDTH_DATE) << " Ngay HH" << "|"
-              << std::left << std::setw(COL_WIDTH_TYPE) << " Loai HD" << "|"
-              << std::left << std::setw(COL_WIDTH_STATUS) << " Trang Thai" << "|"
-              << std::right << std::setw(COL_WIDTH_PRICE) << "Gia Cuoc (VND) " << "|\n";
-
-    std::cout << "+"
-              << std::string(COL_WIDTH_ID, '-') << "+"
-              << std::string(COL_WIDTH_CUST, '-') << "+"
-              << std::string(COL_WIDTH_PHONE, '-') << "+"
-              << std::string(COL_WIDTH_PACKAGE, '-') << "+"
-              << std::string(COL_WIDTH_DATE, '-') << "+"
-              << std::string(COL_WIDTH_DATE, '-') << "+"
-              << std::string(COL_WIDTH_TYPE, '-') << "+"
-              << std::string(COL_WIDTH_STATUS, '-') << "+"
-              << std::string(COL_WIDTH_PRICE, '-') << "+\n";
+    DisplayHelper::printHeader(
+        {"Ma HD", "Ma KH", "So Dien Thoai", "Ma Goi", "Ngay DK", "Ngay HH", "Loai HD", "Trang Thai", "Gia Cuoc (VND)"},
+        {COL_WIDTH_ID, COL_WIDTH_CUST, COL_WIDTH_PHONE, COL_WIDTH_PACKAGE, COL_WIDTH_DATE, COL_WIDTH_DATE, COL_WIDTH_TYPE, COL_WIDTH_STATUS, COL_WIDTH_PRICE},
+        {false, false, false, false, false, false, false, false, true}
+    );
 }
 
 void HopDong::displayRow() const {
-    std::cout << "|"
-              << " " << std::left << std::setw(COL_WIDTH_ID - 1) << id << "|"
-              << " " << std::left << std::setw(COL_WIDTH_CUST - 1) << maKhachHang << "|"
-              << " " << std::left << std::setw(COL_WIDTH_PHONE - 1) << soDienThoai << "|"
-              << " " << std::left << std::setw(COL_WIDTH_PACKAGE - 1) << maGoiCuoc << "|"
-              << " " << std::left << std::setw(COL_WIDTH_DATE - 1) << ngayDangKy.toString() << "|"
-              << " " << std::left << std::setw(COL_WIDTH_DATE - 1) << ngayHetHan.toString() << "|"
-              << " " << std::left << std::setw(COL_WIDTH_TYPE - 1) << loaiHopDong << "|"
-              << " " << std::left << std::setw(COL_WIDTH_STATUS - 1) << trangThai << "|"
-              << std::right << std::setw(COL_WIDTH_PRICE - 1) << std::fixed << std::setprecision(0) << giaTriGoi << " |\n";
+    std::ostringstream oss;
+    oss << std::fixed << std::setprecision(0) << giaTriGoi;
+    DisplayHelper::printRow(
+        {id, maKhachHang, soDienThoai, maGoiCuoc, ngayDangKy.toString(), ngayHetHan.toString(), loaiHopDong, trangThai, oss.str()},
+        {COL_WIDTH_ID, COL_WIDTH_CUST, COL_WIDTH_PHONE, COL_WIDTH_PACKAGE, COL_WIDTH_DATE, COL_WIDTH_DATE, COL_WIDTH_TYPE, COL_WIDTH_STATUS, COL_WIDTH_PRICE},
+        {false, false, false, false, false, false, false, false, true}
+    );
 }
 
 void HopDong::displayDetail() const {
-    std::cout << "  --------------------------------------------------\n"
-              << "  Ma hop dong    : " << id << "\n"
-              << "  Ma khach hang  : " << maKhachHang << "\n"
-              << "  So dien thoai  : " << soDienThoai << "\n"
-              << "  Ma goi cuoc    : " << maGoiCuoc << "\n"
-              << "  Ngay dang ky   : " << ngayDangKy.toString() << "\n"
-              << "  Ngay het han   : " << ngayHetHan.toString() << "\n"
-              << "  Loai hop dong  : " << loaiHopDong << "\n"
-              << "  Trang thai     : " << trangThai << "\n"
-              << "  Gia tri goi    : " << std::fixed << std::setprecision(0) << giaTriGoi << " VND\n"
-              << "  --------------------------------------------------\n";
+    std::ostringstream oss;
+    oss << std::fixed << std::setprecision(0) << giaTriGoi << " VND";
+    DisplayHelper::printCard({
+        {"Ma hop dong", id},
+        {"Ma khach hang", maKhachHang},
+        {"So dien thoai", soDienThoai},
+        {"Ma goi cuoc", maGoiCuoc},
+        {"Ngay dang ky", ngayDangKy.toString()},
+        {"Ngay het han", ngayHetHan.toString()},
+        {"Loai hop dong", loaiHopDong},
+        {"Trang thai", trangThai},
+        {"Gia tri goi", oss.str()}
+    });
 }
 
 std::string HopDong::toFileString() const {
@@ -192,20 +165,23 @@ std::string HopDong::toFileString() const {
 bool HopDong::fromFileString(const std::string& line) {
     std::vector<std::string> tokens = FileIO::split(line, '|');
     const size_t EXPECTED_FIELD_COUNT = 9;
-    if (tokens.size() < EXPECTED_FIELD_COUNT) {
+    if (tokens.size() != EXPECTED_FIELD_COUNT) {
         return false;
     }
 
     try {
-        id = tokens[0];
-        maKhachHang = tokens[1];
-        soDienThoai = tokens[2];
-        maGoiCuoc = tokens[3];
-        ngayDangKy = Date::parse(tokens[4]);
-        ngayHetHan = Date::parse(tokens[5]);
-        loaiHopDong = tokens[6];
-        trangThai = tokens[7];
-        giaTriGoi = std::stod(tokens[8]);
+        HopDong parsed(
+            tokens[0],
+            tokens[1],
+            tokens[2],
+            tokens[3],
+            Date::parse(tokens[4]),
+            Date::parse(tokens[5]),
+            tokens[6],
+            tokens[7],
+            std::stod(tokens[8])
+        );
+        *this = parsed;
         return true;
     } catch (...) {
         return false;

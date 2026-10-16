@@ -26,7 +26,7 @@ namespace IMEIMenuChoices {
 
 class ThietBiIMEIMenu {
 private:
-    Repository<ThietBiIMEI>& repo;
+    Repository<ThietBiIMEI>& store;
 
     void themThietBi();
     void xemDanhSach();
@@ -36,7 +36,7 @@ private:
     void xoaThietBi();
 
 public:
-    explicit ThietBiIMEIMenu(Repository<ThietBiIMEI>& r) : repo(r) {}
+    explicit ThietBiIMEIMenu(Repository<ThietBiIMEI>& s) : store(s) {}
     void showMenu();
 };
 
