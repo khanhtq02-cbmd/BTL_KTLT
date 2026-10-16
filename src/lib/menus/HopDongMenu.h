@@ -35,7 +35,7 @@ namespace HopDongMenuChoices {
 
 class HopDongMenu {
 private:
-    Repository<HopDong>& repo;
+    Repository<HopDong>& store;
 
     void themHopDong();
     void xemDanhSach();
@@ -45,7 +45,7 @@ private:
     void xoaHopDong();
 
 public:
-    explicit HopDongMenu(Repository<HopDong>& r) : repo(r) {}
+    explicit HopDongMenu(Repository<HopDong>& s) : store(s) {}
     void showMenu();
 };
 

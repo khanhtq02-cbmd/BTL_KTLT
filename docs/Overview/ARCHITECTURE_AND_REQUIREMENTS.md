@@ -7,7 +7,7 @@
 
 * **Học viện:** Học viện Công nghệ Bưu chính Viễn thông (PTIT) — Cơ sở Hà Nội.
 * **Khoa:** Khoa Viễn thông 1.
-* **Học phần:** Kỹ thuật Lập trình (KTLT) — Năm học 2024–2025.
+* **Học phần:** Kỹ thuật Lập trình (KTLT) — Sinh viên năm thứ 3, Năm học 2026–2027.
 * **Đề tài:** Đề tài 1 — Hệ thống Quản lý Thuê bao Di động (*Mobile Subscriber Management System*).
 * **Sinh viên thực hiện phân hệ:** Trần Đức Anh — MSSV: B24DCVT021 — Lớp: D24CQVT01-B.
 * **Nhánh phát triển:** `DucAnh-B24DCVT021`.
@@ -30,7 +30,7 @@ Hệ thống mô phỏng hệ sinh thái phần mềm quản trị nghiệp vụ
 
 ---
 
-## 3. Kiến Trúc Tổng Thể 3 Tầng (3-Tier Layered Architecture)
+## 3. Kiến Trúc Tổng Thể 3 Tầng
 
 Hệ thống được thiết kế theo mô hình 3 tầng phân tách trách nhiệm (Separation of Concerns), tuân thủ nguyên lý Lập trình hướng đối tượng (OOP) thuần C++11 chuẩn mực:
 
@@ -56,7 +56,7 @@ Hệ thống được thiết kế theo mô hình 3 tầng phân tách trách nh
                                         v
 +---------------------------------------------------------------------------------+
 |                       TẦNG 3: LƯU TRỮ (PERSISTENCE DATA TIER)                   |
-|  - Repository<T>.h: Template thao tác file phẳng dạng Generic (Atomic Write)    |
+|  - Repository<T>.h: Template thao tác file phẳng dạng Generic (Atomic Write)     |
 |  - fileio.h/cpp: Quản lý đường dẫn, định dạng phân cách cột (|)                 |
 |  - data/hopdong.txt: Lưu trữ dữ liệu hợp đồng viễn thông                        |
 |  - data/imei.txt: Lưu trữ dữ liệu định danh phần cứng thiết bị IMEI             |
@@ -65,7 +65,7 @@ Hệ thống được thiết kế theo mô hình 3 tầng phân tách trách nh
 
 ---
 
-## 4. Đặc Tả Yêu Cầu Chức Năng (Functional Requirements)
+## 4. Đặc Tả Yêu Cầu Chức Năng
 
 ### 4.1 Phân hệ Hợp đồng đăng ký (UC01 - `HopDong`)
 * **FR-HD-01 (Thêm mới):** Tạo hợp đồng với mã hợp đồng duy nhất (`HDxxxx`), gắn kết `maKhachHang`, `soDienThoai`, `maGoiCuoc`, ngày đăng ký, ngày hết hạn, loại hợp đồng (`TraTruoc` / `TraSau`), và giá cước.
@@ -85,7 +85,7 @@ Hệ thống được thiết kế theo mô hình 3 tầng phân tách trách nh
 
 ---
 
-## 5. Đặc Tả Yêu Cầu Phi Chức Năng (Non-Functional Requirements)
+## 5. Đặc Tả Yêu Cầu Phi Chức Năng
 
 1. **Chuẩn mã nguồn & Thư viện:**
    - 100% C++11 tiêu chuẩn (ISO/IEC 14882:2011).

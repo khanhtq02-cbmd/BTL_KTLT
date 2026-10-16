@@ -10,8 +10,13 @@ src/main
 build/
 bin/
 workspace/
-graphify-out/
+# local Envs
+tests/
 # Editor / Agent metadata
+graphify-out/
+.cache/
 .claude/
 .DS_Store
 *.tmp
+.cache/
+.vscode/

@@ -8,6 +8,7 @@
 #include <functional>
 #include <cstdio>
 #include "fileio.h"
+#include "Normalized.h"
 #include "Exceptions.h"
 
 namespace RepositoryConstants {
@@ -40,19 +41,16 @@ public:
 
         std::string line;
         while (std::getline(inFile, line)) {
-            std::string trimmedLine = FileIO::trim(line);
-            if (trimmedLine.empty() || trimmedLine[0] == FileConstants::COMMENT_PREFIX) {
-                continue;
-            }
+            std::string trimmedLine = Normalized::trim(line);
+            if (trimmedLine.empty() || trimmedLine[0] == FileConstants::COMMENT_PREFIX) continue;
             T item;
-            if (item.fromFileString(trimmedLine)) {
-                items.push_back(item);
-            }
+            if (!item.fromFileString(trimmedLine)) continue;
+            items.push_back(item);
         }
         inFile.close();
         return true;
     }
-
+    //luu vao file
     bool saveToFile() const {
         FileIO::ensureDirectoryExists(filePath);
         std::string tempPath = filePath + RepositoryConstants::TEMP_FILE_EXTENSION;

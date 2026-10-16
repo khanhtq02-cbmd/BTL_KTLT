@@ -9,8 +9,10 @@ namespace CalendarConstants {
     const int MAX_VALID_YEAR = 2100;
     const int DEFAULT_MIN_SUBSCRIBER_AGE = 14;
     const int DEFAULT_MAX_SUBSCRIBER_AGE = 120;
+
     const int MONTHS_PER_YEAR = 12;
     const int MONTH_FEBRUARY = 2;
+
     const int DAYS_FEB_LEAP = 29;
     const int DAYS_FEB_NORMAL = 28;
     const int DAYS_LONG_MONTH = 31;
