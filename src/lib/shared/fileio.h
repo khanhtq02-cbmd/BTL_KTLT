@@ -17,7 +17,6 @@ namespace FileConstants {
 class FileIO {
 public:
     static std::vector<std::string> split(const std::string& s, char delimiter = FileConstants::DEFAULT_DELIMITER);
-    static std::string trim(const std::string& s);
     static bool ensureDirectoryExists(const std::string& filepath);
 };
 

@@ -18,14 +18,21 @@ namespace MainMenuChoices {
 }
 
 int main() {
-    Repository<HopDong> hopDongRepo(FilePaths::HOPDONG_DATA);
-    Repository<ThietBiIMEI> imeiRepo(FilePaths::IMEI_DATA);
+    Repository<HopDong> hopDongStore(FilePaths::HOPDONG_DATA);
+    Repository<ThietBiIMEI> imeiStore(FilePaths::IMEI_DATA);
 
-    hopDongRepo.loadFromFile();
-    imeiRepo.loadFromFile();
+    try {
+        if (!hopDongStore.loadFromFile() || !imeiStore.loadFromFile()) {
+            std::cerr << "[LOI] Khong the tai du lieu ban dau. Chuong trinh dung de bao toan du lieu.\n";
+            return 1;
+        }
+    } catch (const std::exception& e) {
+        std::cerr << "[LOI] Loi khi tai du lieu ban dau: " << e.what() << "\n";
+        return 1;
+    }
 
-    HopDongMenu hopDongMenu(hopDongRepo);
-    ThietBiIMEIMenu imeiMenu(imeiRepo);
+    HopDongMenu hopDongMenu(hopDongStore);
+    ThietBiIMEIMenu imeiMenu(imeiStore);
 
     while (true) {
         std::cout << "\n====================================================================\n"
@@ -45,9 +52,14 @@ int main() {
                                          MainMenuChoices::MENU_HOADON);
 
         if (choice == MainMenuChoices::MENU_EXIT) {
-            hopDongRepo.saveToFile();
-            imeiRepo.saveToFile();
-            std::cout << "\n[Luu du lieu] Da dong bo du lieu.\n";
+            // ponytail: simple sync on exit, fileio handles atomicity via tmp file
+            try {
+                hopDongStore.saveToFile();
+                imeiStore.saveToFile();
+                std::cout << "\n[Luu du lieu] Da dong bo du lieu.\n";
+            } catch (const std::exception& e) {
+                std::cerr << "\n[CANH BAO] Khong the luu du lieu khi thoat: " << e.what() << "\n";
+            }
             std::cout << "Cam on ban da su dung chuong trinh! Tam biet.\n";
             break;
         }

@@ -15,8 +15,10 @@ src/lib/
 │   ├── Exceptions.h           # Domain-Specific Exception Hierarchy (Derived from std::runtime_error)
 │   ├── Date.h / Date.cpp      # Calendar Date Engine (Validation, Age Calculation, Parsing)
 │   ├── fileio.h / fileio.cpp  # String Utilities & Cross-Platform Path Handling
-│   ├── InputHelper.h / .cpp   # Safe Console Input Extraction & Validation
-│   └── Repository.h           # Generic In-Memory Collection & Flat-File Persistence Engine
+│   ├── Normalized.h / .cpp    # Sanitization & Validation Engine (Phone & String Cleaning)
+│   ├── InputHelper.h / .cpp   # Safe Console Input Extraction (Console Input Family)
+│   ├── DisplayHelper.h        # Unified Terminal Table & Detail Card Layout Engine
+│   └── Repository.h            # Generic In-Memory Collection & Flat-File Persistence Engine
 │
 ├── models/                    # Tier 2: Domain Entities & Business Logic
 │   ├── hopdong.h / .cpp       # Subscription Contract Management (UC01: Pricing, Validity, Lifecycle)
@@ -27,30 +29,30 @@ src/lib/
 │   └── ThietBiIMEIMenu.h / .cpp # 0–9 Console Controller for Terminal & IMEI Tracking
 │
 └── stubs/                     # Tier 4: Team Extension Placeholders (Cross-Member Integration)
-    ├── goicuoc.h / .cpp       # Tariff Packages & Plan Types (Nguyễn Tùng Dương)
-    ├── thuebao.h / .cpp       # Customer KYC & SIM Provisioning (Trương Quốc Khánh)
-    ├── naptien.h / .cpp       # Top-Up Transactions & CDR Raw Records (Phạm Đức Chính)
-    └── hoadon.h / .cpp        # Billing, Invoicing & Dispute Tickets (Nguyễn Minh Quang)
+    ├── goicuoc.h / .cpp       # Tariff Packages & Plan Types (Nguyễn Tùng Dương - B24DCVT106)
+    ├── thuebao.h / .cpp       # Customer KYC & SIM Provisioning (Nguyễn Tất Thắng - B24DCVT331)
+    ├── naptien.h / .cpp       # Top-Up Transactions & CDR Raw Records (Nguyễn Mạnh Dũng - B24DCVT094)
+    └── hoadon.h / .cpp        # Billing, Invoicing & Dispute Tickets (Đặng Việt Hùng - B24DCVT167)
 ```
 
 ---
 
-## 2. Reverse-Engineering & Defense Constraints
+## 2. Software Architecture & Telecom Engineering Principles
 
-To ensure that the codebase is transparent, straightforward to trace in a debugger (GDB/LLDB), easy to disassemble/decompile (Ghidra/IDA Pro), and easily explainable during an academic oral defense, the following implementation constraints are enforced across all modules in `src/lib/`:
+Designed for a 3rd-year Telecommunications Engineering curriculum (PTIT, 2026–2027), the system enforces rigorous software engineering standards, strict adherence to international telecom protocols, low architectural coupling, and maximum clarity for oral defense and codebase maintainability:
 
-### 2.1. Standard Library & Primitives First
-- **No external frameworks or dependencies:** Only standard C++11 headers (`<iostream>`, `<string>`, `<vector>`, `<sstream>`, `<iomanip>`, `<ctime>`, `<algorithm>`, `<fstream>`, `<stdexcept>`, `<cstdio>`) are used.
-- **Direct primitive operations:** Arithmetic calculations, digit extractions (`/ 10`, `% 10`), and character range validations (`c >= '0' && c <= '9'`) are prioritized over opaque regex libraries.
+### 2.1. Standard Library & Deterministic Execution
+- **Zero external third-party dependencies:** Implemented exclusively in standard C++11 (`<iostream>`, `<string>`, `<vector>`, `<sstream>`, `<iomanip>`, `<ctime>`, `<algorithm>`, `<fstream>`, `<stdexcept>`, `<cstdio>`), ensuring native cross-platform build stability across Linux, Windows, and macOS without dependency hell.
+- **Direct algorithmic validation:** Telecom domain algorithms (such as the 3GPP TS 22.016 Luhn Mod-10 checksum) and validation routines operate directly on fundamental types with deterministic $O(N)$ complexity and zero opaque regex overhead.
 
-### 2.2. Linear Control Flow & Minimal Abstraction Depth
-- **Shallow inheritance hierarchy:** Exactly 1 level of inheritance (`Entity` $\rightarrow$ `HopDong`, `ThietBiIMEI`). No virtual inheritance, no multiple inheritance, and no diamond patterns.
-- **Predictable memory layout:** All entity attributes are contiguous standard data members with explicit getters/setters.
-- **No template metaprogramming:** Generic programming is strictly limited to the straightforward container wrapper `Repository<T>`, avoiding SFINAE, expression templates, or type traits that obfuscate symbol tables.
+### 2.2. Domain Invariants & Separation of Concerns (SoC)
+- **Layered 4-tier decoupling:** Presentation Menu Controllers $\rightarrow$ Domain Models $\rightarrow$ Core Foundations $\rightarrow$ Storage / Integration Stubs. Domain entities (`HopDong`, `ThietBiIMEI`) encapsulate business invariants and are completely decoupled from terminal console I/O (`InputHelper`).
+- **Clean polymorphic design:** Single-level polymorphic inheritance (`Entity` $\rightarrow$ `HopDong`, `ThietBiIMEI`) enforcing pure virtual serialization contracts (`toFileString`, `fromFileString`) and table presentation layouts without deep, brittle inheritance hierarchies.
+- **Fail-Safe Exception Hierarchy:** Standardized domain error propagation derived from `std::runtime_error` (`ValidationException`, `InvalidDateException`, `InvalidPhoneNumberException`, `InvalidLuhnException`, `DuplicateIdException`, `NotFoundException`).
 
-### 2.3. Deterministic Storage & Parsing
-- **Plaintext pipe-delimited records (`|`):** Data files in `data/*.txt` use simple text lines.
-- **Transparent stream tokenization:** Parsing is performed via `std::istringstream` and `std::getline(stream, token, '|')` without binary packing or proprietary codecs.
+### 2.3. Reliable Atomic Storage & Protocol Adherence
+- **Atomic persistence staging:** Generic in-memory store `Repository<T>` stages disk persistence through temporary `.tmp` files and atomic filesystem rename (`std::rename`), ensuring zero database file corruption upon abnormal termination or power loss.
+- **3GPP compliance & EIR lifecycle:** Full compliance with 3GPP TS 22.016 / 23.003 specifications for 15-digit TAC+SNR+CD hardware validation and EIR Blacklist state transitions.
 
 ---
 
@@ -62,6 +64,7 @@ To ensure that the codebase is transparent, straightforward to trace in a debugg
 - **Header:** `src/lib/shared/Date.h`
 - **Implementation:** `src/lib/shared/Date.cpp`
 - **Purpose:** Handles date manipulation, leap year calculation, calendar validity, age computation, string parsing (`DD/MM/YYYY`), and chronological comparison.
+- **Maintenance note (2026-10-12):** Git-tree cleanup normalized whitespace in this header only; no `Date` behavior or API changed. Verify with `git diff --check`.
 
 #### Key Constants (`CalendarConstants` Namespace)
 ```cpp
@@ -149,17 +152,33 @@ namespace FileConstants {
 #### Static Utility Methods
 - `std::vector<std::string> FileIO::split(const std::string& s, char delimiter)`:
   Splits a string by delimiter, trimming surrounding whitespaces from each extracted token while preserving trailing empty tokens.
-- `std::string FileIO::trim(const std::string& s)`:
   Strips leading and trailing whitespace characters (`' '`, `'\t'`, `'\r'`, `'\n'`).
 - `bool FileIO::ensureDirectoryExists(const std::string& filepath)`:
   Extracts parent directory path and calls `mkdir(dir, 0755)` (POSIX) or `_mkdir(dir)` (Windows) to prevent file write failures.
 
 ---
 
-### `InputHelper.h` / `InputHelper.cpp` — Safe Console Input Handler
+### `Normalized.h` / `Normalized.cpp` — Sanitization & Validation Engine
+- **Header:** `src/lib/shared/Normalized.h`
+- **Implementation:** `src/lib/shared/Normalized.cpp`
+- **Purpose:** Pure functions for string sanitization, delimiter injection prevention, and strict Vietnamese 10-digit mobile phone validation. Decoupled from interactive I/O.
+- **Maintenance note (2026-10-13):** `Normalized::trim` is the single shared whitespace helper; `FileIO` keeps splitting and directory/path responsibilities. The redundant `Normalized::Trim` alias and `FileIO::trim` API were removed.
+
+#### Key Functions (`Normalized` Namespace)
+- `bool isValidPhoneNumber(const std::string& phone, bool allowUnassigned = false)`: Validates 10-digit mobile phone number starting with `03`, `05`, `07`, `08`, `09`.
+- `std::string trim(const std::string& str)`: The single shared leading/trailing whitespace helper used by input, file splitting, and persistence loading.
+- `std::string CollapseSpace(const std::string& str)`: Collapses multiple consecutive spaces into a single space.
+- `std::string removeSymbols(const std::string& str)`: Legacy/import cleaner for forbidden delimiter and control symbols.
+- `std::string removeDigits(const std::string& str)`: Removes ASCII digits for explicit cleanup paths and collapses whitespace.
+- `std::string NormalizedName(const std::string& str)`: Standardizes Vietnamese person/customer names for display.
+- `std::string toUpper(const std::string& str)` / `toLower(const std::string& str)`: ASCII case transformations.
+
+---
+
+### `InputHelper.h` / `InputHelper.cpp` — Safe Console Input Handler (Console Input Family)
 - **Header:** `src/lib/shared/InputHelper.h`
 - **Implementation:** `src/lib/shared/InputHelper.cpp`
-- **Purpose:** Prevents `std::cin` buffer lockups, handles invalid input types gracefully, enforces numeric ranges, sanitizes delimiter injection, and verifies Vietnamese 10-digit mobile phone numbers.
+- **Purpose:** Prevents `std::cin` buffer lockups, handles invalid input types gracefully, enforces numeric ranges, sanitizes delimiter injection, and delegates phone validation to `Normalized::isValidPhoneNumber`.
 
 #### Key Constants (`InputLimits` Namespace)
 ```cpp
@@ -181,7 +200,7 @@ namespace InputLimits {
 - `double getDouble(prompt, minVal, maxVal)`: Extracts and validates floating-point numbers.
 - `Date getDate(prompt)`: Prompts until a syntactically and logically valid `Date` is entered.
 - `Date getBirthDate(prompt, minAge, maxAge)`: Ensures entered date is not in the future and corresponds to age within `[minAge, maxAge]`.
-- `bool isValidPhoneNumber(phone, allowUnassigned)`: Validates 10-digit mobile phone number starting with `03`, `05`, `07`, `08`, `09`.
+- `bool isValidPhoneNumber(phone, allowUnassigned)`: Validates 10-digit mobile phone number starting with `03`, `05`, `07`, `08`, `09`; `InputHelper` delegates to this predicate and domain models enforce it independently.
 - `std::string getPhoneNumber(prompt, allowUnassigned)`: Robust loop for phone number input.
 - `bool getConfirm(prompt)`: Prompts user for `(y/n)` confirmation.
 - `void pause(message)`: Halts execution until user presses Enter.
@@ -232,8 +251,21 @@ public:
 
 ---
 
+### `DisplayHelper.h` — Unified Table & Detail Card Layout Engine
+- **Header:** `src/lib/shared/DisplayHelper.h`
+- **Purpose:** Eliminates redundant ASCII table border and padding boilerplate across models and menus. Provides reusable functions for fixed-width header rows, data rows with left/right alignment, and multi-line detail cards.
+
+#### Key Functions (`DisplayHelper` Namespace)
+- `void printBorder(const std::vector<int>& widths, std::ostream& os = std::cout)`: Generates dynamic `+---+---+` border rows matching column widths.
+- `void printHeader(const std::vector<std::string>& headers, const std::vector<int>& widths, const std::vector<bool>& rightAlign = {}, std::ostream& os = std::cout)`: Renders table header with automatic uppercase/spacing and surrounding borders.
+- `void printRow(const std::vector<std::string>& cells, const std::vector<int>& widths, const std::vector<bool>& rightAlign = {}, std::ostream& os = std::cout)`: Formats single entity row with column padding and optional right-alignment (e.g. currency).
+- `void printCard(const std::vector<std::pair<std::string, std::string>>& fields, int labelWidth = 16, std::ostream& os = std::cout)`: Prints multi-line key-value detailed view for single-record inspection.
+
+---
+
 ### `Repository.h` — Generic In-Memory & File Persistence Store
 - **Header:** `src/lib/shared/Repository.h`
+- **Filename contract:** The implementation header uses the canonical `Repository.h` path.
 - **Purpose:** Provides generic CRUD operations, linear searching, predicate filtering, lambda sorting, and atomic file saving (write temp file + rename) for any entity derived from `Entity`.
 
 #### Key Template Methods (`Repository<T>`)
@@ -395,9 +427,9 @@ These header and stub files define integration contracts for the remaining group
 | Library Header | Module & Use Case | Responsible Member | Key Features |
 |---|---|---|---|
 | `stubs/goicuoc.h` / `.cpp` | Gói cước & Loại hình thuê bao | Nguyễn Tùng Dương (B24DCVT106) | Data/Voice/SMS packages, prepaid/postpaid conversion |
-| `stubs/thuebao.h` / `.cpp` | Khách hàng & SIM Số | Trương Quốc Khánh (B24DCVT201) | CCCD/eKYC identification, MSISDN inventory, lock/unlock line |
-| `stubs/naptien.h` / `.cpp` | Nạp tiền & Bản ghi cước (CDR) | Phạm Đức Chính (B24DCVT047) | Scratch card top-up, e-wallet, raw CDR call/data parsing |
-| `stubs/hoadon.h` / `.cpp` | Hóa đơn & Khiếu nại cước | Nguyễn Minh Quang (B24DCVT308) | Monthly invoice aggregation, discount calculation, dispute tickets |
+| `stubs/thuebao.h` / `.cpp` | Khách hàng & SIM Số | Nguyễn Tất Thắng (B24DCVT331) | CCCD/eKYC identification, MSISDN inventory, lock/unlock line |
+| `stubs/naptien.h` / `.cpp` | Nạp tiền & Bản ghi cước (CDR) | Nguyễn Mạnh Dũng (B24DCVT094) | Scratch card top-up, e-wallet, raw CDR call/data parsing |
+| `stubs/hoadon.h` / `.cpp` | Hóa đơn & Khiếu nại cước | Đặng Việt Hùng (B24DCVT167) | Monthly invoice aggregation, discount calculation, dispute tickets |
 
 ---
 
@@ -410,9 +442,8 @@ These header and stub files define integration contracts for the remaining group
 | `Date::isValid` | `shared/Date.cpp` | `int d, int m, int y` | `bool` | $O(1)$ | Very Easy (Range checking) |
 | `Date::calculateAge` | `shared/Date.cpp` | `const Date& relativeTo` | `int` | $O(1)$ | Very Easy (Year & Month delta) |
 | `Date::parse` | `shared/Date.cpp` | `const std::string& str` | `Date` | $O(1)$ | Very Easy (Stream extraction) |
-| `FileIO::trim` | `shared/fileio.cpp` | `const std::string& s` | `std::string` | $O(N)$ | Very Easy (`find_first_not_of`) |
 | `FileIO::split` | `shared/fileio.cpp` | `const std::string& s, char del`| `vector<string>` | $O(N)$ | Easy (`getline` token stream) |
-| `InputHelper::isValidPhoneNumber` | `shared/InputHelper.cpp` | `const std::string& phone` | `bool` | $O(1)$ | Very Easy (Prefix & length check) |
+| `Normalized::isValidPhoneNumber` | `shared/Normalized.cpp` | `const std::string& phone` | `bool` | $O(1)$ | Very Easy (Prefix & length check) |
 | `ThietBiIMEI::validateLuhn` | `models/imei.cpp` | `const std::string& imeiStr` | `bool` | $O(1)$ | Easy (15-step Mod-10 loop) |
 | `Repository::loadFromFile` | `shared/Repository.h` | None | `bool` | $O(N)$ | Easy (File stream line reader) |
 | `Repository::saveToFile` | `shared/Repository.h` | None | `bool` | $O(N)$ | Easy (Temp file + rename) |
