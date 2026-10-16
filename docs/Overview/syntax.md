@@ -1,6 +1,6 @@
-# C++ Syntax Guide for C Programmers (`src/lib/syntax.md`)
+# C++11 Engineering Patterns & Architecture Rationale (`docs/Overview/syntax.md`)
 
-This guide explains modern C++ language features, keywords, and idioms used across `src/lib/` for students familiar with introductory C.
+This document outlines the core C++11 idioms, architectural patterns, type safety mechanisms, and OOP designs applied across `src/lib/`, serving as an engineering reference and oral defense guide for the 3rd-year Mobile Subscriber Management System (PTIT, 2026–2027).
 
 ---
 
@@ -26,7 +26,7 @@ This guide explains modern C++ language features, keywords, and idioms used acro
 
 ```cpp
 // Date.cpp
-Date::Date() : day(1), month(1), year(2024) {}
+Date::Date() : day(1), month(1), year(2000) {}
 
 // hopdong.cpp (calling base constructor and initializing fields)
 HopDong::HopDong(...)
@@ -185,7 +185,7 @@ public:
 * **How it works:**
   - `Repository<HopDong>` $\rightarrow$ Compiler generates a class where `T` is replaced by `HopDong`.
   - `Repository<ThietBiIMEI>` $\rightarrow$ Compiler generates a class where `T` is replaced by `ThietBiIMEI`.
-* **Plain C equivalent:** In C, you would have to use unsafe `void*` casts or duplicate code into `HopDongRepository` and `IMEIRepository`.
+* **Plain C equivalent:** In C, you would have to use unsafe `void*` casts or duplicate code into `HopDongStore` and `IMEIStore`.
 
 ---
 
@@ -268,12 +268,12 @@ std::cout << std::fixed << std::setprecision(0) << giaTriGoi << " VND";
 
 ```cpp
 // Searching for contracts with price > 100,000 using a Lambda:
-auto results = repo.filter([](const HopDong& hd) {
+auto results = store.filter([](const HopDong& hd) {
     return hd.getGiaTriGoi() > 100000;
 });
 
 // Sorting contracts by price descending:
-repo.sort([](const HopDong& a, const HopDong& b) {
+store.sort([](const HopDong& a, const HopDong& b) {
     return a.getGiaTriGoi() > b.getGiaTriGoi();
 });
 ```

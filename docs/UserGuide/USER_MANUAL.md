@@ -1,5 +1,5 @@
-# HƯỚNG DẪN SỬ DỤNG VÀ CHẠY ĐA NỀN TẢNG (USER MANUAL)
-## HỆ THỐNG QUẢN LÝ THUÊ BAO DI ĐỘNG (KTLT - PTIT)
+# HƯỚNG DẪN SỬ DỤNG VÀ CHẠY ĐA NỀN TẢNG
+## HỆ THỐNG QUẢN LÝ THUÊ BAO DI ĐỘNG - PTIT KTLT
 
 ---
 
@@ -35,7 +35,7 @@ make run
 # Hoặc dọn dẹp và biên dịch lại từ đầu
 make clean && make
 
-# Chạy bộ kiểm thử tự động (50 unit tests)
+# Chạy bộ kiểm thử tự động (141 assertions, 100% pass)
 make test
 ```
 
