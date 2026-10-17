@@ -35,7 +35,7 @@ make run
 # Hoặc dọn dẹp và biên dịch lại từ đầu
 make clean && make
 
-# Chạy bộ kiểm thử tự động (141 assertions, 100% pass)
+# Chạy bộ kiểm thử tự động (144 assertions, 100% pass)
 make test
 ```
 

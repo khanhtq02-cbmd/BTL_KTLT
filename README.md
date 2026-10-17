@@ -12,7 +12,7 @@ Dự án được xây dựng bởi nhóm 5 sinh viên Lớp D24CQVT01-B, Khoa V
 | :---: | :--- | :---: | :---: | :--- | :--- | :---: |
 | 1 | **Nguyễn Tùng Dương** | `B24DCVT106` | D24CQVT01-B | **Quản lý Gói cước & Dịch vụ** | `src/lib/stubs/goicuoc.*` | Đang tích hợp |
 | 2 | **Nguyễn Tất Thắng** | `B24DCVT331` | D24CQVT01-B | **Quản lý Thuê bao & Khách hàng** | `src/lib/stubs/thuebao.*` | Đang tích hợp |
-| 3 | **Trần Đức Anh** | **`B24DCVT021`** | **D24CQVT01-B** | **UC01: Hợp đồng đăng ký dịch vụ<br>UC02: Quản lý Thiết bị IMEI (3GPP Luhn)** | **`src/lib/models/hopdong.*`<br>`src/lib/models/imei.*`<br>`src/lib/menus/HopDongMenu.*`<br>`src/lib/menus/ThietBiIMEIMenu.*`** | **Hoàn thành 100%<br>(Grade A - 141 tests)** |
+| 3 | **Trần Đức Anh** | **`B24DCVT021`** | **D24CQVT01-B** | **UC01: Hợp đồng đăng ký dịch vụ<br>UC02: Quản lý Thiết bị IMEI (3GPP Luhn)** | **`src/lib/models/hopdong.*`<br>`src/lib/models/imei.*`<br>`src/lib/menus/HopDongMenu.*`<br>`src/lib/menus/ThietBiIMEIMenu.*`** | **Hoàn thành 100%<br>(Grade A - 144 tests)** |
 | 4 | **Nguyễn Mạnh Dũng** | `B24DCVT094` | D24CQVT01-B | **Quản lý Nạp tiền & Thẻ cào** | `src/lib/stubs/naptien.*` | Đang tích hợp |
 | 5 | **Đặng Việt Hùng** | `B24DCVT167` | D24CQVT01-B | **Quản lý Hóa đơn & Doanh thu** | `src/lib/stubs/hoadon.*` | Đang tích hợp |
 
@@ -113,7 +113,7 @@ make all
 
 ### 4.3 Biên Dịch & Chạy Bộ Kiểm Thử Tự Động (Automated Test Suite)
 ```bash
-# Chạy toàn bộ 141 trường hợp kiểm thử tự động
+# Chạy toàn bộ 144 trường hợp kiểm thử tự động
 make test
 ```
 
@@ -141,6 +141,6 @@ make test
 ## 6. Kết Quả Đánh Giá & Kiểm Định (Verification Gates)
 
 * **Chuẩn biên dịch:** Biên dịch sạch 100% không cảnh báo (`-Wall -Wextra -Wpedantic -Werror`).
-* **Kết quả kiểm thử:** **141/141 assertions passed (100% PASS)**.
+* **Kết quả kiểm thử:** **144/144 assertions passed (100% PASS)**.
 * **Chống gian lận mã nguồn (Anti-Cheat):** 0 strikes via `anti-cheat-enforcer --diff --require-tests`.
 * **Đánh giá độ sạch kiến trúc:** **Grade A (98/100 - Pristine)**.
