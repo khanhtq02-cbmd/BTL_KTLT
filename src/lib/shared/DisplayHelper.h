@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <iomanip>
+#include <sstream>
 #include <string>
 #include <vector>
 #include <utility>
@@ -47,6 +48,22 @@ inline void printCard(const std::vector<std::pair<std::string, std::string>>& fi
     for (const auto& field : fields)
         os << "  " << std::left << std::setw(labelWidth) << field.first << ": " << field.second << '\n';
     os << line;
+}
+
+template <typename T>
+inline void printTable(const std::vector<T>& items, std::ostream& = std::cout) {
+    if (items.empty()) return;
+    items[0].displayHeader();
+    for (const auto& item : items) {
+        item.displayRow();
+    }
+}
+
+inline std::string formatCurrency(double amount, const std::string& suffix = "") {
+    std::ostringstream oss;
+    oss << std::fixed << std::setprecision(0) << amount;
+    if (!suffix.empty()) oss << " " << suffix;
+    return oss.str();
 }
 
 } // namespace DisplayHelper

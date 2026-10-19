@@ -322,7 +322,55 @@ sequenceDiagram
     end
 ```
 
-### 5.2 Sắp Xếp Danh Sách Bằng Thuật Toán Tiêu Chuẩn `std::sort`
+### 5.2 Luồng GhiCuocGoi (CDR): Ghi Nhận Và Lưu Cước Phát Sinh
+
+Luồng này bắt đầu từ menu nạp tiền, nhưng bản ghi sử dụng được lưu độc lập trong `Repository<CDR>` và `data/cdr.txt`.
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor User as Người dùng
+    participant Menu as NapTienMenu::ghiNhanCDR
+    participant Input as InputHelper
+    participant TBRepo as Repository<ThueBao>
+    participant CDRModel as CDR / GhiCuocGoi
+    participant CDRRepo as Repository<CDR>
+    participant Disk as data/cdr.txt
+
+    User->>Menu: Chọn [4] Ghi nhận bản ghi CDR
+    Menu->>Input: Nhập mã CDR, số gọi, loại dịch vụ
+    Input-->>Menu: CDR0004, số thuê bao, Thoai/SMS/Data
+    Menu->>TBRepo: findById(soGoi)
+    alt Thuê bao không tồn tại
+        TBRepo-->>Menu: nullptr
+        Menu-->>User: Báo lỗi và hủy thao tác
+    else Thuê bao hợp lệ
+        Menu->>Input: Nhập số nhận hoặc DATA_SESSION, thời gian, thời lượng/MB, cước
+        Input-->>Menu: Dữ liệu sử dụng hợp lệ
+        Menu->>CDRModel: CDR(maCDR, soGoi, soNhan, loaiDV, timeStr, duration, cost)
+        CDRModel-->>Menu: Bản ghi đã kiểm tra trường bắt buộc và giá trị không âm
+        Menu->>CDRRepo: add(cdr)
+        CDRRepo->>CDRRepo: saveToFile()
+        CDRRepo->>Disk: Ghi staging rồi commit nguyên tử
+        Disk-->>CDRRepo: Thành công
+        opt Thuê bao trả trước và đủ số dư
+            Menu->>TBRepo: truTien(cost), update(soGoi, updated)
+        end
+        Menu-->>User: Xác nhận đã ghi nhận CDR
+    end
+```
+
+Các loại dịch vụ và đơn vị đo được cố định trong `CDRConstants`:
+
+| Loại dịch vụ | Giá trị lưu | Trường nhận | Đơn vị thời lượng |
+|---|---|---|---|
+| Thoại | `Thoai` | Số thuê bao nhận | Giây |
+| Tin nhắn | `SMS` | Số thuê bao nhận | Giây theo schema hiện tại |
+| Data | `Data` | `DATA_SESSION` | MB |
+
+Dòng dữ liệu có đúng bảy trường: `maCDR|soGoi|soNhan|loaiDichVu|thoiGianBatDau|thoiLuong|cuocPhatSinh`. Mô hình từ chối thời lượng hoặc cước âm; dữ liệu không đủ trường bị loại khi nạp lại.
+
+### 5.3 Sắp Xếp Danh Sách Bằng Thuật Toán Tiêu Chuẩn `std::sort`
 ```mermaid
 sequenceDiagram
     autonumber

@@ -228,13 +228,17 @@ flowchart TD
     classDef storage fill:#064e3b,stroke:#34d399,stroke-width:1.5px,color:#d1fae5;
     classDef file fill:#111827,stroke:#64748b,stroke-width:1.5px,color:#cbd5e1;
 
-    User([Nguoi dung / Giang vien]):::entry -->|Nhap lua chon 0-6| Main["src/main.cpp (Menu Chinh)"]:::entry
+    User([Nguoi dung / Giang vien]):::entry -->|Nhap lua chon 0-7| Main["src/main.cpp (Menu Chinh)"]:::entry
 
     subgraph UI ["1. TANG GIAO DIEN CONSOLE (src/lib/menus/)"]
         direction TB
-        Main -->|Choice 3| HDMenu["HopDongMenu"]:::menu
-        Main -->|Choice 4| IMEIMenu["ThietBiIMEIMenu"]:::menu
-        Main -.->|Choice 1,2,5,6| Stubs["Stubs: GoiCuoc, ThueBao, NapTien, HoaDon"]:::file
+        Main -->|Choice 1| KhachHangMenu["KhachHangMenu"]:::menu
+        Main -->|Choice 2| GoiCuocMenu["GoiCuocMenu"]:::menu
+        Main -->|Choice 3| ThueBaoMenu["ThueBaoMenu"]:::menu
+        Main -->|Choice 4| HDMenu["HopDongMenu"]:::menu
+        Main -->|Choice 5| IMEIMenu["ThietBiIMEIMenu"]:::menu
+        Main -->|Choice 6| NapTienMenu["NapTienMenu: GhiCuocGoi (CDR)"]:::menu
+        Main -->|Choice 7| HoaDonMenu["HoaDonMenu"]:::menu
     end
 
     subgraph Core ["2. TANG NGHIEP VU & TIEN ICH XAC THUC (src/lib/models/ & src/lib/shared/)"]

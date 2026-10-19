@@ -3,6 +3,7 @@
 
 #include "Repository.h"
 #include "imei.h"
+#include "thuebao.h"
 
 namespace IMEIMenuChoices {
     const int MENU_BACK = 0;
@@ -27,6 +28,7 @@ namespace IMEIMenuChoices {
 class ThietBiIMEIMenu {
 private:
     Repository<ThietBiIMEI>& store;
+    Repository<ThueBao>& thueBaoStore;
 
     void themThietBi();
     void xemDanhSach();
@@ -36,7 +38,8 @@ private:
     void xoaThietBi();
 
 public:
-    explicit ThietBiIMEIMenu(Repository<ThietBiIMEI>& s) : store(s) {}
+    ThietBiIMEIMenu(Repository<ThietBiIMEI>& s, Repository<ThueBao>& ts)
+        : store(s), thueBaoStore(ts) {}
     void showMenu();
 };
 

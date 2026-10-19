@@ -25,14 +25,24 @@ src/lib/
 │   └── imei.h / .cpp          # Terminal Device & IMEI Tracking (UC02: 3GPP Luhn Checksum, EIR Blacklist)
 │
 ├── menus/                     # Tier 3: Console UI Controllers & Interactive Menus
-│   ├── HopDongMenu.h / .cpp   # 0–9 Console Controller for Contract Operations
-│   └── ThietBiIMEIMenu.h / .cpp # 0–9 Console Controller for Terminal & IMEI Tracking
+│   ├── HopDongMenu.h / .cpp   # Console Controller for Contract Operations
+│   ├── ThietBiIMEIMenu.h / .cpp # Console Controller for Terminal & IMEI Tracking
+│   ├── GoiCuocMenu.h / .cpp   # Console Controller for Tariff Packages
+│   ├── ThueBaoMenu.h / .cpp   # Console Controller for Mobile Subscribers
+│   ├── KhachHangMenu.h / .cpp # Console Controller for Customers & SIM eKYC
+│   ├── NapTienMenu.h / .cpp   # Console Controller for Top-Up & GhiCuocGoi
+│   └── HoaDonMenu.h / .cpp    # Console Controller for Billing & Invoices
 │
-└── stubs/                     # Tier 4: Team Extension Placeholders (Cross-Member Integration)
+└── models/                    # Tier 4: Core Domain Entities
     ├── goicuoc.h / .cpp       # Tariff Packages & Plan Types (Nguyễn Tùng Dương - B24DCVT106)
-    ├── thuebao.h / .cpp       # Customer KYC & SIM Provisioning (Nguyễn Tất Thắng - B24DCVT331)
-    ├── naptien.h / .cpp       # Top-Up Transactions & CDR Raw Records (Nguyễn Mạnh Dũng - B24DCVT094)
-    └── hoadon.h / .cpp        # Billing, Invoicing & Dispute Tickets (Đặng Việt Hùng - B24DCVT167)
+    ├── thuebao.h / .cpp       # Mobile Subscribers TraTruoc/TraSau (Nguyễn Tùng Dương - B24DCVT106)
+    ├── khachhang.h / .cpp     # Customer eKYC & SIM Inventory (Trương Quốc Khánh - B24DCVT201)
+    ├── hopdong.h / .cpp       # Service Contracts (Trần Đức Anh - B24DCVT021)
+    ├── imei.h / .cpp          # Terminal Devices & 3GPP Luhn Checksum (Trần Đức Anh - B24DCVT021)
+    ├── naptien.h / .cpp       # Top-Up Transactions (Phạm Đức Chính - B24DCVT047)
+    ├── cdr.h / .cpp           # GhiCuocGoi (CDR) (Phạm Đức Chính - B24DCVT047)
+    ├── hoadon.h / .cpp        # Billing Invoices (Nguyễn Minh Quang - B24DCVT308)
+    └── khieunai.h / .cpp      # Customer Dispute Tickets (Nguyễn Minh Quang - B24DCVT308)
 ```
 
 ---
@@ -46,12 +56,12 @@ Designed for a 3rd-year Telecommunications Engineering curriculum (PTIT, 2026–
 - **Direct algorithmic validation:** Telecom domain algorithms (such as the 3GPP TS 22.016 Luhn Mod-10 checksum) and validation routines operate directly on fundamental types with deterministic $O(N)$ complexity and zero opaque regex overhead.
 
 ### 2.2. Domain Invariants & Separation of Concerns (SoC)
-- **Layered 4-tier decoupling:** Presentation Menu Controllers $\rightarrow$ Domain Models $\rightarrow$ Core Foundations $\rightarrow$ Storage / Integration Stubs. Domain entities (`HopDong`, `ThietBiIMEI`) encapsulate business invariants and are completely decoupled from terminal console I/O (`InputHelper`).
+- **Layered 4-tier decoupling:** Presentation Menu Controllers $\rightarrow$ Domain Models $\rightarrow$ Core Foundations $\rightarrow$ Storage. All domain entities (`HopDong`, `ThietBiIMEI`, `GoiCuoc`, `ThueBao`, `KhachHang`, `NapTien`, `GhiCuocGoi`, `HoaDon`, `KhieuNai`) use the shared `Entity` and `Repository<T>` contracts and remain decoupled from terminal console I/O (`InputHelper`).
 - **Clean polymorphic design:** Single-level polymorphic inheritance (`Entity` $\rightarrow$ `HopDong`, `ThietBiIMEI`) enforcing pure virtual serialization contracts (`toFileString`, `fromFileString`) and table presentation layouts without deep, brittle inheritance hierarchies.
 - **Fail-Safe Exception Hierarchy:** Standardized domain error propagation derived from `std::runtime_error` (`ValidationException`, `InvalidDateException`, `InvalidPhoneNumberException`, `InvalidLuhnException`, `DuplicateIdException`, `NotFoundException`).
 
 ### 2.3. Reliable Atomic Storage & Protocol Adherence
-- **Atomic persistence staging:** Generic in-memory store `Repository<T>` stages disk persistence through temporary `.tmp` files and atomic filesystem rename (`std::rename`), ensuring zero database file corruption upon abnormal termination or power loss.
+- **Atomic persistence staging:** Generic in-memory store `Repository<T>` stages disk persistence through RAM tmpfs (`tmps/` backed by `/dev/shm`) and atomic POSIX replacement (`std::rename`), ensuring zero database file corruption, strong exception rollback on mutation failure, and automatic recovery from reboot-cleared symlinks.
 - **3GPP compliance & EIR lifecycle:** Full compliance with 3GPP TS 22.016 / 23.003 specifications for 15-digit TAC+SNR+CD hardware validation and EIR Blacklist state transitions.
 
 ---
@@ -420,16 +430,21 @@ bool ThietBiIMEI::validateLuhn(const std::string& imeiStr) {
 
 ---
 
-## 6. Tier 4: Team Extension Placeholders (`src/lib/stubs/`)
+## 6. Các mô hình nghiệp vụ và menu tích hợp
 
-These header and stub files define integration contracts for the remaining group members:
+Các mô hình dưới đây đã được triển khai trong `src/lib/models/` và kết nối với menu tương ứng trong `src/lib/menus/`.
 
-| Library Header | Module & Use Case | Responsible Member | Key Features |
+| Mô hình / Menu | Phân hệ | Thành viên phụ trách | Chức năng chính |
 |---|---|---|---|
-| `stubs/goicuoc.h` / `.cpp` | Gói cước & Loại hình thuê bao | Nguyễn Tùng Dương (B24DCVT106) | Data/Voice/SMS packages, prepaid/postpaid conversion |
-| `stubs/thuebao.h` / `.cpp` | Khách hàng & SIM Số | Nguyễn Tất Thắng (B24DCVT331) | CCCD/eKYC identification, MSISDN inventory, lock/unlock line |
-| `stubs/naptien.h` / `.cpp` | Nạp tiền & Bản ghi cước (CDR) | Nguyễn Mạnh Dũng (B24DCVT094) | Scratch card top-up, e-wallet, raw CDR call/data parsing |
-| `stubs/hoadon.h` / `.cpp` | Hóa đơn & Khiếu nại cước | Đặng Việt Hùng (B24DCVT167) | Monthly invoice aggregation, discount calculation, dispute tickets |
+| `models/goicuoc.h` / `menus/GoiCuocMenu.h` | Gói cước di động | Nguyễn Tùng Dương (B24DCVT106) | Danh mục gói Data/Thoại/SMS và chu kỳ cước |
+| `models/thuebao.h` / `menus/ThueBaoMenu.h` | Thuê bao trả trước/trả sau | Nguyễn Tùng Dương (B24DCVT106) | Trạng thái thuê bao, đổi gói, số dư |
+| `models/khachhang.h` / `menus/KhachHangMenu.h` | Khách hàng và SIM chính chủ | Trương Quốc Khánh (B24DCVT201) | CCCD/eKYC, kho số, liên kết thuê bao/hợp đồng |
+| `models/hopdong.h` / `menus/HopDongMenu.h` | Hợp đồng dịch vụ | Trần Đức Anh (B24DCVT021) | Ký kết, gia hạn, chấm dứt, ràng buộc SĐT/gói cước |
+| `models/imei.h` / `menus/ThietBiIMEIMenu.h` | Thiết bị đầu cuối IMEI | Trần Đức Anh (B24DCVT021) | Luhn 3GPP, EIR blacklist, BTS |
+| `models/naptien.h` / `menus/NapTienMenu.h` | Phiếu nạp tiền | Phạm Đức Chính (B24DCVT047) | Nạp thẻ cào, ngân hàng, ví điện tử |
+| `models/cdr.h` / `menus/NapTienMenu.h` | **GhiCuocGoi (CDR)** | Phạm Đức Chính (B24DCVT047) | Ghi cuộc gọi/SMS/Data, lưu cước, khấu trừ thuê bao trả trước |
+| `models/hoadon.h` / `menus/HoaDonMenu.h` | Hóa đơn cước | Nguyễn Minh Quang (B24DCVT308) | Lập hóa đơn và tổng hợp cước |
+| `models/khieunai.h` / `menus/HoaDonMenu.h` | Khiếu nại cước | Nguyễn Minh Quang (B24DCVT308) | Tiếp nhận và xử lý phiếu khiếu nại |
 
 ---
 

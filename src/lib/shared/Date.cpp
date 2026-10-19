@@ -73,7 +73,9 @@ Date Date::parse(const std::string& str) {
     int d = 0, m = 0, y = 0;
     char sep1 = 0, sep2 = 0;
     std::istringstream iss(str);
-    if (!(iss >> d >> sep1 >> m >> sep2 >> y) || (sep1 != '/' && sep1 != '-') || (sep2 != '/' && sep2 != '-')) {
+    std::string trailing;
+    //kiem tra dau gach,chan ky tu thua phia sau
+    if (!(iss >> d >> sep1 >> m >> sep2 >> y) || (sep1 != '/' && sep1 != '-') || (sep1 != sep2) || (iss >> trailing)) {
         throw InvalidDateException("Dinh dang ngay phai la DD/MM/YYYY (Chuoi nhap: '" + str + "')");
     }
     return Date(d, m, y);

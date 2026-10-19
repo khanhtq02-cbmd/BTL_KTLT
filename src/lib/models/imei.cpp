@@ -33,6 +33,10 @@ ThietBiIMEI::ThietBiIMEI(const std::string& imei,
       ngayKichHoat(ngayKH),
       trangThai(tThai),
       tramBTSGanNhat(bts) {
+    if (id.empty() || tenThietBi.empty() || hangSanXuat.empty() ||
+        trangThai.empty() || tramBTSGanNhat.empty()) {
+        throw AppException("Loi: Thong tin thiet bi IMEI khong duoc de trong cac truong bat buoc!");
+    }
     if (!validateLuhn(imei)) {
         throw InvalidLuhnException(imei);
     }
@@ -45,36 +49,7 @@ ThietBiIMEI::ThietBiIMEI(const std::string& imei,
 }
 
 bool ThietBiIMEI::validateLuhn(const std::string& imeiStr) {
-    if (imeiStr.length() != REQUIRED_IMEI_LENGTH) {
-        return false;
-    }
-
-    bool allZeros = true;
-    for (char c : imeiStr) {
-        if (c < '0' || c > '9') {
-            return false;
-        }
-        if (c != '0') {
-            allZeros = false;
-        }
-    }
-    if (allZeros) {
-        return false;
-    }
-
-    int sum = 0;
-    for (int i = static_cast<int>(REQUIRED_IMEI_LENGTH) - 1; i >= 0; --i) {
-        int d = imeiStr[i] - '0';
-        int posFromRight = static_cast<int>(REQUIRED_IMEI_LENGTH) - i;
-        if (posFromRight % 2 == 0) {
-            d *= LUHN_MULTIPLIER;
-            if (d > 9) {
-                d -= LUHN_DIGIT_OVERFLOW_SUBTRACT;
-            }
-        }
-        sum += d;
-    }
-    return (sum % MODULO_BASE == 0);
+    return Normalized::isValidLuhn(imeiStr);
 }
 
 void ThietBiIMEI::setMaIMEI(const std::string& imei) {

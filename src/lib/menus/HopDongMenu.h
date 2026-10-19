@@ -3,6 +3,9 @@
 
 #include "Repository.h"
 #include "hopdong.h"
+#include "khachhang.h"
+#include "thuebao.h"
+#include "goicuoc.h"
 
 namespace HopDongMenuChoices {
     const int MENU_BACK = 0;
@@ -36,6 +39,9 @@ namespace HopDongMenuChoices {
 class HopDongMenu {
 private:
     Repository<HopDong>& store;
+    Repository<KhachHang>& khachHangStore;
+    Repository<ThueBao>& thueBaoStore;
+    Repository<GoiCuoc>& goiCuocStore;
 
     void themHopDong();
     void xemDanhSach();
@@ -45,7 +51,15 @@ private:
     void xoaHopDong();
 
 public:
-    explicit HopDongMenu(Repository<HopDong>& s) : store(s) {}
+    HopDongMenu(
+        Repository<HopDong>& s,
+        Repository<KhachHang>& ks,
+        Repository<ThueBao>& ts,
+        Repository<GoiCuoc>& gs
+    ) : store(s),
+        khachHangStore(ks),
+        thueBaoStore(ts),
+        goiCuocStore(gs) {}
     void showMenu();
 };
 

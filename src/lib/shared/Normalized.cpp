@@ -99,4 +99,27 @@ bool isValidPhoneNumber(const std::string& phone, bool allowUnassigned) {
     return true;
 }
 
+bool isValidLuhn(const std::string& imeiStr) {
+    if (imeiStr.length() != 15) return false;
+
+    bool allZeros = true;
+    for (char c : imeiStr) {
+        if (c < '0' || c > '9') return false;
+        if (c != '0') allZeros = false;
+    }
+    if (allZeros) return false;
+
+    int sum = 0;
+    for (int i = 14; i >= 0; --i) {
+        int d = imeiStr[i] - '0';
+        int posFromRight = 15 - i;
+        if (posFromRight % 2 == 0) {
+            d *= 2;
+            if (d > 9) d -= 9;
+        }
+        sum += d;
+    }
+    return (sum % 10 == 0);
+}
+
 } // namespace Normalized

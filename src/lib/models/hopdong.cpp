@@ -38,6 +38,10 @@ HopDong::HopDong(const std::string& maHD,
       loaiHopDong(loaiHD),
       trangThai(tThai),
       giaTriGoi(gia) {
+    if (id.empty() || maKhachHang.empty() || soDienThoai.empty() || maGoiCuoc.empty() ||
+        loaiHopDong.empty() || trangThai.empty()) {
+        throw AppException("Loi: Cac truong bat buoc cua hop dong khong duoc de trong!");
+    }
     if (ngayHetHan < ngayDangKy) {
         throw InvalidDateException("Ngay het han khong duoc nho hon ngay dang ky!");
     }
@@ -170,6 +174,10 @@ bool HopDong::fromFileString(const std::string& line) {
     }
 
     try {
+        //doc va kiem tra dinh dang hop dong,chong du thua
+        size_t idxGia = 0;
+        double gia = std::stod(tokens[8], &idxGia);
+        if (idxGia != tokens[8].length()) return false;
         HopDong parsed(
             tokens[0],
             tokens[1],
@@ -179,7 +187,7 @@ bool HopDong::fromFileString(const std::string& line) {
             Date::parse(tokens[5]),
             tokens[6],
             tokens[7],
-            std::stod(tokens[8])
+            gia
         );
         *this = parsed;
         return true;

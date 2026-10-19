@@ -15,7 +15,7 @@ struct BTSRecord{
 };
 class BTSRegistry{
     private:
-        std::vector<BTSRecord>towers;
+        std::vector<BTSRecord>towers;   //la vector kph mang vi vector them moi bts va so luong tot hon mang
     public:
     BTSRegistry();
    explicit BTSRegistry(const std::string& filePath);

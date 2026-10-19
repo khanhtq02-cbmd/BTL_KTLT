@@ -19,17 +19,23 @@ src/lib/
 │
 ├── models/                    # Tier 2: Domain Entities & Business Logic
 │   ├── hopdong.h / .cpp       # Subscription Contract Management (UC01: Pricing, Validity, Lifecycle)
-│   └── imei.h / .cpp          # Terminal Device & IMEI Tracking (UC02: 3GPP Luhn Checksum, EIR Blacklist)
+│   ├── imei.h / .cpp          # Terminal Device & IMEI Tracking (UC02: 3GPP Luhn Checksum, EIR Blacklist)
+│   ├── goicuoc.h / .cpp       # Tariff Packages & Plan Types
+│   ├── thuebao.h / .cpp       # Mobile Subscribers and Account Balance
+│   ├── khachhang.h / .cpp     # Customer eKYC and SIM Ownership
+│   ├── naptien.h / .cpp       # Top-Up Transactions
+│   ├── cdr.h / .cpp           # GhiCuocGoi (CDR) Usage Records
+│   ├── hoadon.h / .cpp        # Billing Invoices
+│   └── khieunai.h / .cpp      # Customer Dispute Tickets
 │
-├── menus/                     # Tier 3: Console UI Controllers & Interactive Menus
-│   ├── HopDongMenu.h / .cpp   # 0–9 Console Controller for Contract Operations
-│   └── ThietBiIMEIMenu.h / .cpp # 0–9 Console Controller for Terminal & IMEI Tracking
-│
-└── stubs/                     # Tier 4: Team Extension Placeholders (Cross-Member Integration)
-    ├── goicuoc.h / .cpp       # Tariff Packages & Plan Types (Nguyễn Tùng Dương - B24DCVT106)
-    ├── thuebao.h / .cpp       # Customer KYC & SIM Provisioning (Nguyễn Tất Thắng - B24DCVT331)
-    ├── naptien.h / .cpp       # Top-Up Transactions & CDR Raw Records (Nguyễn Mạnh Dũng - B24DCVT094)
-    └── hoadon.h / .cpp        # Billing, Invoicing & Dispute Tickets (Đặng Việt Hùng - B24DCVT167)
+└── menus/                     # Tier 3: Console UI Controllers & Interactive Menus
+    ├── HopDongMenu.h / .cpp   # Contract Operations
+    ├── ThietBiIMEIMenu.h / .cpp # Terminal and IMEI Operations
+    ├── GoiCuocMenu.h / .cpp   # Tariff Package Operations
+    ├── ThueBaoMenu.h / .cpp   # Subscriber Operations
+    ├── KhachHangMenu.h / .cpp # Customer and SIM eKYC Operations
+    ├── NapTienMenu.h / .cpp   # Top-Up and GhiCuocGoi Operations
+    └── HoaDonMenu.h / .cpp    # Billing and Dispute Operations
 ```
 
 ---
@@ -116,7 +122,31 @@ src/lib/
   - Tính tổng toàn bộ: $S = \sum_{i=1}^{15} f(d_i)$.
   - Nếu $S \pmod{10} == 0$, mã IMEI là **hợp lệ**. Ngược lại là **không hợp lệ**.
 
-### 3.4 Lớp Đối Tượng Ngày Tháng `Date` (`src/lib/shared/Date.h` & `src/lib/shared/Date.cpp`)
+### 3.4 Lớp `GhiCuocGoi` / `CDR` (`src/lib/models/cdr.h` & `src/lib/models/cdr.cpp`)
+
+`CDR` là mã kỹ thuật của **GhiCuocGoi**, dùng để lưu một sự kiện sử dụng dịch vụ viễn thông: cuộc gọi thoại, tin nhắn SMS hoặc phiên Data. Mô hình kế thừa `Entity` để dùng chung CRUD, hiển thị và tuần tự hóa của `Repository<T>`.
+
+* **Thuộc tính và ý nghĩa:**
+  - `id`: Mã bản ghi, ví dụ `CDR0001`.
+  - `soGoi`: Số thuê bao phát sinh sử dụng dịch vụ.
+  - `soNhan`: Số thuê bao nhận; với Data dùng giá trị quy ước `DATA_SESSION`.
+  - `loaiDichVu`: Một trong `Thoai`, `SMS`, `Data`.
+  - `thoiGianBatDau`: Thời điểm bắt đầu ở dạng văn bản `DD/MM/YYYY HH:MM:SS`.
+  - `thoiLuong`: Số giây với thoại/SMS hoặc số MB với Data.
+  - `cuocPhatSinh`: Cước phát sinh, tính bằng VND.
+
+* **Định dạng lưu trữ:** `data/cdr.txt`, mỗi dòng có bảy trường phân cách bằng `|`:
+  ```text
+  CDR0001|0981234567|0912345678|Thoai|15/01/2024 08:30:00|120|2000
+  ```
+
+* **Bất biến:** Mã, số gọi, số nhận, loại dịch vụ và thời gian không được rỗng; thời lượng và cước không được âm. `toFileString()` và `fromFileString()` đảm bảo ghi/đọc cùng một schema.
+
+* **Luồng nghiệp vụ:** `NapTienMenu::ghiNhanCDR()` kiểm tra thuê bao gọi tồn tại, nhận loại dịch vụ và thông số sử dụng, thêm bản ghi vào `Repository<CDR>`, sau đó khấu trừ cước nếu thuê bao trả trước có đủ số dư. `NapTienMenu::xemDanhSachCDR()` hiển thị toàn bộ nhật ký.
+
+* **API hiển thị/chuyển đổi:** `displayHeader()`, `displayRow()`, `displayDetail()`, `toFileString()` và `fromFileString()`.
+
+### 3.5 Lớp Đối Tượng Ngày Tháng `Date` (`src/lib/shared/Date.h` & `src/lib/shared/Date.cpp`)
 * **Thuộc tính:** `day` (1–31), `month` (1–12), `year` ($\ge 1900$).
 * **Xử lý năm nhuận:**
   ```cpp

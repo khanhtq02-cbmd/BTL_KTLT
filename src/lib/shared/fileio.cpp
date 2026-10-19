@@ -1,8 +1,18 @@
 #include "fileio.h"
 #include "Normalized.h"
 #include <sstream>
+#include <fstream>
+#include <cstdio>
+#include <cerrno>
 #include <sys/stat.h>
 #include <sys/types.h>
+
+#if defined(_WIN32)
+#include <direct.h>
+#include <windows.h>
+#else
+#include <unistd.h>
+#endif
 
 std::vector<std::string> FileIO::split(const std::string& s, char delimiter) {
     std::vector<std::string> tokens;
@@ -27,4 +37,116 @@ bool FileIO::ensureDirectoryExists(const std::string& filepath) {
     mkdir(dir.c_str(), 0755);
 #endif
     return true;
+}
+
+bool FileIO::initTmpDir() {
+#if defined(_WIN32)
+    _mkdir(FilePaths::TMP_DIR.c_str());
+    return true;
+#else
+    struct stat st;
+    if (lstat(FilePaths::TMP_DIR.c_str(), &st) == 0) {
+        struct stat target;
+        if (stat(FilePaths::TMP_DIR.c_str(), &target) == 0 && S_ISDIR(target.st_mode)) {
+            return true;
+        }
+        if (!S_ISLNK(st.st_mode)) {
+            return false;
+        }
+
+        //khoi phuc tmpfs truoc,loi moi dung o cung
+        mkdir("/dev/shm/ktlt_tmps", 0777);
+        if (stat(FilePaths::TMP_DIR.c_str(), &target) == 0 && S_ISDIR(target.st_mode)) {
+            return true;
+        }
+        if (unlink(FilePaths::TMP_DIR.c_str()) != 0) {
+            return false;
+        }
+        return mkdir(FilePaths::TMP_DIR.c_str(), 0755) == 0 || errno == EEXIST;
+    }
+
+    //tao symlink sang /dev/shm de luu tren ram
+    struct stat shmStat;
+    if (stat("/dev/shm", &shmStat) == 0 && S_ISDIR(shmStat.st_mode)) {
+        mkdir("/dev/shm/ktlt_tmps", 0777);
+        if (symlink("/dev/shm/ktlt_tmps", FilePaths::TMP_DIR.c_str()) == 0) {
+            return true;
+        }
+    }
+
+    return mkdir(FilePaths::TMP_DIR.c_str(), 0755) == 0;
+#endif
+}
+
+std::string FileIO::getTempStagingPath(const std::string& targetFilePath) {
+    initTmpDir();
+    size_t lastSlash = targetFilePath.find_last_of("/\\");
+    std::string filename = (lastSlash == std::string::npos) ? targetFilePath : targetFilePath.substr(lastSlash + 1);
+    return FilePaths::TMP_DIR + "/" + filename + ".tmp";
+}
+
+bool FileIO::commitFromTmp(const std::string& tmpPath, const std::string& targetPath) {
+    ensureDirectoryExists(targetPath);
+
+    //doi ten truc tiep neu tren cung mot phan vung o dia
+#if defined(_WIN32)
+    if (MoveFileExA(tmpPath.c_str(), targetPath.c_str(),
+                    MOVEFILE_REPLACE_EXISTING | MOVEFILE_WRITE_THROUGH)) {
+        return true;
+    }
+#else
+    if (std::rename(tmpPath.c_str(), targetPath.c_str()) == 0) {
+        return true;
+    }
+#endif
+
+    //sao chep qua phan vung o dia (tu ram /dev/shm sang ssd)
+    std::ifstream src(tmpPath, std::ios::binary);
+    if (!src.is_open()) {
+        return false;
+    }
+
+    std::string intermediateTarget = targetPath + ".ssd_swap";
+    std::ofstream dst(intermediateTarget, std::ios::binary | std::ios::trunc);
+    if (!dst.is_open()) {
+        src.close();
+        return false;
+    }
+
+    //tranh loi failbit khi file 0 byte,chi doc khi co data
+    if (src.peek() != std::ifstream::traits_type::eof()) {
+        dst << src.rdbuf();
+    }
+    dst.flush();
+    bool copyOk = !src.bad() && dst.good();
+    src.close();
+    dst.close();
+    copyOk = copyOk && !dst.fail();
+    if (!copyOk) {
+        std::remove(intermediateTarget.c_str());
+        return false;
+    }
+
+#if defined(_WIN32)
+    bool replaced = MoveFileExA(intermediateTarget.c_str(), targetPath.c_str(),
+                                MOVEFILE_REPLACE_EXISTING | MOVEFILE_WRITE_THROUGH) != 0;
+#else
+    bool replaced = std::rename(intermediateTarget.c_str(), targetPath.c_str()) == 0;
+#endif
+    if (!replaced) {
+        std::remove(intermediateTarget.c_str());
+        return false;
+    }
+    std::remove(tmpPath.c_str());
+    return true;
+}
+
+bool FileIO::isUsingTmpfs() {
+#if defined(__linux__)
+    struct stat st;
+    if (lstat(FilePaths::TMP_DIR.c_str(), &st) == 0 && S_ISLNK(st.st_mode)) {
+        return true;
+    }
+#endif
+    return false;
 }

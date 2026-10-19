@@ -32,40 +32,55 @@ public:
     const std::vector<T>& getAll() const { return items; }
 
     bool loadFromFile() {
-        items.clear();
         FileIO::ensureDirectoryExists(filePath);
         std::ifstream inFile(filePath);
         if (!inFile.is_open()) {
             return false;
         }
 
+        std::vector<T> loadedItems;
         std::string line;
         while (std::getline(inFile, line)) {
             std::string trimmedLine = Normalized::trim(line);
             if (trimmedLine.empty() || trimmedLine[0] == FileConstants::COMMENT_PREFIX) continue;
             T item;
             if (!item.fromFileString(trimmedLine)) continue;
-            items.push_back(item);
+            loadedItems.push_back(item);
+        }
+        if (inFile.bad()) {
+            return false;
         }
         inFile.close();
+        items.swap(loadedItems);
         return true;
     }
     //luu vao file
     bool saveToFile() const {
         FileIO::ensureDirectoryExists(filePath);
-        std::string tempPath = filePath + RepositoryConstants::TEMP_FILE_EXTENSION;
+        std::string tempPath = FileIO::getTempStagingPath(filePath);
         std::ofstream outFile(tempPath);
         if (!outFile.is_open()) {
-            throw FileIOException("Khong the mo tep tin tam de ghi: " + tempPath);
+            throw FileIOException("Khong the mo tep tin tam tren tmps/ de ghi: " + tempPath);
         }
 
         for (const auto& item : items) {
             outFile << item.toFileString() << "\n";
         }
+        outFile.flush();
+        if (!outFile.good()) {
+            outFile.close();
+            std::remove(tempPath.c_str());
+            throw FileIOException("Khong the ghi day du tep tin tam: " + tempPath);
+        }
         outFile.close();
+        if (outFile.fail()) {
+            std::remove(tempPath.c_str());
+            throw FileIOException("Khong the dong tep tin tam: " + tempPath);
+        }
 
-        std::remove(filePath.c_str());
-        if (std::rename(tempPath.c_str(), filePath.c_str()) != 0) {
+        //viet trong ram truoc,roi commit sang o cung
+        if (!FileIO::commitFromTmp(tempPath, filePath)) {
+            std::remove(tempPath.c_str());
             throw FileIOException("Khong the ghi de tep tin: " + filePath);
         }
         return true;
@@ -76,14 +91,25 @@ public:
             throw DuplicateIdException(item.getId());
         }
         items.push_back(item);
-        return saveToFile();
+        try {
+            return saveToFile();
+        } catch (...) {
+            items.pop_back();
+            throw;
+        }
     }
 
     bool update(const std::string& id, const T& updatedItem) {
         for (size_t i = 0; i < items.size(); ++i) {
             if (items[i].getId() == id) {
+                T previous = items[i];
                 items[i] = updatedItem;
-                return saveToFile();
+                try {
+                    return saveToFile();
+                } catch (...) {
+                    items[i] = previous;
+                    throw;
+                }
             }
         }
         throw NotFoundException(id);
@@ -92,8 +118,15 @@ public:
     bool remove(const std::string& id) {
         for (auto it = items.begin(); it != items.end(); ++it) {
             if (it->getId() == id) {
+                const size_t index = static_cast<size_t>(it - items.begin());
+                T previous = *it;
                 items.erase(it);
-                return saveToFile();
+                try {
+                    return saveToFile();
+                } catch (...) {
+                    items.insert(items.begin() + index, previous);
+                    throw;
+                }
             }
         }
         throw NotFoundException(id);
@@ -132,8 +165,14 @@ public:
     }
 
     void clear() {
+        std::vector<T> previous = items;
         items.clear();
-        saveToFile();
+        try {
+            saveToFile();
+        } catch (...) {
+            items.swap(previous);
+            throw;
+        }
     }
 };
 

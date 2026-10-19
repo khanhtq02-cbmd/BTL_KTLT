@@ -62,10 +62,31 @@ void HopDongMenu::themHopDong() {
     }
 
     std::string maKH = InputHelper::getString("Nhap Ma khach hang (VD: KH0001): ", false);
+    if (std::cin.eof() || maKH.empty()) return;
+    //kiem tra ma khach hang ton tai
+    if (khachHangStore.findById(maKH) == nullptr) {
+        std::cout << "  [!] Ma khach hang '" << maKH << "' khong ton tai trong he thong!\n";
+        return;
+    }
+
     std::string sdt = InputHelper::getPhoneNumber("Nhap So dien thoai (10 chu so): ", false);
+    if (std::cin.eof() || sdt.empty()) return;
+    //kiem tra so dien thoai thue bao da dang ky
+    if (thueBaoStore.findById(sdt) == nullptr) {
+        std::cout << "  [!] Thue bao co so '" << sdt << "' chua duoc dang ky tren he thong!\n";
+        return;
+    }
+
     std::string maGC = InputHelper::getString("Nhap Ma goi cuoc (VD: GC001, VD149): ", false);
+    if (std::cin.eof() || maGC.empty()) return;
+    //kiem tra goi cuoc ton tai
+    if (goiCuocStore.findById(maGC) == nullptr) {
+        std::cout << "  [!] Goi cuoc '" << maGC << "' khong ton tai trong he thong!\n";
+        return;
+    }
 
     Date ngayDK = InputHelper::getDate("Nhap Ngay dang ky (DD/MM/YYYY): ");
+    if (std::cin.eof()) return;
     Date ngayHH;
     while (true) {
         ngayHH = InputHelper::getDate("Nhap Ngay het han (DD/MM/YYYY): ");
@@ -81,9 +102,11 @@ void HopDongMenu::themHopDong() {
               << "  [" << TYPE_CHOICE_PREPAID << "] Tra truoc \n"
               << "  [" << TYPE_CHOICE_POSTPAID << "] Tra sau \n";
     int loaiChoice = InputHelper::getInt("Lua chon [1-2]: ", TYPE_CHOICE_PREPAID, TYPE_CHOICE_POSTPAID);
+    if (std::cin.eof()) return;
     std::string loaiHD = (loaiChoice == TYPE_CHOICE_PREPAID) ? HopDongConstants::TYPE_PREPAID : HopDongConstants::TYPE_POSTPAID;
 
     double gia = InputHelper::getDouble("Nhap Gia tri goi cuoc (VND): ", 0.0);
+    if (std::cin.eof()) return;
 
     try {
         HopDong hd(maHD, maKH, sdt, maGC, ngayDK, ngayHH, loaiHD, HopDongConstants::STATUS_ACTIVE, gia);
@@ -197,6 +220,7 @@ void HopDongMenu::capNhatHopDong() {
 
     std::cout << "\nThong tin hien tai cua hop dong:\n";
     hd->displayDetail();
+    HopDong updated = *hd;
 
     std::cout << "\nChon thong tin can cap nhat:\n"
               << "  [" << UPDATE_PACKAGE << "] Doi goi cuoc\n"
@@ -205,7 +229,7 @@ void HopDongMenu::capNhatHopDong() {
               << "  [" << UPDATE_CANCEL << "] Huy bo thao tac\n";
     int choice = InputHelper::getInt("Nhap lua chon [0-3]: ", UPDATE_CANCEL, UPDATE_STATUS);
 
-    if (choice == UPDATE_CANCEL) {
+    if (choice == UPDATE_CANCEL || std::cin.eof()) {
         std::cout << "[DA HUY] Thao tac cap nhat da duoc huy bo.\n";
         InputHelper::pause();
         return;
@@ -214,15 +238,23 @@ void HopDongMenu::capNhatHopDong() {
     try {
         if (choice == UPDATE_PACKAGE) {
             std::string maGoiMoi = InputHelper::getString("Nhap Ma goi cuoc moi: ", false);
+            if (std::cin.eof()) return;
+            if (goiCuocStore.findById(maGoiMoi) == nullptr) {
+                std::cout << "  [!] Ma goi cuoc '" << maGoiMoi << "' khong ton tai trong he thong!\n";
+                InputHelper::pause();
+                return;
+            }
             double giaMoi = InputHelper::getDouble("Nhap Gia tri goi moi (VND): ", 0.0);
-            hd->setMaGoiCuoc(maGoiMoi);
-            hd->setGiaTriGoi(giaMoi);
-            store.update(id, *hd);
+            if (std::cin.eof()) return;
+            updated.setMaGoiCuoc(maGoiMoi);
+            updated.setGiaTriGoi(giaMoi);
+            store.update(id, updated);
             std::cout << "[THANH CONG] Da cap nhat goi cuoc moi cho hop dong " << id << "!\n";
         } else if (choice == UPDATE_EXPIRY) {
             Date ngayHHMoi = InputHelper::getDate("Nhap Ngay het han moi (DD/MM/YYYY): ");
-            hd->giaHan(ngayHHMoi);
-            store.update(id, *hd);
+            if (std::cin.eof()) return;
+            updated.giaHan(ngayHHMoi);
+            store.update(id, updated);
             std::cout << "[THANH CONG] Da gia han hop dong " << id << " den ngay " << ngayHHMoi.toString() << "!\n";
         } else if (choice == UPDATE_STATUS) {
             std::cout << "Chon trang thai moi:\n"
@@ -230,12 +262,13 @@ void HopDongMenu::capNhatHopDong() {
                       << "  [" << STATUS_CHOICE_SUSPENDED << "] " << HopDongConstants::STATUS_SUSPENDED << "\n"
                       << "  [" << STATUS_CHOICE_TERMINATED << "] " << HopDongConstants::STATUS_TERMINATED << "\n";
             int sChoice = InputHelper::getInt("Nhap lua chon [1-3]: ", STATUS_CHOICE_ACTIVE, STATUS_CHOICE_TERMINATED);
-            if (sChoice == STATUS_CHOICE_ACTIVE) hd->kichHoatLai();
-            else if (sChoice == STATUS_CHOICE_SUSPENDED) hd->tamDung();
-            else if (sChoice == STATUS_CHOICE_TERMINATED) hd->chamDut();
+            if (std::cin.eof()) return;
+            if (sChoice == STATUS_CHOICE_ACTIVE) updated.kichHoatLai();
+            else if (sChoice == STATUS_CHOICE_SUSPENDED) updated.tamDung();
+            else if (sChoice == STATUS_CHOICE_TERMINATED) updated.chamDut();
 
-            store.update(id, *hd);
-            std::cout << "[THANH CONG] Da cap nhat trang thai thanh: " << hd->getTrangThai() << "!\n";
+            store.update(id, updated);
+            std::cout << "[THANH CONG] Da cap nhat trang thai thanh: " << updated.getTrangThai() << "!\n";
         }
     } catch (const AppException& e) {
         std::cout << "[LOI] " << e.what() << "\n";

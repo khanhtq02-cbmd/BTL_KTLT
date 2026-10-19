@@ -15,6 +15,7 @@ namespace Normalized {
     std::string NormalizedId(const std::string& str);
     std::string NormalizedProvinceCode(const std::string& str);
     bool isValidPhoneNumber(const std::string& phone, bool allowUnassigned = false);
+    bool isValidLuhn(const std::string& imeiStr);
 }
 
 #endif // NORMALIZED_H

@@ -17,15 +17,16 @@
 ====================================================================
                HE THONG QUAN LY THUE BAO DI DONG
 ====================================================================
-  [1] Quan ly goi cuoc
-  [2] Quan ly thue bao
-  [3] Quan ly hop dong
-  [4] Quan ly thiet bi IMEI
-  [5] Quan ly phieu nap tien
-  [6] Quan ly hoa don
+  [1] Quan ly Khach hang & SIM eKYC
+  [2] Quan ly Goi cuoc di dong
+  [3] Quan ly Thue bao di dong
+  [4] Quan ly Hop dong dich vu
+  [5] Quan ly Thiet bi dau cuoi IMEI
+  [6] Quan ly Nap tien & GhiCuocGoi (CDR)
+  [7] Quan ly Hoa don & Khieu nai
   [0] Thoat chuong trinh
 ====================================================================
-Nhap lua chon cua ban [0-6]: 
+Nhap lua chon cua ban [0-7]:
 ```
 
 ---
@@ -45,7 +46,7 @@ Nhap lua chon cua ban [0-6]:
   [6] Xoa hop dong
   [0] Quay lai menu chinh
 --------------------------------------------------------------------
-Nhap lua chon cua ban [0-6]: 
+Nhap lua chon cua ban [0-7]:
 ```
 
 ### 3.2 Định Dạng Bảng Dữ Liệu Hợp Đồng (`<iomanip>`)
@@ -88,7 +89,7 @@ Tong so: 3 hop dong.
   [6] Xoa thiet bi
   [0] Quay lai menu chinh
 --------------------------------------------------------------------
-Nhap lua chon cua ban [0-6]: 
+Nhap lua chon cua ban [0-7]:
 ```
 
 ### 4.2 Định Dạng Bảng Dữ Liệu Thiết Bị IMEI (`<iomanip>`)
