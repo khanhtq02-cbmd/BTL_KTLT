@@ -10,6 +10,7 @@
 
 using namespace NapTienConstants;
 
+//tao phieu nap tien mac dinh
 NapTien::NapTien()
     : Entity(""),
       soDienThoai(""),
@@ -18,6 +19,7 @@ NapTien::NapTien()
       hinhThucNap(METHOD_BANKING),
       trangThai(STATUS_SUCCESS) {}
 
+//tao phieu nap tien va kiem tra thong tin
 NapTien::NapTien(
     const std::string& maGD,
     const std::string& sdt,
@@ -49,30 +51,34 @@ NapTien::NapTien(
     }
 }
 
+//cap nhat trang thai phieu nap
 void NapTien::setTrangThai(const std::string& tThai) {
     trangThai = tThai;
 }
 
-void NapTien::displayHeader() const {
+//in tieu de danh sach phieu nap
+void NapTien::displayHeader(std::ostream& os) const {
     DisplayHelper::printHeader(
         {"Ma GD", "So Dien Thoai", "Ngay Nap", "So Tien (VND)", "Hinh Thuc", "Trang Thai"},
         {COL_WIDTH_ID, COL_WIDTH_PHONE, COL_WIDTH_DATE, COL_WIDTH_AMOUNT, COL_WIDTH_METHOD, COL_WIDTH_STATUS},
-        {false, false, false, true, false, false}
+        {false, false, false, true, false, false}, os
     );
 }
 
-void NapTien::displayRow() const {
+//in mot dong phieu nap
+void NapTien::displayRow(std::ostream& os) const {
     std::ostringstream oss;
     oss << std::fixed << std::setprecision(0) << soTien;
 
     DisplayHelper::printRow(
         {id, soDienThoai, ngayNap, oss.str(), hinhThucNap, trangThai},
         {COL_WIDTH_ID, COL_WIDTH_PHONE, COL_WIDTH_DATE, COL_WIDTH_AMOUNT, COL_WIDTH_METHOD, COL_WIDTH_STATUS},
-        {false, false, false, true, false, false}
+        {false, false, false, true, false, false}, os
     );
 }
 
-void NapTien::displayDetail() const {
+//in chi tiet phieu nap
+void NapTien::displayDetail(std::ostream& os) const {
     std::ostringstream oss;
     oss << std::fixed << std::setprecision(0) << soTien << " VND";
 
@@ -83,9 +89,10 @@ void NapTien::displayDetail() const {
         {"So tien nap", oss.str()},
         {"Hinh thuc nap", hinhThucNap},
         {"Trang thai", trangThai}
-    });
+    }, 16, os);
 }
 
+//chuyen phieu nap thanh dong tep
 std::string NapTien::toFileString() const {
     std::ostringstream oss;
     oss << id << "|"
@@ -97,6 +104,7 @@ std::string NapTien::toFileString() const {
     return oss.str();
 }
 
+//nap phieu nap tu dong tep
 bool NapTien::fromFileString(const std::string& line) {
     std::vector<std::string> tokens = FileIO::split(line, '|');
     if (tokens.size() != 6) {

@@ -14,6 +14,7 @@
 #include <unistd.h>
 #endif
 
+//tach chuoi thanh cac truong du lieu
 std::vector<std::string> FileIO::split(const std::string& s, char delimiter) {
     std::vector<std::string> tokens;
     std::string token;
@@ -27,6 +28,7 @@ std::vector<std::string> FileIO::split(const std::string& s, char delimiter) {
     return tokens;
 }
 
+//tao thu muc cha neu chua ton tai
 bool FileIO::ensureDirectoryExists(const std::string& filepath) {
     size_t pos = filepath.find_last_of("/\\");
     if (pos == std::string::npos) return true;
@@ -39,6 +41,7 @@ bool FileIO::ensureDirectoryExists(const std::string& filepath) {
     return true;
 }
 
+//khoi tao thu muc tam tren bo nho phu hop
 bool FileIO::initTmpDir() {
 #if defined(_WIN32)
     _mkdir(FilePaths::TMP_DIR.c_str());
@@ -78,6 +81,7 @@ bool FileIO::initTmpDir() {
 #endif
 }
 
+//tao duong dan tep tam tu tep dich
 std::string FileIO::getTempStagingPath(const std::string& targetFilePath) {
     initTmpDir();
     size_t lastSlash = targetFilePath.find_last_of("/\\");
@@ -85,6 +89,7 @@ std::string FileIO::getTempStagingPath(const std::string& targetFilePath) {
     return FilePaths::TMP_DIR + "/" + filename + ".tmp";
 }
 
+//commit tep tam vao tep dich
 bool FileIO::commitFromTmp(const std::string& tmpPath, const std::string& targetPath) {
     ensureDirectoryExists(targetPath);
 
@@ -141,6 +146,7 @@ bool FileIO::commitFromTmp(const std::string& tmpPath, const std::string& target
     return true;
 }
 
+//kiem tra thu muc tam co dung tmpfs
 bool FileIO::isUsingTmpfs() {
 #if defined(__linux__)
     struct stat st;
@@ -149,4 +155,44 @@ bool FileIO::isUsingTmpfs() {
     }
 #endif
     return false;
+}
+
+//noi thu muc va ten tep thanh duong dan
+std::string FileIO::joinPath(const std::string& directory, const std::string& filename) {
+    if (directory.empty()) return filename;
+    if (directory.back() == '/' || directory.back() == '\\') return directory + filename;
+    return directory + "/" + filename;
+}
+
+//tim thu muc data day du theo vi tri executable
+std::string FileIO::resolveDataDirectory(const std::string& executablePath) {
+    const std::vector<std::string> candidates = {
+        "data"
+    };
+
+    std::vector<std::string> searchPaths = candidates;
+    size_t slash = executablePath.find_last_of("/\\");
+    if (slash != std::string::npos) {
+        std::string executableDirectory = executablePath.substr(0, slash);
+        searchPaths.push_back(joinPath(executableDirectory, "data"));
+        searchPaths.push_back(joinPath(joinPath(executableDirectory, ".."), "data"));
+        searchPaths.push_back(joinPath(joinPath(joinPath(executableDirectory, ".."), ".."), "data"));
+    }
+
+    const std::vector<std::string> requiredFiles = {
+        "hopdong.txt", "imei.txt", "CacGoiCuoc.txt", "thuebao.txt",
+        "khachhang.txt", "hoadon.txt", "naptien.txt", "GhiCuocGoi.txt", "khieunai.txt"
+    };
+    for (const auto& directory : searchPaths) {
+        bool complete = true;
+        for (const auto& filename : requiredFiles) {
+            std::ifstream file(joinPath(directory, filename));
+            if (!file.good()) {
+                complete = false;
+                break;
+            }
+        }
+        if (complete) return directory;
+    }
+    return "";
 }

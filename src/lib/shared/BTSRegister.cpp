@@ -4,14 +4,17 @@
 #include <fstream>
 #include <sstream>
 
+//tao danh ba tram tu tep mac dinh
 BTSRegistry::BTSRegistry() {
     LoadFromFile();
 }
 
+//tao danh ba tram tu tep chi dinh
 BTSRegistry::BTSRegistry(const std::string& filePath) {
     LoadFromFile(filePath);
 }
 
+//nap danh sach tram phat song tu tep
 bool BTSRegistry::LoadFromFile(const std::string& filePath) {
     std::ifstream file(filePath);
     if (!file.is_open()) {
@@ -49,6 +52,7 @@ bool BTSRegistry::LoadFromFile(const std::string& filePath) {
     return !towers.empty();
 }
 
+//tim tram phat song theo ma
 const BTSRecord* BTSRegistry::findById(const std::string& btsId) const {
     for (const auto& tower : towers) {
         if (tower.btsId == btsId) {
@@ -58,6 +62,7 @@ const BTSRecord* BTSRegistry::findById(const std::string& btsId) const {
     return nullptr;
 }
 
+//goi y tram phat song theo khu vuc
 std::string BTSRegistry::suggestNearestBTS(const std::string& districtOrCity) const {
     if (towers.empty()) return "BTS-HN-001";
     std::string query = Normalized::toLower(Normalized::trim(districtOrCity));

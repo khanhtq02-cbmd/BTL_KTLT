@@ -7,10 +7,15 @@
 
 using namespace KhachHangMenuChoices;
 
+//them khach hang moi va xac thuc thong tin
 void KhachHangMenu::themKhachHang() {
     std::cout << "\n--- THEM KHACH HANG MOI (DANG KY THONG TIN EKYC) ---\n";
-    std::string maKH = InputHelper::getString("Nhap ma khach hang (VD: KH0011): ");
+    std::string maKH = InputHelper::getString("Nhap ma khach hang (KH0000001-KH9999999): ");
     if (std::cin.eof() || maKH.empty()) return;
+    if (!Normalized::isValidCustomerId(maKH)) {
+        std::cout << "[LOI] Ma khach hang phai co dang KH0001 hoac KH0000001.\n";
+        return;
+    }
     if (store.findById(maKH) != nullptr) {
         std::cout << "[CANH BAO] Ma khach hang da ton tai trong he thong!\n";
         return;
@@ -23,6 +28,10 @@ void KhachHangMenu::themKhachHang() {
     std::string loaiGT = "CCCD";
     std::string soGT = InputHelper::getString("Nhap so giay to CCCD (12 chu so): ");
     if (std::cin.eof() || soGT.empty()) return;
+    if (!Normalized::isValidCredential(soGT)) {
+        std::cout << "[LOI] So CCCD khong hop le.\n";
+        return;
+    }
 
     std::string ngayCap = InputHelper::getString("Nhap ngay cap (DD/MM/YYYY): ");
     if (std::cin.eof() || ngayCap.empty()) return;
@@ -51,6 +60,7 @@ void KhachHangMenu::themKhachHang() {
     }
 }
 
+//hien thi danh sach khach hang
 void KhachHangMenu::xemDanhSach() {
     std::cout << "\n--- DANH SACH KHACH HANG (KYC PROFILE) ---\n";
     if (store.empty()) {
@@ -61,6 +71,7 @@ void KhachHangMenu::xemDanhSach() {
     std::cout << "Tong so: " << store.size() << " khach hang.\n";
 }
 
+//tim kiem khach hang theo dieu kien
 void KhachHangMenu::timKiemKhachHang() {
     std::cout << "\n--- TIM KIEM KHACH HANG ---\n"
               << "  [" << SEARCH_BY_ID << "] Tim theo Ma khach hang\n"
@@ -104,6 +115,7 @@ void KhachHangMenu::timKiemKhachHang() {
     }
 }
 
+//cap nhat thong tin khach hang
 void KhachHangMenu::capNhatKhachHang() {
     std::cout << "\n--- CAP NHAT THONG TIN KHACH HANG ---\n";
     std::string maKH = InputHelper::getString("Nhap ma khach hang can sua: ");
@@ -137,6 +149,7 @@ void KhachHangMenu::capNhatKhachHang() {
     }
 }
 
+//xoa khach hang va kiem tra khoa ngoai
 void KhachHangMenu::xoaKhachHang() {
     std::cout << "\n--- XOA KHACH HANG KHOI HE THONG ---\n";
     std::string maKH = InputHelper::getString("Nhap ma khach hang can xoa: ");
@@ -179,6 +192,7 @@ void KhachHangMenu::xoaKhachHang() {
     }
 }
 
+//hien thi danh sach SIM cua khach hang
 void KhachHangMenu::xemDanhSachSIM() {
     std::cout << "\n--- TRA CUU DANH SACH SIM / THUE BAO CHINH CHU ---\n";
     std::string maKH = InputHelper::getString("Nhap ma khach hang: ");
@@ -202,6 +216,7 @@ void KhachHangMenu::xemDanhSachSIM() {
     }
 }
 
+//hien thi menu quan ly khach hang
 void KhachHangMenu::showMenu() {
     while (true) {
         std::cout << "\n====================================================================\n"

@@ -9,6 +9,7 @@
 
 using namespace HoaDonConstants;
 
+//tao hoa don mac dinh
 HoaDon::HoaDon()
     : Entity(""),
       soDienThoai(""),
@@ -18,6 +19,7 @@ HoaDon::HoaDon()
       tongTien(0.0),
       trangThai(STATUS_PAID) {}
 
+//tao hoa don va kiem tra thong tin
 HoaDon::HoaDon(
     const std::string& maHD,
     const std::string& sdt,
@@ -47,23 +49,27 @@ HoaDon::HoaDon(
     }
 }
 
+//cap nhat trang thai hoa don
 void HoaDon::setTrangThai(const std::string& tThai) {
     trangThai = tThai;
 }
 
+//chuyen hoa don sang da thanh toan
 void HoaDon::thanhToan() {
     trangThai = STATUS_PAID;
 }
 
-void HoaDon::displayHeader() const {
+//in tieu de danh sach hoa don
+void HoaDon::displayHeader(std::ostream& os) const {
     DisplayHelper::printHeader(
         {"Ma HD", "So Dien Thoai", "Ky Cuoc", "Tien Goi (VND)", "Tien Data (VND)", "Tong Cong (VND)", "Trang Thai"},
         {COL_WIDTH_ID, COL_WIDTH_PHONE, COL_WIDTH_CYCLE, COL_WIDTH_CALL, COL_WIDTH_DATA, COL_WIDTH_TOTAL, COL_WIDTH_STATUS},
-        {false, false, false, true, true, true, false}
+        {false, false, false, true, true, true, false}, os
     );
 }
 
-void HoaDon::displayRow() const {
+//in mot dong hoa don
+void HoaDon::displayRow(std::ostream& os) const {
     std::ostringstream ossGoi, ossData, ossTong;
     ossGoi << std::fixed << std::setprecision(0) << tienGoi;
     ossData << std::fixed << std::setprecision(0) << tienData;
@@ -72,11 +78,12 @@ void HoaDon::displayRow() const {
     DisplayHelper::printRow(
         {id, soDienThoai, kyCuoc, ossGoi.str(), ossData.str(), ossTong.str(), trangThai},
         {COL_WIDTH_ID, COL_WIDTH_PHONE, COL_WIDTH_CYCLE, COL_WIDTH_CALL, COL_WIDTH_DATA, COL_WIDTH_TOTAL, COL_WIDTH_STATUS},
-        {false, false, false, true, true, true, false}
+        {false, false, false, true, true, true, false}, os
     );
 }
 
-void HoaDon::displayDetail() const {
+//in chi tiet hoa don
+void HoaDon::displayDetail(std::ostream& os) const {
     std::ostringstream ossGoi, ossData, ossTong;
     ossGoi << std::fixed << std::setprecision(0) << tienGoi << " VND";
     ossData << std::fixed << std::setprecision(0) << tienData << " VND";
@@ -90,9 +97,10 @@ void HoaDon::displayDetail() const {
         {"Tien cuoc data", ossData.str()},
         {"Tong tien thanh toan", ossTong.str()},
         {"Trang thai", trangThai}
-    });
+    }, 16, os);
 }
 
+//chuyen hoa don thanh dong tep
 std::string HoaDon::toFileString() const {
     std::ostringstream oss;
     oss << id << "|"
@@ -105,6 +113,7 @@ std::string HoaDon::toFileString() const {
     return oss.str();
 }
 
+//nap hoa don tu dong tep
 bool HoaDon::fromFileString(const std::string& line) {
     std::vector<std::string> tokens = FileIO::split(line, '|');
     if (tokens.size() != 7) {

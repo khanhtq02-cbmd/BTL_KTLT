@@ -21,18 +21,25 @@ private:
     Repository<ThueBao>& thueBaoStore;
     Repository<CDR>& cdrStore;
 
+    //lap phieu nap tien
     void lapPhieuNapTien();
+    //hien thi danh sach phieu nap
     void xemDanhSachPhieu();
+    //tra cuu nap tien theo so dien thoai
     void traCuuTheoSoDienThoai();
+    //ghi nhan ban ghi CDR
     void ghiNhanCDR();
+    //hien thi danh sach CDR
     void xemDanhSachCDR();
 
 public:
+    //tao menu nap tien va CDR
     NapTienMenu(Repository<NapTien>& ntRepo,
                 Repository<ThueBao>& tbRepo,
                 Repository<CDR>& cRepo)
         : napTienStore(ntRepo), thueBaoStore(tbRepo), cdrStore(cRepo) {}
 
+    //hien thi menu nap tien va CDR
     void showMenu();
 };
 

@@ -52,7 +52,7 @@ Nhap lua chon cua ban [0-7]:
 ### 3.2 Định Dạng Bảng Dữ Liệu Hợp Đồng (`<iomanip>`)
 * **Độ rộng các cột:**
   - `Ma HD`: 10 ký tự
-  - `Ma KH`: 10 ký tự
+  - `Ma KH`: tiền tố `KH` + 4 chữ số legacy hoặc 7 chữ số mở rộng (`KH0000001`–`KH9999999`); dữ liệu cũ `KH0001` vẫn được hỗ trợ
   - `So Dien Thoai`: 14 ký tự
   - `Ma Goi`: 10 ký tự
   - `Ngay DK`: 13 ký tự

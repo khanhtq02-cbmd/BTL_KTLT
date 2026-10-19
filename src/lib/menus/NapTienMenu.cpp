@@ -6,6 +6,7 @@
 
 using namespace NapTienMenuChoices;
 
+//lap phieu nap tien va cap nhat so du
 void NapTienMenu::lapPhieuNapTien() {
     std::cout << "\n--- LAP PHIEU NAP TIEN VAO TAI KHOAN ---\n";
     std::string maGD = InputHelper::getString("Nhap ma giao dich (VD: GD0010): ");
@@ -65,6 +66,7 @@ void NapTienMenu::lapPhieuNapTien() {
     }
 }
 
+//hien thi danh sach phieu nap tien
 void NapTienMenu::xemDanhSachPhieu() {
     std::cout << "\n--- DANH SACH PHIEU NAP TIEN ---\n";
     if (napTienStore.empty()) {
@@ -75,6 +77,7 @@ void NapTienMenu::xemDanhSachPhieu() {
     std::cout << "Tong so: " << napTienStore.size() << " phieu nap tien.\n";
 }
 
+//tra cuu lich su nap tien theo so dien thoai
 void NapTienMenu::traCuuTheoSoDienThoai() {
     std::cout << "\n--- TRA CUU LICH SU NAP TIEN THEO SO THUE BAO ---\n";
     std::string sdt = InputHelper::getPhoneNumber("Nhap so dien thoai: ", false);
@@ -92,6 +95,7 @@ void NapTienMenu::traCuuTheoSoDienThoai() {
     }
 }
 
+//ghi nhan ban ghi cuoc goi hoac phien data
 void NapTienMenu::ghiNhanCDR() {
     std::cout << "\n--- GHI NHAN BAN GHI CUOC GOI / PHIEN DATA (CDR) ---\n";
     std::string maCDR = InputHelper::getString("Nhap ma ban ghi CDR (VD: CDR0001): ");
@@ -156,6 +160,7 @@ void NapTienMenu::ghiNhanCDR() {
     }
 }
 
+//hien thi danh sach ban ghi CDR
 void NapTienMenu::xemDanhSachCDR() {
     std::cout << "\n--- DANH SACH BAN GHI CUOC GOI / PHIEN DATA (CDR) ---\n";
     if (cdrStore.empty()) {
@@ -166,6 +171,7 @@ void NapTienMenu::xemDanhSachCDR() {
     std::cout << "Tong so: " << cdrStore.size() << " ban ghi CDR.\n";
 }
 
+//hien thi menu nap tien va CDR
 void NapTienMenu::showMenu() {
     while (true) {
         std::cout << "\n====================================================================\n"

@@ -4,6 +4,7 @@
 
 using namespace IMEIMenuChoices;
 
+//hien thi menu quan ly thiet bi IMEI
 void ThietBiIMEIMenu::showMenu() {
     while (true) {
         std::cout << "\n--------------------------------------------------------------------\n"
@@ -48,6 +49,7 @@ void ThietBiIMEIMenu::showMenu() {
     }
 }
 
+//them thiet bi IMEI moi
 void ThietBiIMEIMenu::themThietBi() {
     std::cout << "\n>>> THEM THIET BI DAU CUOI MOI (IMEI) <<<\n";
     std::string imei;
@@ -97,6 +99,7 @@ void ThietBiIMEIMenu::themThietBi() {
     InputHelper::pause();
 }
 
+//hien thi danh sach thiet bi
 void ThietBiIMEIMenu::xemDanhSach() {
     std::cout << "\n>>> DANH SACH THIET BI DAU CUOI (IMEI) <<<\n";
     const auto& list = store.getAll();
@@ -114,6 +117,7 @@ void ThietBiIMEIMenu::xemDanhSach() {
     InputHelper::pause();
 }
 
+//tim kiem thiet bi theo dieu kien
 void ThietBiIMEIMenu::timKiemThietBi() {
     std::cout << "\n>>> TIM KIEM THIET BI <<<\n"
               << "  [" << SEARCH_BY_IMEI << "] Tra cuu theo Ma IMEI\n"
@@ -165,6 +169,7 @@ void ThietBiIMEIMenu::timKiemThietBi() {
     InputHelper::pause();
 }
 
+//hien thi danh sach thiet bi bi khoa mang
 void ThietBiIMEIMenu::danhSachKhoaMang() {
     std::cout << "\n>>> DANH SACH THIET BI BI KHOA MANG <<<\n";
     auto blacklisted = store.filter([](const ThietBiIMEI& tb) {
@@ -183,6 +188,7 @@ void ThietBiIMEIMenu::danhSachKhoaMang() {
     InputHelper::pause();
 }
 
+//cap nhat thong tin thiet bi
 void ThietBiIMEIMenu::capNhatThietBi() {
     std::cout << "\n>>> CAP NHAT THONG TIN THIET BI (IMEI) <<<\n";
     std::string imei = InputHelper::getString("Nhap Ma IMEI can cap nhat: ", false);
@@ -245,6 +251,7 @@ void ThietBiIMEIMenu::capNhatThietBi() {
     InputHelper::pause();
 }
 
+//xoa thiet bi khoi he thong
 void ThietBiIMEIMenu::xoaThietBi() {
     std::cout << "\n>>> XOA THIET BI KHOI HE THONG <<<\n";
     std::string imei = InputHelper::getString("Nhap Ma IMEI can xoa: ", false);

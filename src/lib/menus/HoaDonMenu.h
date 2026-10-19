@@ -23,20 +23,29 @@ private:
     Repository<ThueBao>& thueBaoStore;
     Repository<KhieuNai>& khieuNaiStore;
 
+    //lap hoa don cuoc phat sinh
     void lapHoaDon();
+    //hien thi danh sach hoa don
     void xemDanhSachHoaDon();
+    //thanh toan hoa don
     void thanhToanHoaDon();
+    //tra cuu hoa don theo so dien thoai
     void traCuuTheoSoDienThoai();
+    //tiep nhan phieu khieu nai
     void tiepNhanKhieuNai();
+    //xu ly phieu khieu nai
     void xuLyKhieuNai();
+    //hien thi danh sach khieu nai
     void xemDanhSachKhieuNai();
 
 public:
+    //tao menu quan ly hoa don va khieu nai
     HoaDonMenu(Repository<HoaDon>& hdRepo,
                Repository<ThueBao>& tbRepo,
                Repository<KhieuNai>& knRepo)
         : hoaDonStore(hdRepo), thueBaoStore(tbRepo), khieuNaiStore(knRepo) {}
 
+    //hien thi menu quan ly hoa don va khieu nai
     void showMenu();
 };
 

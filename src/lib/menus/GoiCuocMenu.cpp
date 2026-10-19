@@ -7,6 +7,7 @@
 
 using namespace GoiCuocMenuChoices;
 
+//them goi cuoc moi
 void GoiCuocMenu::themGoiCuoc() {
     std::cout << "\n--- THEM GOI CUOC MOI ---\n";
     std::string maGoi = InputHelper::getString("Nhap ma goi cuoc: ");
@@ -36,6 +37,7 @@ void GoiCuocMenu::themGoiCuoc() {
     }
 }
 
+//hien thi danh sach goi cuoc
 void GoiCuocMenu::xemDanhSach() {
     std::cout << "\n--- DANH SACH GOI CUOC HIEN CO ---\n";
     if (store.empty()) {
@@ -48,6 +50,7 @@ void GoiCuocMenu::xemDanhSach() {
     }
 }
 
+//tim kiem goi cuoc theo tu khoa
 void GoiCuocMenu::timKiemGoiCuoc() {
     std::cout << "\n--- TIM KIEM GOI CUOC ---\n";
     std::string keyword = InputHelper::getString("Nhap ma goi hoac ten goi can tim: ");
@@ -71,6 +74,7 @@ void GoiCuocMenu::timKiemGoiCuoc() {
     }
 }
 
+//sap xep danh sach goi cuoc
 void GoiCuocMenu::sapXepDanhSach() {
     std::cout << "\n--- SAP XEP DANH SACH GOI CUOC ---\n";
     std::cout << "  [" << SORT_BY_PRICE_ASC << "] Gia cuoc tang dan\n";
@@ -95,6 +99,7 @@ void GoiCuocMenu::sapXepDanhSach() {
     xemDanhSach();
 }
 
+//cap nhat thong tin goi cuoc
 void GoiCuocMenu::capNhatGoiCuoc() {
     std::cout << "\n--- CAP NHAT GOI CUOC ---\n";
     std::string maGoi = InputHelper::getString("Nhap ma goi cuoc can sua: ");
@@ -129,6 +134,7 @@ void GoiCuocMenu::capNhatGoiCuoc() {
     }
 }
 
+//xoa goi cuoc khoi he thong
 void GoiCuocMenu::xoaGoiCuoc() {
     std::cout << "\n--- XOA GOI CUOC ---\n";
     std::string maGoi = InputHelper::getString("Nhap ma goi cuoc can xoa: ");
@@ -154,6 +160,7 @@ void GoiCuocMenu::xoaGoiCuoc() {
     }
 }
 
+//hien thi menu quan ly goi cuoc
 void GoiCuocMenu::showMenu() {
     while (true) {
         std::cout << "\n====================================================================\n"

@@ -49,3 +49,8 @@ set_tests_properties(unit_tests PROPERTIES WORKING_DIRECTORY "${CMAKE_CURRENT_SO
 
 add_test(NAME stress_test_quick COMMAND stress_test_runner --duration 5)
 set_tests_properties(stress_test_quick PROPERTIES WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}")
+
+add_test(NAME startup_from_other_directory
+    COMMAND bash "${CMAKE_CURRENT_SOURCE_DIR}/tests/repro/startup_working_directory.sh"
+            "$<TARGET_FILE:quanlythuebao>"
+            "${CMAKE_CURRENT_SOURCE_DIR}/data")

@@ -30,16 +30,27 @@ namespace MainMenuChoices {
     const int MENU_HOADON = 7;
 }
 
-int main() {
-    Repository<HopDong> hopDongStore(FilePaths::HOPDONG_DATA);
-    Repository<ThietBiIMEI> imeiStore(FilePaths::IMEI_DATA);
-    Repository<GoiCuoc> goiCuocStore(FilePaths::GOICUOC_DATA);
-    Repository<ThueBao> thueBaoStore(FilePaths::THUEBAO_DATA);
-    Repository<KhachHang> khachHangStore(FilePaths::KHACHHANG_DATA);
-    Repository<HoaDon> hoaDonStore(FilePaths::HOADON_DATA);
-    Repository<NapTien> napTienStore(FilePaths::NAPTIEN_DATA);
-    Repository<CDR> ghiCuocGoiStore(FilePaths::GHICUOCGOI_DATA);
-    Repository<KhieuNai> khieuNaiStore(FilePaths::KHIEUNAI_DATA);
+//khoi dong chuong trinh va dieu phoi cac menu
+int main(int argc, char* argv[]) {
+    const std::string dataDirectory = FileIO::resolveDataDirectory(argc > 0 ? argv[0] : "");
+    if (dataDirectory.empty()) {
+        std::cerr << "[LOI] Khong tim thay thu muc data day du. "
+                  << "Hay chay chuong trinh tu thu muc du an hoac dat data/ canh executable.\n";
+        return 1;
+    }
+
+    const auto dataPath = [&dataDirectory](const std::string& filename) {
+        return FileIO::joinPath(dataDirectory, filename);
+    };
+    Repository<HopDong> hopDongStore(dataPath("hopdong.txt"));
+    Repository<ThietBiIMEI> imeiStore(dataPath("imei.txt"));
+    Repository<GoiCuoc> goiCuocStore(dataPath("CacGoiCuoc.txt"));
+    Repository<ThueBao> thueBaoStore(dataPath("thuebao.txt"));
+    Repository<KhachHang> khachHangStore(dataPath("khachhang.txt"));
+    Repository<HoaDon> hoaDonStore(dataPath("hoadon.txt"));
+    Repository<NapTien> napTienStore(dataPath("naptien.txt"));
+    Repository<CDR> ghiCuocGoiStore(dataPath("GhiCuocGoi.txt"));
+    Repository<KhieuNai> khieuNaiStore(dataPath("khieunai.txt"));
 
     try {
         hopDongStore.loadFromFile();

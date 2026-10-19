@@ -30,16 +30,24 @@ private:
     Repository<ThietBiIMEI>& store;
     Repository<ThueBao>& thueBaoStore;
 
+    //them thiet bi IMEI
     void themThietBi();
+    //hien thi danh sach thiet bi
     void xemDanhSach();
+    //tim kiem thiet bi
     void timKiemThietBi();
+    //hien thi thiet bi bi khoa mang
     void danhSachKhoaMang();
+    //cap nhat thiet bi
     void capNhatThietBi();
+    //xoa thiet bi
     void xoaThietBi();
 
 public:
+    //tao menu quan ly thiet bi IMEI
     ThietBiIMEIMenu(Repository<ThietBiIMEI>& s, Repository<ThueBao>& ts)
         : store(s), thueBaoStore(ts) {}
+    //hien thi menu quan ly thiet bi IMEI
     void showMenu();
 };
 

@@ -176,6 +176,58 @@ void testPhoneNumberValidation() {
 
 }
 
+void testCustomerIdValidation() {
+    std::cout << "[RUN] Kiem thu ma khach hang legacy va mo rong...\n";
+
+    TEST_ASSERT(Normalized::isValidCustomerId("KH0001"), "Ma KH legacy KH0001 phai hop le");
+    TEST_ASSERT(Normalized::isValidCustomerId("KH0000001"), "Ma KH mo rong KH0000001 phai hop le");
+    TEST_ASSERT(Normalized::isValidCustomerId("KH9999999"), "Ma KH mo rong KH9999999 phai hop le");
+    TEST_ASSERT(!Normalized::isValidCustomerId("KH00001"), "Ma KH 5 chu so phai bi tu choi");
+    TEST_ASSERT(!Normalized::isValidCustomerId("KH10000000"), "Ma KH 8 chu so phai bi tu choi");
+    TEST_ASSERT(!Normalized::isValidCustomerId("KX0000001"), "Ma KH sai tien to phai bi tu choi");
+    TEST_ASSERT(!Normalized::isValidCustomerId("KH00000A1"), "Ma KH chua ky tu chu phai bi tu choi");
+
+    KhachHang expanded("KH0000001", "Nguoi Mo Rong", "CCCD", "079085012345", "10/01/2021", "Cuc C06", "0981234567", "Ha Noi");
+    TEST_ASSERT(expanded.getMaKhachHang() == "KH0000001", "KhachHang phai giu ma KH mo rong");
+
+    bool caughtBadId = false;
+    try {
+        KhachHang invalid("KH1", "Nguoi Sai", "CCCD", "079085012345", "10/01/2021", "Cuc C06", "0981234567", "Ha Noi");
+    } catch (const AppException&) {
+        caughtBadId = true;
+    }
+    TEST_ASSERT(caughtBadId, "KhachHang phai tu choi ma KH sai format");
+}
+
+void testCredentialValidation() {
+    std::cout << "[RUN] Kiem thu CCCD 12 chu so va ma tinh...\n";
+
+    TEST_ASSERT(Normalized::isValidCredential("079085012345"), "CCCD 079085012345 phai hop le");
+    TEST_ASSERT(Normalized::isValidCredential("079285012345"), "CCCD 079285012345 phai hop le");
+    TEST_ASSERT(!Normalized::isValidCredential("099085012345"), "CCCD voi ma tinh 099 phai bi tu choi");
+    TEST_ASSERT(!Normalized::isValidCredential("07908501234"), "CCCD 11 chu so phai bi tu choi");
+    TEST_ASSERT(!Normalized::isValidCredential("079A85012345"), "CCCD chua ky tu chu phai bi tu choi");
+
+    bool caughtConstructor = false;
+    try {
+        KhachHang invalid("KH0000003", "Nguoi Sai", "CCCD", "099085012345", "10/01/2021", "Cuc C06", "0981234567", "Ha Noi");
+    } catch (const InvalidCredentialException&) {
+        caughtConstructor = true;
+    }
+    TEST_ASSERT(caughtConstructor, "KhachHang constructor phai tu choi CCCD sai");
+
+    KhachHang kh("KH0000004", "Nguoi Dung", "CCCD", "079085012345", "10/01/2021", "Cuc C06", "0981234567", "Ha Noi");
+    bool caughtSetter = false;
+    try {
+        kh.setSoGiayTo("099085012345");
+    } catch (const InvalidCredentialException&) {
+        caughtSetter = true;
+    }
+    TEST_ASSERT(caughtSetter, "KhachHang setter phai tu choi CCCD sai");
+    TEST_ASSERT(!kh.fromFileString("KH-BAD|Nguoi Sai|CCCD|099085012345|10/01/2021|Cuc C06|0981234567|Ha Noi"),
+                "KhachHang fromFileString phai tu choi CCCD sai");
+}
+
 void testNormalizedUtils() {
     std::cout << "[RUN] Kiem thu Normalized string utils...\n";
     TEST_ASSERT(Normalized::trim("  hello world  \t\n") == "hello world", "Normalized::trim phai cat khoang trang hai dau");
@@ -506,6 +558,12 @@ void testDisplayHelper() {
     std::string cardStr = ossCard.str();
     TEST_ASSERT(cardStr.find("Key A     : Value A") != std::string::npos, "Card phai in nhan va gia tri dung dinh dang");
 
+    HopDong tableItem("HD-TABLE", "KH0001", "0981234567", "GC001", Date(1, 1, 2024), Date(1, 1, 2025), "TraSau", "HieuLuc", 150000.0);
+    std::ostringstream ossTable;
+    DisplayHelper::printTable(std::vector<HopDong>{tableItem}, ossTable);
+    TEST_ASSERT(ossTable.str().find("HD-TABLE") != std::string::npos,
+                "printTable phai forward output stream vao display methods");
+
     //kiem thu tich hop model
     HopDong hd("HD0001", "KH0001", "0981234567", "GC001", Date(1, 1, 2024), Date(1, 1, 2025), "TraSau", "HieuLuc", 150000.0);
     ThietBiIMEI tb("860123456789014", "iPhone 15", "Apple", "0981234567", Date(15, 1, 2024), "HoatDong", "BTS-HN-001");
@@ -690,6 +748,10 @@ void testMenuControllers() {
 void testFileIOTmpfs() {
     std::cout << "[RUN] Kiem thu FileIO staging qua tmps/ va tmpfs zero-SSD...\n";
 
+    TEST_ASSERT(FileIO::joinPath("data", "khachhang.txt") == "data/khachhang.txt",
+                "joinPath phai tao duong dan data on dinh");
+    TEST_ASSERT(FileIO::resolveDataDirectory("/tmp/quanlythuebao") == "data",
+                "resolveDataDirectory phai tim thay bo data tu thu muc hien tai");
     TEST_ASSERT(FileIO::initTmpDir(), "initTmpDir phai return true");
 
     std::string testTarget = "data/test_tmpfs_target.txt";
@@ -769,7 +831,7 @@ void testKhachHangModel() {
     //kiem tra loi sdt
     bool caughtPhone = false;
     try {
-        KhachHang khErr("KH0002", "Tran Binh", "CCCD", "123", "01/01/2021", "C06", "012345", "HN");
+        KhachHang khErr("KH0002", "Tran Binh", "CCCD", "001201004567", "01/01/2021", "C06", "012345", "HN");
     } catch (const InvalidPhoneNumberException& e) {
         caughtPhone = (e.what() != nullptr);
     }
@@ -1133,6 +1195,20 @@ void testRemainingMenuControllers() {
         TEST_ASSERT(khRepo.findById("KH0002") != nullptr, "KhachHangMenu phai them duoc KH0002");
     }
 
+    // 1b. Test KhachHangMenu: tu choi CCCD sai
+    {
+        std::istringstream inputSim("1\nKH0000005\nNguoi Sai\n099085012345\n0\n");
+        std::ostringstream outputCapture;
+        std::cin.rdbuf(inputSim.rdbuf());
+        std::cout.rdbuf(outputCapture.rdbuf());
+
+        khMenu.showMenu();
+
+        TEST_ASSERT(khRepo.findById("KH0000005") == nullptr, "KhachHangMenu khong duoc luu CCCD sai");
+        TEST_ASSERT(outputCapture.str().find("CCCD khong hop le") != std::string::npos,
+                    "KhachHangMenu phai thong bao CCCD khong hop le");
+    }
+
     // 2. Test KhachHangMenu: tu choi xoa khach hang co lien ket khoa ngoai
     {
         std::istringstream inputSim("5\nKH0001\n0\n");
@@ -1197,6 +1273,8 @@ int main() {
     testDate();
     testBirthDateAndAgeValidation();
     testPhoneNumberValidation();
+    testCustomerIdValidation();
+    testCredentialValidation();
     testNormalizedUtils();
     testIMEILuhn();
     testHopDong();

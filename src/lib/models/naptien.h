@@ -29,7 +29,9 @@ private:
     std::string trangThai;
 
 public:
+    //tao phieu nap tien mac dinh
     NapTien();
+    //tao phieu nap tien day du thong tin
     NapTien(
         const std::string& maGD,
         const std::string& sdt,
@@ -39,20 +41,32 @@ public:
         const std::string& tThai = NapTienConstants::STATUS_SUCCESS
     );
 
+    //lay ma giao dich
     std::string getMaGiaoDich() const { return id; }
+    //lay so dien thoai
     std::string getSoDienThoai() const { return soDienThoai; }
+    //lay ngay nap
     std::string getNgayNap() const { return ngayNap; }
+    //lay so tien nap
     double getSoTien() const { return soTien; }
+    //lay hinh thuc nap
     std::string getHinhThucNap() const { return hinhThucNap; }
+    //lay trang thai phieu nap
     std::string getTrangThai() const { return trangThai; }
 
+    //cap nhat trang thai phieu nap
     void setTrangThai(const std::string& tThai);
 
-    void displayHeader() const override;
-    void displayRow() const override;
-    void displayDetail() const override;
+    //in tieu de danh sach phieu nap
+    void displayHeader(std::ostream& os = std::cout) const override;
+    //in mot dong phieu nap
+    void displayRow(std::ostream& os = std::cout) const override;
+    //in chi tiet phieu nap
+    void displayDetail(std::ostream& os = std::cout) const override;
 
+    //chuyen phieu nap thanh dong tep
     std::string toFileString() const override;
+    //nap phieu nap tu dong tep
     bool fromFileString(const std::string& line) override;
 };
 

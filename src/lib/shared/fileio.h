@@ -25,12 +25,22 @@ namespace FileConstants {
 
 class FileIO {
 	public:
+    //tach dong du lieu theo ky tu phan cach
     static std::vector<std::string> split(const std::string& s, char delimiter = FileConstants::DEFAULT_DELIMITER);
+    //dam bao thu muc cua tep ton tai
     static bool ensureDirectoryExists(const std::string& filepath);
+    //khoi tao thu muc luu tep tam thoi
     static bool initTmpDir();
+    //tao duong dan tep tam thoi de ghi
     static std::string getTempStagingPath(const std::string& targetFilePath);
+    //chuyen tep tam thanh tep dich
     static bool commitFromTmp(const std::string& tmpPath, const std::string& targetPath);
+    //kiem tra tep tam co nam tren tmpfs hya ko
     static bool isUsingTmpfs();
+    //tim thu muc data day du cua chuong trinh
+    static std::string resolveDataDirectory(const std::string& executablePath);
+    //noi thu muc va ten tep thanh duong dan
+    static std::string joinPath(const std::string& directory, const std::string& filename);
 };
 
 #endif // FILEIO_H

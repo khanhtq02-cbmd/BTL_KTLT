@@ -28,7 +28,9 @@ private:
     double cuocPhatSinh; // VND
 
 public:
+    //tao ban ghi CDR mac dinh
     CDR();
+    //tao ban ghi CDR day du thong tin
     CDR(
         const std::string& maCDR,
         const std::string& caller,
@@ -39,19 +41,31 @@ public:
         double cost
     );
 
+    //lay ma CDR
     std::string getMaCDR() const { return id; }
+    //lay so thue bao goi
     std::string getSoGoi() const { return soGoi; }
+    //lay so thue bao nhan
     std::string getSoNhan() const { return soNhan; }
+    //lay loai dich vu
     std::string getLoaiDichVu() const { return loaiDichVu; }
+    //lay thoi gian bat dau
     std::string getThoiGianBatDau() const { return thoiGianBatDau; }
+    //lay thoi luong hoac dung luong
     int getThoiLuong() const { return thoiLuong; }
+    //lay cuoc phat sinh
     double getCuocPhatSinh() const { return cuocPhatSinh; }
 
-    void displayHeader() const override;
-    void displayRow() const override;
-    void displayDetail() const override;
+    //in tieu de danh sach CDR
+    void displayHeader(std::ostream& os = std::cout) const override;
+    //in mot dong CDR
+    void displayRow(std::ostream& os = std::cout) const override;
+    //in chi tiet CDR
+    void displayDetail(std::ostream& os = std::cout) const override;
 
+    //chuyen CDR thanh dong tep
     std::string toFileString() const override;
+    //nap CDR tu dong tep
     bool fromFileString(const std::string& line) override;
 };
 

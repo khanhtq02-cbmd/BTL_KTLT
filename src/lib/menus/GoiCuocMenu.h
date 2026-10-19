@@ -22,15 +22,23 @@ class GoiCuocMenu {
 private:
     Repository<GoiCuoc>& store;
 
+    //them goi cuoc moi
     void themGoiCuoc();
+    //hien thi danh sach goi cuoc
     void xemDanhSach();
+    //tim kiem goi cuoc
     void timKiemGoiCuoc();
+    //sap xep danh sach goi cuoc
     void sapXepDanhSach();
+    //cap nhat goi cuoc
     void capNhatGoiCuoc();
+    //xoa goi cuoc
     void xoaGoiCuoc();
 
 public:
+    //tao menu quan ly goi cuoc
     explicit GoiCuocMenu(Repository<GoiCuoc>& s) : store(s) {}
+    //hien thi menu quan ly goi cuoc
     void showMenu();
 };
 

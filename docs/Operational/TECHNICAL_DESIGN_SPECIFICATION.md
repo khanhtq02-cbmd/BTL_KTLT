@@ -93,7 +93,7 @@ src/lib/
 ### 3.2 Lớp `HopDong` (`src/lib/models/hopdong.h` & `src/lib/models/hopdong.cpp`)
 * **Thuộc tính:**
   - `id` (Mã HĐ): Kế thừa từ `Entity`, ví dụ: `HD0001`, `HD0002`.
-  - `maKhachHang`: Mã định danh khách hàng, ví dụ: `KH0001`.
+  - `maKhachHang`: Mã định danh khách hàng với tiền tố `KH`, dùng dạng legacy `KH0001` hoặc dạng mở rộng `KH0000001`–`KH9999999`; dữ liệu legacy vẫn được hỗ trợ.
   - `soDienThoai`: Số điện thoại thuê bao 10 số, ví dụ: `0981234567`.
   - `maGoiCuoc`: Gói cước viễn thông gắn kết, ví dụ: `GC001`, `VD149`.
   - `ngayDangKy`: Ngày ký hợp đồng (`Date`).
@@ -181,6 +181,7 @@ src/lib/
 * **Thiết kế:** Namespace thuần túy (Sanitization & Validation Family) chịu trách nhiệm làm sạch chuỗi và xác thực dữ liệu nghiệp vụ không phụ thuộc vào I/O console.
 * **Phương thức chính:**
   - `bool isValidPhoneNumber(const std::string& phone, bool allowUnassigned = false)`: Xác thực số điện thoại di động Việt Nam (đúng 10 chữ số, bắt đầu bằng `0`, thuộc các đầu số `03`, `05`, `07`, `08`, `09`).
+  - `bool isValidCredential(const std::string& cccd)`: Xác thực CCCD đúng 12 chữ số ASCII, có mã tỉnh/thành trong bảng mã triển khai (bao gồm `079`), và không áp đặt năm sinh thực tế lên phần cấu trúc còn lại.
   - `std::string trim(const std::string& str)` / `CollapseSpace(const std::string& str)`: Cắt khoảng trắng đầu/cuối và thu gọn khoảng trắng liên tiếp.
   - `std::string removeSymbols(const std::string& str)`: Loại bỏ các ký tự phân tách nguy hiểm (`|`, `{`, `}`, `<`, `>`, ...) ngăn chặn lỗi format tệp tin.
   - `std::string NormalizedName(const std::string& str)`: Chuẩn hóa họ tên người dùng/khách hàng.
@@ -200,6 +201,7 @@ Kế thừa từ `std::runtime_error` để bắt và hiển thị thông báo l
 - `DuplicateIdException`: Báo lỗi khi tạo đối tượng có mã ID đã tồn tại.
 - `NotFoundException`: Báo lỗi khi không tìm thấy bản ghi theo ID.
 - `InvalidLuhnException`: Báo lỗi khi mã IMEI không vượt qua thuật toán Luhn Mod-10.
+- `InvalidCredentialException`: Báo lỗi khi CCCD không đúng định dạng 12 chữ số hoặc mã tỉnh/thành không thuộc bảng mã triển khai.
 - `InvalidDateException`: Báo lỗi khi ngày tháng không hợp lệ hoặc ngày hết hạn < ngày đăng ký.
 - `FileIOException`: Báo lỗi khi không thể mở hoặc ghi tệp dữ liệu.
 

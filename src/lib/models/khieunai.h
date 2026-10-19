@@ -32,7 +32,9 @@ private:
     std::string trangThai;
 
 public:
+    //tao phieu khieu nai mac dinh
     KhieuNai();
+    //tao phieu khieu nai day du thong tin
     KhieuNai(
         const std::string& maKN,
         const std::string& sdt,
@@ -42,20 +44,32 @@ public:
         const std::string& status = KhieuNaiConstants::STATUS_RECEIVED
     );
 
+    //lay ma phieu khieu nai
     std::string getMaKhieuNai() const { return id; }
+    //lay so dien thoai phan anh
     std::string getSoDienThoai() const { return soDienThoai; }
+    //lay loai khieu nai
     std::string getLoaiKhieuNai() const { return loaiKhieuNai; }
+    //lay ngay tiep nhan
     std::string getNgayTiepNhan() const { return ngayTiepNhan; }
+    //lay noi dung phan anh
     std::string getNoiDung() const { return noiDung; }
+    //lay trang thai xu ly
     std::string getTrangThai() const { return trangThai; }
 
+    //cap nhat trang thai phieu khieu nai
     void setTrangThai(const std::string& status);
 
-    void displayHeader() const override;
-    void displayRow() const override;
-    void displayDetail() const override;
+    //in tieu de danh sach khieu nai
+    void displayHeader(std::ostream& os = std::cout) const override;
+    //in mot dong khieu nai
+    void displayRow(std::ostream& os = std::cout) const override;
+    //in chi tiet khieu nai
+    void displayDetail(std::ostream& os = std::cout) const override;
 
+    //chuyen khieu nai thanh dong tep
     std::string toFileString() const override;
+    //nap khieu nai tu dong tep
     bool fromFileString(const std::string& line) override;
 };
 

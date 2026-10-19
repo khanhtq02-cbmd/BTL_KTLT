@@ -43,14 +43,21 @@ private:
     Repository<ThueBao>& thueBaoStore;
     Repository<GoiCuoc>& goiCuocStore;
 
+    //them hop dong moi
     void themHopDong();
+    //hien thi danh sach hop dong
     void xemDanhSach();
+    //tim kiem hop dong
     void timKiemHopDong();
+    //sap xep danh sach hop dong
     void sapXepDanhSach();
+    //cap nhat hop dong
     void capNhatHopDong();
+    //xoa hop dong
     void xoaHopDong();
 
 public:
+    //tao menu quan ly hop dong
     HopDongMenu(
         Repository<HopDong>& s,
         Repository<KhachHang>& ks,
@@ -60,6 +67,7 @@ public:
         khachHangStore(ks),
         thueBaoStore(ts),
         goiCuocStore(gs) {}
+    //hien thi menu quan ly hop dong
     void showMenu();
 };
 

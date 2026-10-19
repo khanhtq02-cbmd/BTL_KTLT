@@ -165,6 +165,12 @@ namespace FileConstants {
   Strips leading and trailing whitespace characters (`' '`, `'\t'`, `'\r'`, `'\n'`).
 - `bool FileIO::ensureDirectoryExists(const std::string& filepath)`:
   Extracts parent directory path and calls `mkdir(dir, 0755)` (POSIX) or `_mkdir(dir)` (Windows) to prevent file write failures.
+- `std::string FileIO::resolveDataDirectory(const std::string& executablePath)`:
+  Finds the complete application dataset in the current directory or beside/above the executable, preventing a launch from another working directory from creating empty shadow files.
+- `std::string FileIO::joinPath(const std::string& directory, const std::string& filename)`:
+  Joins runtime data paths with platform-neutral separators.
+
+`main()` resolves this directory before constructing repositories and exits with a clear error when the required dataset is unavailable. The regression `startup_from_other_directory` launches a staged executable from a separate directory and verifies that no empty `data/` tree is created there.
 
 ---
 
@@ -268,8 +274,9 @@ public:
 #### Key Functions (`DisplayHelper` Namespace)
 - `void printBorder(const std::vector<int>& widths, std::ostream& os = std::cout)`: Generates dynamic `+---+---+` border rows matching column widths.
 - `void printHeader(const std::vector<std::string>& headers, const std::vector<int>& widths, const std::vector<bool>& rightAlign = {}, std::ostream& os = std::cout)`: Renders table header with automatic uppercase/spacing and surrounding borders.
-- `void printRow(const std::vector<std::string>& cells, const std::vector<int>& widths, const std::vector<bool>& rightAlign = {}, std::ostream& os = std::cout)`: Formats single entity row with column padding and optional right-alignment (e.g. currency).
-- `void printCard(const std::vector<std::pair<std::string, std::string>>& fields, int labelWidth = 16, std::ostream& os = std::cout)`: Prints multi-line key-value detailed view for single-record inspection.
+- `void printRow(const std::vector<std::string>& cells, const std::vector<int>& widths, const std::vector<bool>& rightAlign = {}, std::ostream& os = std::cout)`: Formats a single entity row with column padding and optional right-alignment (e.g. currency); width fallback and alignment selection are centralized in private `detail` helpers.
+- `void printCard(const std::vector<std::pair<std::string, std::string>>& fields, int labelWidth = 16, std::ostream& os = std::cout)`: Prints multi-line key-value detail view for single-record inspection.
+- `void printTable(const std::vector<T>& items, std::ostream& os = std::cout)`: Renders the first item's header and every item row to the supplied stream; model display methods retain zero-argument `std::cout` compatibility.
 
 ---
 

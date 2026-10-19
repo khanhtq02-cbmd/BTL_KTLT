@@ -26,19 +26,27 @@ private:
     Repository<ThueBao>& thueBaoStore;
     Repository<HopDong>& hopDongStore;
 
+    //them khach hang moi
     void themKhachHang();
+    //hien thi danh sach khach hang
     void xemDanhSach();
+    //tim kiem khach hang
     void timKiemKhachHang();
+    //cap nhat khach hang
     void capNhatKhachHang();
+    //xoa khach hang
     void xoaKhachHang();
+    //hien thi danh sach SIM cua khach hang
     void xemDanhSachSIM();
 
 public:
+    //tao menu quan ly khach hang
     KhachHangMenu(Repository<KhachHang>& khRepo,
                   Repository<ThueBao>& tbRepo,
                   Repository<HopDong>& hdRepo)
         : store(khRepo), thueBaoStore(tbRepo), hopDongStore(hdRepo) {}
 
+    //hien thi menu quan ly khach hang
     void showMenu();
 };
 

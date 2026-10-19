@@ -9,6 +9,7 @@
 
 using namespace CDRConstants;
 
+//tao ban ghi CDR mac dinh
 CDR::CDR()
     : Entity(""),
       soGoi(""),
@@ -18,6 +19,7 @@ CDR::CDR()
       thoiLuong(0),
       cuocPhatSinh(0.0) {}
 
+//tao ban ghi CDR va kiem tra thong tin
 CDR::CDR(
     const std::string& maCDR,
     const std::string& caller,
@@ -44,27 +46,30 @@ CDR::CDR(
     }
 }
 
-void CDR::displayHeader() const {
+//in tieu de danh sach CDR
+void CDR::displayHeader(std::ostream& os) const {
     DisplayHelper::printHeader(
         {"Ma CDR", "So Goi", "So Nhan", "Loai DV", "Thoi Gian", "Thoi Luong", "Cuoc (VND)"},
         {COL_WIDTH_ID, COL_WIDTH_CALLER, COL_WIDTH_RECEIVER, COL_WIDTH_TYPE,
          COL_WIDTH_TIME, COL_WIDTH_DURATION, COL_WIDTH_COST},
-        {false, false, false, false, false, true, true}
+        {false, false, false, false, false, true, true}, os
     );
 }
 
-void CDR::displayRow() const {
+//in mot dong CDR
+void CDR::displayRow(std::ostream& os) const {
     std::string durationStr = (loaiDichVu == TYPE_DATA) ? (std::to_string(thoiLuong) + " MB")
                                                         : (std::to_string(thoiLuong) + " s");
     DisplayHelper::printRow(
         {id, soGoi, soNhan, loaiDichVu, thoiGianBatDau, durationStr, DisplayHelper::formatCurrency(cuocPhatSinh)},
         {COL_WIDTH_ID, COL_WIDTH_CALLER, COL_WIDTH_RECEIVER, COL_WIDTH_TYPE,
          COL_WIDTH_TIME, COL_WIDTH_DURATION, COL_WIDTH_COST},
-        {false, false, false, false, false, true, true}
+        {false, false, false, false, false, true, true}, os
     );
 }
 
-void CDR::displayDetail() const {
+//in chi tiet CDR
+void CDR::displayDetail(std::ostream& os) const {
     std::string durationStr = (loaiDichVu == TYPE_DATA) ? (std::to_string(thoiLuong) + " MB")
                                                         : (std::to_string(thoiLuong) + " giay");
     DisplayHelper::printCard({
@@ -75,15 +80,17 @@ void CDR::displayDetail() const {
         {"Thoi gian bat dau", thoiGianBatDau},
         {"Thoi luong / Dung luong", durationStr},
         {"Cuoc phat sinh", DisplayHelper::formatCurrency(cuocPhatSinh, "VND")}
-    });
+    }, 16, os);
 }
 
+//chuyen CDR thanh dong tep
 std::string CDR::toFileString() const {
     return id + "|" + soGoi + "|" + soNhan + "|" + loaiDichVu + "|" +
            thoiGianBatDau + "|" + std::to_string(thoiLuong) + "|" +
            DisplayHelper::formatCurrency(cuocPhatSinh);
 }
 
+//nap CDR tu dong tep
 bool CDR::fromFileString(const std::string& line) {
     auto tokens = FileIO::split(line, '|');
     if (tokens.size() < 7) return false;

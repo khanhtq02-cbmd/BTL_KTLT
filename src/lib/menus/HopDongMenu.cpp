@@ -4,6 +4,7 @@
 
 using namespace HopDongMenuChoices;
 
+//hien thi menu quan ly hop dong
 void HopDongMenu::showMenu() {
     while (true) {
         std::cout << "\n--------------------------------------------------------------------\n"
@@ -48,6 +49,7 @@ void HopDongMenu::showMenu() {
     }
 }
 
+//them hop dong moi
 void HopDongMenu::themHopDong() {
     std::cout << "\n>>> THEM HOP DONG DANG KY MOI <<<\n";
     std::string maHD;
@@ -61,7 +63,7 @@ void HopDongMenu::themHopDong() {
         break;
     }
 
-    std::string maKH = InputHelper::getString("Nhap Ma khach hang (VD: KH0001): ", false);
+    std::string maKH = InputHelper::getString("Nhap Ma khach hang (VD: KH0000001): ", false);
     if (std::cin.eof() || maKH.empty()) return;
     //kiem tra ma khach hang ton tai
     if (khachHangStore.findById(maKH) == nullptr) {
@@ -118,6 +120,7 @@ void HopDongMenu::themHopDong() {
     InputHelper::pause();
 }
 
+//hien thi danh sach hop dong
 void HopDongMenu::xemDanhSach() {
     std::cout << "\n>>> DANH SACH HOP DONG DANG KY <<<\n";
     const auto& list = store.getAll();
@@ -135,6 +138,7 @@ void HopDongMenu::xemDanhSach() {
     InputHelper::pause();
 }
 
+//tim kiem hop dong theo dieu kien
 void HopDongMenu::timKiemHopDong() {
     std::cout << "\n>>> TIM KIEM HOP DONG <<<\n"
               << "  [" << SEARCH_BY_ID << "] Tim theo Ma hop dong\n"
@@ -186,6 +190,7 @@ void HopDongMenu::timKiemHopDong() {
     InputHelper::pause();
 }
 
+//sap xep danh sach hop dong
 void HopDongMenu::sapXepDanhSach() {
     std::cout << "\n>>> SAP XEP DANH SACH HOP DONG <<<\n"
               << "  [" << SORT_BY_DATE_DESC << "] Theo Ngay dang ky (Moi nhat -> Cu nhat)\n"
@@ -208,6 +213,7 @@ void HopDongMenu::sapXepDanhSach() {
     xemDanhSach();
 }
 
+//cap nhat thong tin hop dong
 void HopDongMenu::capNhatHopDong() {
     std::cout << "\n>>> CAP NHAT THONG TIN HOP DONG <<<\n";
     std::string id = InputHelper::getString("Nhap Ma hop dong can cap nhat: ", false);
@@ -276,6 +282,7 @@ void HopDongMenu::capNhatHopDong() {
     InputHelper::pause();
 }
 
+//xoa hop dong khoi he thong
 void HopDongMenu::xoaHopDong() {
     std::cout << "\n>>> XOA / THANH LY HOP DONG <<<\n";
     std::string id = InputHelper::getString("Nhap Ma hop dong can xoa: ", false);

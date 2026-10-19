@@ -6,6 +6,7 @@
 
 using namespace ThueBaoMenuChoices;
 
+//them thue bao moi va kiem tra lien ket
 void ThueBaoMenu::themThueBao() {
     std::cout << "\n--- THEM THUE BAO MOI ---\n";
     std::string sdt = InputHelper::getString("Nhap so dien thoai (10 so): ");
@@ -24,7 +25,7 @@ void ThueBaoMenu::themThueBao() {
     if (std::cin.eof()) return;
     std::string loaiTB = (loaiChoice == 1) ? ThueBaoConstants::TYPE_PREPAID : ThueBaoConstants::TYPE_POSTPAID;
 
-    std::string maKH = InputHelper::getString("Nhap ma khach hang so huu (vd KH0001): ");
+    std::string maKH = InputHelper::getString("Nhap ma khach hang so huu (vd KH0000001): ");
     if (std::cin.eof() || maKH.empty()) return;
     //kiem tra khoa ngoai khach hang,tranh tham chieu sai
     if (khachHangStore.findById(maKH) == nullptr) {
@@ -60,6 +61,7 @@ void ThueBaoMenu::themThueBao() {
     }
 }
 
+//hien thi danh sach thue bao
 void ThueBaoMenu::xemDanhSach() {
     std::cout << "\n--- DANH SACH THUE BAO DI DONG ---\n";
     if (store.empty()) {
@@ -72,6 +74,7 @@ void ThueBaoMenu::xemDanhSach() {
     }
 }
 
+//tim kiem thue bao theo tu khoa
 void ThueBaoMenu::timKiemThueBao() {
     std::cout << "\n--- TIM KIEM THUE BAO ---\n";
     std::string keyword = InputHelper::getString("Nhap so dien thoai hoac ma khach hang can tim: ");
@@ -95,6 +98,7 @@ void ThueBaoMenu::timKiemThueBao() {
     }
 }
 
+//dang ky goi cuoc cho thue bao
 void ThueBaoMenu::dangKyGoiCuoc() {
     std::cout << "\n--- DANG KY / DOI GOI CUOC CHO THUE BAO ---\n";
     std::string sdt = InputHelper::getString("Nhap so dien thoai thue bao: ");
@@ -136,6 +140,7 @@ void ThueBaoMenu::dangKyGoiCuoc() {
     }
 }
 
+//cap nhat trang thai khoa mo chieu thue bao
 void ThueBaoMenu::khoaMoChieu() {
     std::cout << "\n--- KHOA / MO CHIEU HOAT DONG THUE BAO ---\n";
     std::string sdt = InputHelper::getString("Nhap so dien thoai: ");
@@ -171,6 +176,7 @@ void ThueBaoMenu::khoaMoChieu() {
     }
 }
 
+//nap tien vao tai khoan thue bao
 void ThueBaoMenu::napTien() {
     std::cout << "\n--- NAP TIEN VAO TAI KHOAN THUE BAO ---\n";
     std::string sdt = InputHelper::getString("Nhap so dien thoai can nap: ");
@@ -196,6 +202,7 @@ void ThueBaoMenu::napTien() {
     }
 }
 
+//xoa thue bao khoi he thong
 void ThueBaoMenu::xoaThueBao() {
     std::cout << "\n--- XOA THUE BAO ---\n";
     std::string sdt = InputHelper::getString("Nhap so dien thoai can xoa: ");
@@ -219,6 +226,7 @@ void ThueBaoMenu::xoaThueBao() {
     }
 }
 
+//hien thi menu quan ly thue bao
 void ThueBaoMenu::showMenu() {
     while (true) {
         std::cout << "\n====================================================================\n"

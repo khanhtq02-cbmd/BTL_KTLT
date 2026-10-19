@@ -504,7 +504,8 @@ int main(int argc, char* argv[]) {
         // =========================================================================
         {
             // Direct Customer insertion
-            std::string khId = "KH_ST_" + std::to_string(roundCounter % 200);
+            const std::string khNumber = std::to_string((roundCounter % 200) + 1);
+            std::string khId = "KH" + std::string(7 - khNumber.length(), '0') + khNumber;
             if (khachHangStore.findById(khId) == nullptr) {
                 KhachHang kh(khId, "Test Customer " + std::to_string(roundCounter),
                              "CCCD", "001200000001", "01/01/2020", "Cuc CS QLHC", "0900000000", "Hanoi");

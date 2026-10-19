@@ -9,6 +9,7 @@
 
 using namespace KhachHangConstants;
 
+//tao khach hang mac dinh
 KhachHang::KhachHang()
     : Entity(""),
       hoTen(""),
@@ -19,6 +20,7 @@ KhachHang::KhachHang()
       soDienThoai(""),
       diaChi("") {}
 
+//tao khach hang va kiem tra thong tin
 KhachHang::KhachHang(
     const std::string& maKH,
     const std::string& ten,
@@ -40,32 +42,47 @@ KhachHang::KhachHang(
         ngayCap.empty() || noiCap.empty() || soDienThoai.empty() || diaChi.empty()) {
         throw AppException("Loi: Thong tin bat buoc cua khach hang khong hop le!");
     }
+    if (!Normalized::isValidCustomerId(id)) {
+        throw AppException("Loi: Ma khach hang phai co dang KH0001 hoac KH0000001!");
+    }
+    if (loaiGiayTo != "CCCD" || !Normalized::isValidCredential(soGiayTo)) {
+        throw InvalidCredentialException(soGiayTo);
+    }
     Date::parse(ngayCap);
     if (!Normalized::isValidPhoneNumber(soDienThoai)) {
         throw InvalidPhoneNumberException(soDienThoai);
     }
 }
 
+//cap nhat ho ten khach hang
 void KhachHang::setHoTen(const std::string& value) {
     hoTen = value;
 }
 
+//cap nhat loai giay to
 void KhachHang::setLoaiGiayTo(const std::string& value) {
     loaiGiayTo = value;
 }
 
+//cap nhat so giay to
 void KhachHang::setSoGiayTo(const std::string& value) {
+    if (!Normalized::isValidCredential(value)) {
+        throw InvalidCredentialException(value);
+    }
     soGiayTo = value;
 }
 
+//cap nhat ngay cap giay to
 void KhachHang::setNgayCap(const std::string& value) {
     ngayCap = value;
 }
 
+//cap nhat noi cap giay to
 void KhachHang::setNoiCap(const std::string& value) {
     noiCap = value;
 }
 
+//cap nhat so dien thoai khach hang
 void KhachHang::setSoDienThoai(const std::string& value) {
     if (!value.empty() && !Normalized::isValidPhoneNumber(value)) {
         throw InvalidPhoneNumberException(value);
@@ -73,27 +90,31 @@ void KhachHang::setSoDienThoai(const std::string& value) {
     soDienThoai = value;
 }
 
+//cap nhat dia chi khach hang
 void KhachHang::setDiaChi(const std::string& value) {
     diaChi = value;
 }
 
-void KhachHang::displayHeader() const {
+//in tieu de danh sach khach hang
+void KhachHang::displayHeader(std::ostream& os) const {
     DisplayHelper::printHeader(
         {"Ma KH", "Ho Va Ten", "Loai GT", "So Giay To", "Ngay Cap", "Noi Cap", "So Dien Thoai", "Dia Chi"},
         {COL_WIDTH_ID, COL_WIDTH_NAME, COL_WIDTH_DOC_TYPE, COL_WIDTH_DOC_NUMBER, COL_WIDTH_DATE, COL_WIDTH_ISSUER, COL_WIDTH_PHONE, COL_WIDTH_ADDRESS},
-        {false, false, false, false, false, false, false, false}
+        {false, false, false, false, false, false, false, false}, os
     );
 }
 
-void KhachHang::displayRow() const {
+//in mot dong khach hang
+void KhachHang::displayRow(std::ostream& os) const {
     DisplayHelper::printRow(
         {id, hoTen, loaiGiayTo, soGiayTo, ngayCap, noiCap, soDienThoai, diaChi},
         {COL_WIDTH_ID, COL_WIDTH_NAME, COL_WIDTH_DOC_TYPE, COL_WIDTH_DOC_NUMBER, COL_WIDTH_DATE, COL_WIDTH_ISSUER, COL_WIDTH_PHONE, COL_WIDTH_ADDRESS},
-        {false, false, false, false, false, false, false, false}
+        {false, false, false, false, false, false, false, false}, os
     );
 }
 
-void KhachHang::displayDetail() const {
+//in chi tiet khach hang
+void KhachHang::displayDetail(std::ostream& os) const {
     DisplayHelper::printCard({
         {"Ma khach hang", id},
         {"Ho va ten", hoTen},
@@ -103,9 +124,10 @@ void KhachHang::displayDetail() const {
         {"Noi cap", noiCap},
         {"So dien thoai", soDienThoai},
         {"Dia chi", diaChi}
-    });
+    }, 16, os);
 }
 
+//chuyen khach hang thanh dong tep
 std::string KhachHang::toFileString() const {
     std::ostringstream oss;
     oss << id << "|"
@@ -119,6 +141,7 @@ std::string KhachHang::toFileString() const {
     return oss.str();
 }
 
+//nap khach hang tu dong tep
 bool KhachHang::fromFileString(const std::string& line) {
     std::vector<std::string> tokens = FileIO::split(line, '|');
     const size_t EXPECTED_FIELD_COUNT = 8;

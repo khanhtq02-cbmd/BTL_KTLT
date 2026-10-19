@@ -6,6 +6,7 @@
 
 using namespace HoaDonMenuChoices;
 
+//lap hoa don cuoc phat sinh
 void HoaDonMenu::lapHoaDon() {
     std::cout << "\n--- LAP HOA DON CUOC PHAT SINH TRONG THANG ---\n";
     std::string maHD = InputHelper::getString("Nhap ma hoa don (VD: HD11): ");
@@ -45,6 +46,7 @@ void HoaDonMenu::lapHoaDon() {
     }
 }
 
+//hien thi danh sach hoa don
 void HoaDonMenu::xemDanhSachHoaDon() {
     std::cout << "\n--- DANH SACH HOA DON CUOC ---\n";
     if (hoaDonStore.empty()) {
@@ -55,6 +57,7 @@ void HoaDonMenu::xemDanhSachHoaDon() {
     std::cout << "Tong so: " << hoaDonStore.size() << " hoa don.\n";
 }
 
+//thanh toan hoa don
 void HoaDonMenu::thanhToanHoaDon() {
     std::cout << "\n--- THANH TOAN HOA DON CUOC ---\n";
     std::string maHD = InputHelper::getString("Nhap ma hoa don can thanh toan: ");
@@ -85,6 +88,7 @@ void HoaDonMenu::thanhToanHoaDon() {
     }
 }
 
+//tra cuu hoa don theo so dien thoai
 void HoaDonMenu::traCuuTheoSoDienThoai() {
     std::cout << "\n--- TRA CUU HOA DON THEO SO THUE BAO ---\n";
     std::string sdt = InputHelper::getPhoneNumber("Nhap so dien thoai: ", false);
@@ -102,6 +106,7 @@ void HoaDonMenu::traCuuTheoSoDienThoai() {
     }
 }
 
+//tiep nhan phieu khieu nai
 void HoaDonMenu::tiepNhanKhieuNai() {
     std::cout << "\n--- TIEP NHAN PHIEU KHIEU NAI / TRA SOAT CUOC ---\n";
     std::string maKN = InputHelper::getString("Nhap ma phieu khiieu nai (VD: KN0001): ");
@@ -151,6 +156,7 @@ void HoaDonMenu::tiepNhanKhieuNai() {
     }
 }
 
+//xu ly phieu khieu nai
 void HoaDonMenu::xuLyKhieuNai() {
     std::cout << "\n--- XU LY / TRA SOAT PHIEU KHIEU NAI ---\n";
     std::string maKN = InputHelper::getString("Nhap ma phieu khiieu nai can xu ly: ");
@@ -182,6 +188,7 @@ void HoaDonMenu::xuLyKhieuNai() {
     }
 }
 
+//hien thi danh sach khieu nai
 void HoaDonMenu::xemDanhSachKhieuNai() {
     std::cout << "\n--- DANH SACH PHIEU KHIEU NAI / TRA SOAT ---\n";
     if (khieuNaiStore.empty()) {
@@ -192,6 +199,7 @@ void HoaDonMenu::xemDanhSachKhieuNai() {
     std::cout << "Tong so: " << khieuNaiStore.size() << " phieu khiieu nai.\n";
 }
 
+//hien thi menu quan ly hoa don va khieu nai
 void HoaDonMenu::showMenu() {
     while (true) {
         std::cout << "\n====================================================================\n"
