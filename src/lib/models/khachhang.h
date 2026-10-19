@@ -4,6 +4,7 @@
 
 #include <string>
 #include "Entity.h"
+#include "Date.h"
 
 namespace KhachHangConstants {
     const int COL_WIDTH_ID = 10;
@@ -21,20 +22,20 @@ private:
     std::string hoTen;
     std::string loaiGiayTo;
     std::string soGiayTo;
-    std::string ngayCap;
+    Date ngayCap;
     std::string noiCap;
     std::string soDienThoai;
     std::string diaChi;
 
 public:
     KhachHang();
-    
+
     KhachHang(
         const std::string& maKH,
         const std::string& hoTen,
         const std::string& loaiGiayTo,
         const std::string& soGiayTo,
-        const std::string& ngayCap,
+        const Date& ngayCap,
         const std::string& noiCap,
         const std::string& soDienThoai,
         const std::string& diaChi
@@ -44,7 +45,7 @@ public:
     std::string getHoTen() const { return hoTen; }
     std::string getLoaiGiayTo() const { return loaiGiayTo; }
     std::string getSoGiayTo() const { return soGiayTo; }
-    std::string getNgayCap() const { return ngayCap; }
+    Date getNgayCap() const { return ngayCap; }
     std::string getNoiCap() const { return noiCap; }
     std::string getSoDienThoai() const { return soDienThoai; }
     std::string getDiaChi() const { return diaChi; }
@@ -52,7 +53,7 @@ public:
     void setHoTen(const std::string& value);
     void setLoaiGiayTo(const std::string& value);
     void setSoGiayTo(const std::string& value);
-    void setNgayCap(const std::string& value);
+    void setNgayCap(const Date& value);
     void setNoiCap(const std::string& value);
     void setSoDienThoai(const std::string& value);
     void setDiaChi(const std::string& value);
