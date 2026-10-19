@@ -24,7 +24,7 @@ src/lib/
 │   ├── thuebao.h / .cpp       # Mobile Subscribers and Account Balance
 │   ├── khachhang.h / .cpp     # Customer eKYC and SIM Ownership
 │   ├── naptien.h / .cpp       # Top-Up Transactions
-│   ├── cdr.h / .cpp           # GhiCuocGoi (CDR) Usage Records
+│   ├── GhiCuocGoi.h / .cpp    # GhiCuocGoi (CDR) Usage Records
 │   ├── hoadon.h / .cpp        # Billing Invoices
 │   └── khieunai.h / .cpp      # Customer Dispute Tickets
 │
@@ -122,7 +122,7 @@ src/lib/
   - Tính tổng toàn bộ: $S = \sum_{i=1}^{15} f(d_i)$.
   - Nếu $S \pmod{10} == 0$, mã IMEI là **hợp lệ**. Ngược lại là **không hợp lệ**.
 
-### 3.4 Lớp `GhiCuocGoi` / `CDR` (`src/lib/models/cdr.h` & `src/lib/models/cdr.cpp`)
+### 3.4 Lớp `GhiCuocGoi` / `CDR` (`src/lib/models/GhiCuocGoi.h` & `src/lib/models/GhiCuocGoi.cpp`)
 
 `CDR` là mã kỹ thuật của **GhiCuocGoi**, dùng để lưu một sự kiện sử dụng dịch vụ viễn thông: cuộc gọi thoại, tin nhắn SMS hoặc phiên Data. Mô hình kế thừa `Entity` để dùng chung CRUD, hiển thị và tuần tự hóa của `Repository<T>`.
 
@@ -135,7 +135,7 @@ src/lib/
   - `thoiLuong`: Số giây với thoại/SMS hoặc số MB với Data.
   - `cuocPhatSinh`: Cước phát sinh, tính bằng VND.
 
-* **Định dạng lưu trữ:** `data/cdr.txt`, mỗi dòng có bảy trường phân cách bằng `|`:
+* **Định dạng lưu trữ:** `data/GhiCuocGoi.txt`, mỗi dòng có bảy trường phân cách bằng `|`:
   ```text
   CDR0001|0981234567|0912345678|Thoai|15/01/2024 08:30:00|120|2000
   ```

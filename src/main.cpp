@@ -8,7 +8,7 @@
 #include "lib/models/khachhang.h"
 #include "lib/models/hoadon.h"
 #include "lib/models/naptien.h"
-#include "lib/models/cdr.h"
+#include "lib/models/GhiCuocGoi.h"
 #include "lib/models/khieunai.h"
 #include "lib/menus/HopDongMenu.h"
 #include "lib/menus/ThietBiIMEIMenu.h"
@@ -38,7 +38,7 @@ int main() {
     Repository<KhachHang> khachHangStore(FilePaths::KHACHHANG_DATA);
     Repository<HoaDon> hoaDonStore(FilePaths::HOADON_DATA);
     Repository<NapTien> napTienStore(FilePaths::NAPTIEN_DATA);
-    Repository<CDR> cdrStore(FilePaths::CDR_DATA);
+    Repository<CDR> ghiCuocGoiStore(FilePaths::GHICUOCGOI_DATA);
     Repository<KhieuNai> khieuNaiStore(FilePaths::KHIEUNAI_DATA);
 
     try {
@@ -49,7 +49,7 @@ int main() {
         khachHangStore.loadFromFile();
         hoaDonStore.loadFromFile();
         napTienStore.loadFromFile();
-        cdrStore.loadFromFile();
+        ghiCuocGoiStore.loadFromFile();
         khieuNaiStore.loadFromFile();
     } catch (const std::exception& e) {
         std::cerr << "[LOI] Loi khi tai du lieu ban dau: " << e.what() << "\n";
@@ -61,7 +61,7 @@ int main() {
     ThueBaoMenu thueBaoMenu(thueBaoStore, goiCuocStore, khachHangStore);
     HopDongMenu hopDongMenu(hopDongStore, khachHangStore, thueBaoStore, goiCuocStore);
     ThietBiIMEIMenu imeiMenu(imeiStore, thueBaoStore);
-    NapTienMenu napTienMenu(napTienStore, thueBaoStore, cdrStore);
+    NapTienMenu napTienMenu(napTienStore, thueBaoStore, ghiCuocGoiStore);
     HoaDonMenu hoaDonMenu(hoaDonStore, thueBaoStore, khieuNaiStore);
 
     while (true) {
@@ -93,7 +93,7 @@ int main() {
                 khachHangStore.saveToFile();
                 hoaDonStore.saveToFile();
                 napTienStore.saveToFile();
-                cdrStore.saveToFile();
+                ghiCuocGoiStore.saveToFile();
                 khieuNaiStore.saveToFile();
                 std::cout << "\n[Luu du lieu] Da dong bo toan bo du lieu he thong thanh cong.\n";
             } catch (const std::exception& e) {

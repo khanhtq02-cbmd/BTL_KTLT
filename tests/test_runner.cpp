@@ -24,7 +24,7 @@
 #include "KhachHangMenu.h"
 #include "NapTienMenu.h"
 #include "HoaDonMenu.h"
-#include "cdr.h"
+#include "GhiCuocGoi.h"
 #include "khieunai.h"
 #include "BTSRegister.h"
 #include <sstream>
@@ -996,6 +996,9 @@ void testNewRepositoriesAndMenus() {
 
 void testCDRAndKhieuNaiModels() {
     std::cout << "[RUN] Kiem thu CDR va KhieuNai models...\n";
+    TEST_ASSERT(FilePaths::GHICUOCGOI_DATA == "data/GhiCuocGoi.txt", "Duong dan GhiCuocGoi phai dung ten file moi");
+    std::ifstream ghiCuocGoiFixture(FilePaths::GHICUOCGOI_DATA);
+    TEST_ASSERT(ghiCuocGoiFixture.good(), "Tep du lieu GhiCuocGoi phai ton tai");
 
     // Test CDR
     CDR cdr("CDR0001", "0981234567", "0912345678", "Thoai", "15/01/2024 08:30:00", 120, 2000.0);
@@ -1080,7 +1083,7 @@ void testRemainingMenuControllers() {
     const std::string TB_TEST_FILE = "data/test_tb_ctrl.txt";
     const std::string HD_TEST_FILE = "data/test_hd_ctrl.txt";
     const std::string NT_TEST_FILE = "data/test_nt_ctrl.txt";
-    const std::string CDR_TEST_FILE = "data/test_cdr_ctrl.txt";
+    const std::string GHICUOCGOI_TEST_FILE = "data/test_GhiCuocGoi_ctrl.txt";
     const std::string INV_TEST_FILE = "data/test_inv_ctrl.txt";
     const std::string KN_TEST_FILE = "data/test_kn_ctrl.txt";
 
@@ -1102,7 +1105,7 @@ void testRemainingMenuControllers() {
     Repository<NapTien> ntRepo(NT_TEST_FILE);
     ntRepo.clear();
 
-    Repository<CDR> cdrRepo(CDR_TEST_FILE);
+    Repository<CDR> cdrRepo(GHICUOCGOI_TEST_FILE);
     cdrRepo.clear();
 
     Repository<HoaDon> hoaDonRepo(INV_TEST_FILE);
@@ -1181,7 +1184,7 @@ void testRemainingMenuControllers() {
     std::remove(TB_TEST_FILE.c_str());
     std::remove(HD_TEST_FILE.c_str());
     std::remove(NT_TEST_FILE.c_str());
-    std::remove(CDR_TEST_FILE.c_str());
+    std::remove(GHICUOCGOI_TEST_FILE.c_str());
     std::remove(INV_TEST_FILE.c_str());
     std::remove(KN_TEST_FILE.c_str());
 }

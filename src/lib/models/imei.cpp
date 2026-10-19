@@ -58,11 +58,15 @@ void ThietBiIMEI::setMaIMEI(const std::string& imei) {
     }
     id = imei;
 }
-
+//danh sach den
 bool ThietBiIMEI::isBlacklisted() const {
     return trangThai == STATUS_LOCKED;
 }
-
+//tra ve status
+//if(trangThai==locked)
+//return STATUS_LOCKED
+//else
+//RETURN STATUS_ACTIVE
 void ThietBiIMEI::setBlacklist(bool lock) {
     trangThai = lock ? STATUS_LOCKED : STATUS_ACTIVE;
 }
@@ -88,7 +92,7 @@ void ThietBiIMEI::goSIM() {
 void ThietBiIMEI::capNhatBTS(const std::string& bts) {
     tramBTSGanNhat = bts;
 }
-
+//hienthi
 void ThietBiIMEI::displayHeader() const {
     DisplayHelper::printHeader(
         {"Ma IMEI", "Ten Thiet Bi", "Hang SX", "So Dien Thoai", "Ngay Kich Hoat", "Trang Thai", "Tram BTS Gan"},

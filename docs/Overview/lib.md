@@ -40,7 +40,7 @@ src/lib/
     ├── hopdong.h / .cpp       # Service Contracts (Trần Đức Anh - B24DCVT021)
     ├── imei.h / .cpp          # Terminal Devices & 3GPP Luhn Checksum (Trần Đức Anh - B24DCVT021)
     ├── naptien.h / .cpp       # Top-Up Transactions (Phạm Đức Chính - B24DCVT047)
-    ├── cdr.h / .cpp           # GhiCuocGoi (CDR) (Phạm Đức Chính - B24DCVT047)
+    ├── GhiCuocGoi.h / .cpp    # GhiCuocGoi (CDR) (Phạm Đức Chính - B24DCVT047)
     ├── hoadon.h / .cpp        # Billing Invoices (Nguyễn Minh Quang - B24DCVT308)
     └── khieunai.h / .cpp      # Customer Dispute Tickets (Nguyễn Minh Quang - B24DCVT308)
 ```
@@ -442,7 +442,7 @@ Các mô hình dưới đây đã được triển khai trong `src/lib/models/` 
 | `models/hopdong.h` / `menus/HopDongMenu.h` | Hợp đồng dịch vụ | Trần Đức Anh (B24DCVT021) | Ký kết, gia hạn, chấm dứt, ràng buộc SĐT/gói cước |
 | `models/imei.h` / `menus/ThietBiIMEIMenu.h` | Thiết bị đầu cuối IMEI | Trần Đức Anh (B24DCVT021) | Luhn 3GPP, EIR blacklist, BTS |
 | `models/naptien.h` / `menus/NapTienMenu.h` | Phiếu nạp tiền | Phạm Đức Chính (B24DCVT047) | Nạp thẻ cào, ngân hàng, ví điện tử |
-| `models/cdr.h` / `menus/NapTienMenu.h` | **GhiCuocGoi (CDR)** | Phạm Đức Chính (B24DCVT047) | Ghi cuộc gọi/SMS/Data, lưu cước, khấu trừ thuê bao trả trước |
+| `models/GhiCuocGoi.h` / `menus/NapTienMenu.h` | **GhiCuocGoi (CDR)** | Phạm Đức Chính (B24DCVT047) | Ghi cuộc gọi/SMS/Data, lưu cước, khấu trừ thuê bao trả trước |
 | `models/hoadon.h` / `menus/HoaDonMenu.h` | Hóa đơn cước | Nguyễn Minh Quang (B24DCVT308) | Lập hóa đơn và tổng hợp cước |
 | `models/khieunai.h` / `menus/HoaDonMenu.h` | Khiếu nại cước | Nguyễn Minh Quang (B24DCVT308) | Tiếp nhận và xử lý phiếu khiếu nại |
 

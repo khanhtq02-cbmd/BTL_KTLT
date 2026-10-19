@@ -86,7 +86,7 @@ ctest --test-dir build --output-on-failure
    - `[1] Lap phieu nap tien`: Nhập mã giao dịch, số thuê bao, số tiền, hình thức nạp và ngày nạp.
    - `[2] Xem danh sach phieu nap tien`: Hiển thị lịch sử giao dịch nạp tiền.
    - `[3] Tra cuu lich su nap tien theo so thue bao`: Lọc giao dịch theo số thuê bao.
-   - `[4] Ghi nhan ban ghi cuoc goi / SMS / Data`: Tạo một bản ghi `GhiCuocGoi (CDR)` trong `data/cdr.txt`.
+   - `[4] Ghi nhan ban ghi cuoc goi / SMS / Data`: Tạo một bản ghi `GhiCuocGoi (CDR)` trong `data/GhiCuocGoi.txt`.
    - `[5] Xem danh sach nhat ky cuoc goi CDR`: Hiển thị toàn bộ bản ghi CDR.
 3. Bản ghi CDR gồm bảy trường: `maCDR`, `soGoi`, `soNhan`, `loaiDichVu`, `thoiGianBatDau`, `thoiLuong` và `cuocPhatSinh`.
 4. Với thuê bao trả trước, hệ thống chỉ khấu trừ cước khi số dư hiện tại đủ lớn; bản ghi CDR vẫn được lưu độc lập.

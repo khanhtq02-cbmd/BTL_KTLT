@@ -324,7 +324,7 @@ sequenceDiagram
 
 ### 5.2 Luồng GhiCuocGoi (CDR): Ghi Nhận Và Lưu Cước Phát Sinh
 
-Luồng này bắt đầu từ menu nạp tiền, nhưng bản ghi sử dụng được lưu độc lập trong `Repository<CDR>` và `data/cdr.txt`.
+Luồng này bắt đầu từ menu nạp tiền, nhưng bản ghi sử dụng được lưu độc lập trong `Repository<CDR>` và `data/GhiCuocGoi.txt`.
 
 ```mermaid
 sequenceDiagram
@@ -335,7 +335,7 @@ sequenceDiagram
     participant TBRepo as Repository<ThueBao>
     participant CDRModel as CDR / GhiCuocGoi
     participant CDRRepo as Repository<CDR>
-    participant Disk as data/cdr.txt
+    participant Disk as data/GhiCuocGoi.txt
 
     User->>Menu: Chọn [4] Ghi nhận bản ghi CDR
     Menu->>Input: Nhập mã CDR, số gọi, loại dịch vụ

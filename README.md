@@ -13,7 +13,7 @@ Dự án được xây dựng bởi nhóm 5 sinh viên Lớp D24CQVT01-B, Khoa V
 | 1 | **Nguyễn Tùng Dương** | `B24DCVT106` | D24CQVT01-B | **Quản Lí Thuê Bao Di Động**<br>(Gói cước; Loại hình thuê bao trả trước/trả sau) | `src/lib/models/goicuoc.*`<br>`src/lib/models/thuebao.*`<br>`src/lib/menus/GoiCuocMenu.*`<br>`src/lib/menus/ThueBaoMenu.*` | Đang tích hợp |
 | 2 | **Trương Quốc Khánh** | `B24DCVT201` | D24CQVT01-B | **Khách hàng; SIM – số thuê bao** | `src/lib/models/khachhang.*`<br>`src/lib/menus/KhachHangMenu.*` | Đang tích hợp |
 | 3 | **Trần Đức Anh** | **`B24DCVT021`** | **D24CQVT01-B** | **Hợp đồng đăng ký; Thiết bị đầu cuối (IMEI)**<br>(UC01: Hợp đồng dịch vụ<br>UC02: Thiết bị IMEI 3GPP Luhn) | **`src/lib/models/hopdong.*`<br>`src/lib/models/imei.*`<br>`src/lib/menus/HopDongMenu.*`<br>`src/lib/menus/ThietBiIMEIMenu.*`** | **Hoàn thành 100%<br>(Grade A - 144 tests)** |
-| 4 | **Phạm Đức Chính** | `B24DCVT047` | D24CQVT01-B | **Phiếu nạp tiền; GhiCuocGoi (CDR)** | `src/lib/models/naptien.*`<br>`src/lib/models/cdr.*`<br>`src/lib/menus/NapTienMenu.*` | Hoàn thành |
+| 4 | **Phạm Đức Chính** | `B24DCVT047` | D24CQVT01-B | **Phiếu nạp tiền; GhiCuocGoi (CDR)** | `src/lib/models/naptien.*`<br>`src/lib/models/GhiCuocGoi.*`<br>`src/lib/menus/NapTienMenu.*` | Hoàn thành |
 | 5 | **Nguyễn Minh Quang** | `B24DCVT308` | D24CQVT01-B | **Hóa đơn cước; Phiếu khiếu nại** | `src/lib/models/hoadon.*`<br>`src/lib/models/khieunai.*`<br>`src/lib/menus/HoaDonMenu.*` | Đang tích hợp |
 
 * **Nhánh làm việc chính của phân hệ:** `DucAnh-B24DCVT021`
@@ -85,7 +85,7 @@ src/
     │   ├── hopdong.h / .cpp         # Hợp đồng thuê bao (Trần Đức Anh - B24DCVT021)
     │   ├── imei.h / .cpp            # Thiết bị IMEI (Trần Đức Anh - B24DCVT021)
     │   ├── naptien.h / .cpp         # Nạp tiền (Phạm Đức Chính - B24DCVT047)
-    │   ├── cdr.h / .cpp             # GhiCuocGoi (CDR) (Phạm Đức Chính - B24DCVT047)
+    │   ├── GhiCuocGoi.h / .cpp      # GhiCuocGoi (CDR) (Phạm Đức Chính - B24DCVT047)
     │   ├── hoadon.h / .cpp          # Hóa đơn cước (Nguyễn Minh Quang - B24DCVT308)
     │   └── khieunai.h / .cpp        # Khiếu nại (Nguyễn Minh Quang - B24DCVT308)
     │

@@ -6,14 +6,14 @@
 
 ## Thành phần
 
-- Model: `src/lib/models/cdr.h`, `src/lib/models/cdr.cpp`
+- Model: `src/lib/models/GhiCuocGoi.h`, `src/lib/models/GhiCuocGoi.cpp`
 - Menu: `src/lib/menus/NapTienMenu.h`, `src/lib/menus/NapTienMenu.cpp`
-- Kho dữ liệu: `data/cdr.txt`
+- Kho dữ liệu: `data/GhiCuocGoi.txt`
 - Repository: `Repository<CDR>` được khởi tạo trong `src/main.cpp`
 
 ## Schema dữ liệu
 
-Mỗi dòng trong `data/cdr.txt` có bảy trường, phân cách bằng `|`:
+Mỗi dòng trong `data/GhiCuocGoi.txt` có bảy trường, phân cách bằng `|`:
 
 ```text
 maCDR|soGoi|soNhan|loaiDichVu|thoiGianBatDau|thoiLuong|cuocPhatSinh

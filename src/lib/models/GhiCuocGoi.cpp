@@ -1,4 +1,4 @@
-#include "cdr.h"
+#include "GhiCuocGoi.h"
 #include "Exceptions.h"
 #include "fileio.h"
 #include "Normalized.h"
