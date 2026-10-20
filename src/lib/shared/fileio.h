@@ -13,7 +13,7 @@ namespace FilePaths {
     const std::string THUEBAO_DATA = "data/thuebao.txt";
     const std::string HOADON_DATA = "data/hoadon.txt";
     const std::string NAPTIEN_DATA = "data/naptien.txt";
-    const std::string GHICUOCGOI_DATA = "data/GhiCuocGoi.txt";
+    const std::string GHICUOCGOI_DATA = "data/ghicuocgoi.txt";
     const std::string KHIEUNAI_DATA = "data/khieunai.txt";
     const std::string TMP_DIR = "tmps";
 }

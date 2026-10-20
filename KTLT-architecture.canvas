@@ -183,7 +183,7 @@
     {
       "id": "cdr-model",
       "type": "file",
-      "file": "src/lib/models/GhiCuocGoi.h",
+      "file": "src/lib/models/ghicuocgoi.h",
       "x": 630,
       "y": 760,
       "width": 390,
@@ -303,7 +303,7 @@
     {
       "id": "data-cdr",
       "type": "file",
-      "file": "data/GhiCuocGoi.txt",
+      "file": "data/ghicuocgoi.txt",
       "x": 1710,
       "y": 600,
       "width": 300,

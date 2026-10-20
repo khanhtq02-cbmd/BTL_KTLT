@@ -24,7 +24,7 @@ flowchart TD
         Main -->|Choice 3| ThueBaoMenu["ThueBaoMenu"]
         Main -->|Choice 4| HDMenu["HopDongMenu"]
         Main -->|Choice 5| IMEIMenu["ThietBiIMEIMenu"]
-        Main -->|Choice 6| NapTienMenu["NapTienMenu: GhiCuocGoi (CDR)"]
+        Main -->|Choice 6| NapTienMenu["NapTienMenu: ghicuocgoi (CDR)"]
         Main -->|Choice 7| HoaDonMenu["HoaDonMenu"]
     end
 

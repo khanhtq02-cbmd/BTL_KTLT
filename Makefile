@@ -17,7 +17,7 @@ LIB_SRCS = src/lib/shared/Date.cpp \
            src/lib/models/thuebao.cpp \
            src/lib/models/hoadon.cpp \
            src/lib/models/naptien.cpp \
-           src/lib/models/GhiCuocGoi.cpp \
+           src/lib/models/ghicuocgoi.cpp \
            src/lib/models/khieunai.cpp \
            src/lib/menus/HopDongMenu.cpp \
            src/lib/menus/ThietBiIMEIMenu.cpp \

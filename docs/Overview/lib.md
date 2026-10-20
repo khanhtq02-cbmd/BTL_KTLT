@@ -30,7 +30,7 @@ src/lib/
 │   ├── GoiCuocMenu.h / .cpp   # Console Controller for Tariff Packages
 │   ├── ThueBaoMenu.h / .cpp   # Console Controller for Mobile Subscribers
 │   ├── KhachHangMenu.h / .cpp # Console Controller for Customers & SIM eKYC
-│   ├── NapTienMenu.h / .cpp   # Console Controller for Top-Up & GhiCuocGoi
+│   ├── NapTienMenu.h / .cpp   # Console Controller for Top-Up & ghicuocgoi
 │   └── HoaDonMenu.h / .cpp    # Console Controller for Billing & Invoices
 │
 └── models/                    # Tier 4: Core Domain Entities
@@ -40,7 +40,7 @@ src/lib/
     ├── hopdong.h / .cpp       # Service Contracts (Trần Đức Anh - B24DCVT021)
     ├── imei.h / .cpp          # Terminal Devices & 3GPP Luhn Checksum (Trần Đức Anh - B24DCVT021)
     ├── naptien.h / .cpp       # Top-Up Transactions (Phạm Đức Chính - B24DCVT047)
-    ├── GhiCuocGoi.h / .cpp    # GhiCuocGoi (CDR) (Phạm Đức Chính - B24DCVT047)
+    ├── ghicuocgoi.h / .cpp    # ghicuocgoi (CDR) (Phạm Đức Chính - B24DCVT047)
     ├── hoadon.h / .cpp        # Billing Invoices (Nguyễn Minh Quang - B24DCVT308)
     └── khieunai.h / .cpp      # Customer Dispute Tickets (Nguyễn Minh Quang - B24DCVT308)
 ```
@@ -56,7 +56,7 @@ Designed for a 3rd-year Telecommunications Engineering curriculum (PTIT, 2026–
 - **Direct algorithmic validation:** Telecom domain algorithms (such as the 3GPP TS 22.016 Luhn Mod-10 checksum) and validation routines operate directly on fundamental types with deterministic $O(N)$ complexity and zero opaque regex overhead.
 
 ### 2.2. Domain Invariants & Separation of Concerns (SoC)
-- **Layered 4-tier decoupling:** Presentation Menu Controllers $\rightarrow$ Domain Models $\rightarrow$ Core Foundations $\rightarrow$ Storage. All domain entities (`HopDong`, `ThietBiIMEI`, `GoiCuoc`, `ThueBao`, `KhachHang`, `NapTien`, `GhiCuocGoi`, `HoaDon`, `KhieuNai`) use the shared `Entity` and `Repository<T>` contracts and remain decoupled from terminal console I/O (`InputHelper`).
+- **Layered 4-tier decoupling:** Presentation Menu Controllers $\rightarrow$ Domain Models $\rightarrow$ Core Foundations $\rightarrow$ Storage. All domain entities (`HopDong`, `ThietBiIMEI`, `GoiCuoc`, `ThueBao`, `KhachHang`, `NapTien`, `ghicuocgoi`, `HoaDon`, `KhieuNai`) use the shared `Entity` and `Repository<T>` contracts and remain decoupled from terminal console I/O (`InputHelper`).
 - **Clean polymorphic design:** Single-level polymorphic inheritance (`Entity` $\rightarrow$ `HopDong`, `ThietBiIMEI`) enforcing pure virtual serialization contracts (`toFileString`, `fromFileString`) and table presentation layouts without deep, brittle inheritance hierarchies.
 - **Fail-Safe Exception Hierarchy:** Standardized domain error propagation derived from `std::runtime_error` (`ValidationException`, `InvalidDateException`, `InvalidPhoneNumberException`, `InvalidLuhnException`, `DuplicateIdException`, `NotFoundException`).
 
@@ -449,7 +449,7 @@ Các mô hình dưới đây đã được triển khai trong `src/lib/models/` 
 | `models/hopdong.h` / `menus/HopDongMenu.h` | Hợp đồng dịch vụ | Trần Đức Anh (B24DCVT021) | Ký kết, gia hạn, chấm dứt, ràng buộc SĐT/gói cước |
 | `models/imei.h` / `menus/ThietBiIMEIMenu.h` | Thiết bị đầu cuối IMEI | Trần Đức Anh (B24DCVT021) | Luhn 3GPP, EIR blacklist, BTS |
 | `models/naptien.h` / `menus/NapTienMenu.h` | Phiếu nạp tiền | Phạm Đức Chính (B24DCVT047) | Nạp thẻ cào, ngân hàng, ví điện tử |
-| `models/GhiCuocGoi.h` / `menus/NapTienMenu.h` | **GhiCuocGoi (CDR)** | Phạm Đức Chính (B24DCVT047) | Ghi cuộc gọi/SMS/Data, lưu cước, khấu trừ thuê bao trả trước |
+| `models/ghicuocgoi.h` / `menus/NapTienMenu.h` | **ghicuocgoi (CDR)** | Phạm Đức Chính (B24DCVT047) | Ghi cuộc gọi/SMS/Data, lưu cước, khấu trừ thuê bao trả trước |
 | `models/hoadon.h` / `menus/HoaDonMenu.h` | Hóa đơn cước | Nguyễn Minh Quang (B24DCVT308) | Lập hóa đơn và tổng hợp cước |
 | `models/khieunai.h` / `menus/HoaDonMenu.h` | Khiếu nại cước | Nguyễn Minh Quang (B24DCVT308) | Tiếp nhận và xử lý phiếu khiếu nại |
 

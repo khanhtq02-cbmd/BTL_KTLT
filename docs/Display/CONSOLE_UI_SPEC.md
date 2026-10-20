@@ -22,7 +22,7 @@
   [3] Quan ly Thue bao di dong
   [4] Quan ly Hop dong dich vu
   [5] Quan ly Thiet bi dau cuoi IMEI
-  [6] Quan ly Nap tien & GhiCuocGoi (CDR)
+  [6] Quan ly Nap tien & ghicuocgoi (CDR)
   [7] Quan ly Hoa don & Khieu nai
   [0] Thoat chuong trinh
 ====================================================================

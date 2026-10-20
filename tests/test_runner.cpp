@@ -24,7 +24,7 @@
 #include "KhachHangMenu.h"
 #include "NapTienMenu.h"
 #include "HoaDonMenu.h"
-#include "GhiCuocGoi.h"
+#include "ghicuocgoi.h"
 #include "khieunai.h"
 #include "BTSRegister.h"
 #include <sstream>
@@ -1058,9 +1058,9 @@ void testNewRepositoriesAndMenus() {
 
 void testCDRAndKhieuNaiModels() {
     std::cout << "[RUN] Kiem thu CDR va KhieuNai models...\n";
-    TEST_ASSERT(FilePaths::GHICUOCGOI_DATA == "data/GhiCuocGoi.txt", "Duong dan GhiCuocGoi phai dung ten file moi");
-    std::ifstream ghiCuocGoiFixture(FilePaths::GHICUOCGOI_DATA);
-    TEST_ASSERT(ghiCuocGoiFixture.good(), "Tep du lieu GhiCuocGoi phai ton tai");
+    TEST_ASSERT(FilePaths::GHICUOCGOI_DATA == "data/ghicuocgoi.txt", "Duong dan ghicuocgoi phai dung ten file moi");
+    std::ifstream ghicuocgoiFixture(FilePaths::GHICUOCGOI_DATA);
+    TEST_ASSERT(ghicuocgoiFixture.good(), "Tep du lieu ghicuocgoi phai ton tai");
 
     // Test CDR
     CDR cdr("CDR0001", "0981234567", "0912345678", "Thoai", "15/01/2024 08:30:00", 120, 2000.0);
@@ -1145,7 +1145,7 @@ void testRemainingMenuControllers() {
     const std::string TB_TEST_FILE = "data/test_tb_ctrl.txt";
     const std::string HD_TEST_FILE = "data/test_hd_ctrl.txt";
     const std::string NT_TEST_FILE = "data/test_nt_ctrl.txt";
-    const std::string GHICUOCGOI_TEST_FILE = "data/test_GhiCuocGoi_ctrl.txt";
+    const std::string GHICUOCGOI_TEST_FILE = "data/test_ghicuocgoi_ctrl.txt";
     const std::string INV_TEST_FILE = "data/test_inv_ctrl.txt";
     const std::string KN_TEST_FILE = "data/test_kn_ctrl.txt";
 

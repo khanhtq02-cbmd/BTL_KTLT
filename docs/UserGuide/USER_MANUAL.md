@@ -80,13 +80,13 @@ ctest --test-dir build --output-on-failure
    - `[5] Cap nhat thong tin`: Gia hạn hợp đồng, đổi gói cước, chuyển trạng thái (`HieuLuc`, `TamDung`, `ThanhLy`).
    - `[6] Xoa hop dong`: Xóa an toàn kèm hộp thoại xác nhận `(y/n)`.
 
-### 2.2 GhiCuocGoi (CDR) và Phiếu Nạp Tiền
+### 2.2 ghicuocgoi (CDR) và Phiếu Nạp Tiền
 1. Tại **Menu chính**, chọn `[6] Quan ly Nap tien & Ban ghi CDR`.
 2. Lựa chọn các chức năng:
    - `[1] Lap phieu nap tien`: Nhập mã giao dịch, số thuê bao, số tiền, hình thức nạp và ngày nạp.
    - `[2] Xem danh sach phieu nap tien`: Hiển thị lịch sử giao dịch nạp tiền.
    - `[3] Tra cuu lich su nap tien theo so thue bao`: Lọc giao dịch theo số thuê bao.
-   - `[4] Ghi nhan ban ghi cuoc goi / SMS / Data`: Tạo một bản ghi `GhiCuocGoi (CDR)` trong `data/GhiCuocGoi.txt`.
+   - `[4] Ghi nhan ban ghi cuoc goi / SMS / Data`: Tạo một bản ghi `ghicuocgoi (CDR)` trong `data/ghicuocgoi.txt`.
    - `[5] Xem danh sach nhat ky cuoc goi CDR`: Hiển thị toàn bộ bản ghi CDR.
 3. Bản ghi CDR gồm bảy trường: `maCDR`, `soGoi`, `soNhan`, `loaiDichVu`, `thoiGianBatDau`, `thoiLuong` và `cuocPhatSinh`.
 4. Với thuê bao trả trước, hệ thống chỉ khấu trừ cước khi số dư hiện tại đủ lớn; bản ghi CDR vẫn được lưu độc lập.

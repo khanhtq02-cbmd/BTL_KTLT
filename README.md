@@ -13,7 +13,7 @@ Dự án được xây dựng bởi nhóm 5 sinh viên Lớp D24CQVT01-B, Khoa V
 | 1 | **Nguyễn Tùng Dương** | `B24DCVT106` | D24CQVT01-B | **Quản Lí Thuê Bao Di Động**<br>(Gói cước; Loại hình thuê bao trả trước/trả sau) | `src/lib/models/goicuoc.*`<br>`src/lib/models/thuebao.*`<br>`src/lib/menus/GoiCuocMenu.*`<br>`src/lib/menus/ThueBaoMenu.*` | Đang tích hợp |
 | 2 | **Trương Quốc Khánh** | `B24DCVT201` | D24CQVT01-B | **Khách hàng; SIM – số thuê bao** | `src/lib/models/khachhang.*`<br>`src/lib/menus/KhachHangMenu.*` | Đang tích hợp |
 | 3 | **Trần Đức Anh** | **`B24DCVT021`** | **D24CQVT01-B** | **Hợp đồng đăng ký; Thiết bị đầu cuối (IMEI)**<br>(UC01: Hợp đồng dịch vụ<br>UC02: Thiết bị IMEI 3GPP Luhn) | **`src/lib/models/hopdong.*`<br>`src/lib/models/imei.*`<br>`src/lib/menus/HopDongMenu.*`<br>`src/lib/menus/ThietBiIMEIMenu.*`** | **Hoàn thành 100%<br>(Grade A - 144 tests)** |
-| 4 | **Phạm Đức Chính** | `B24DCVT047` | D24CQVT01-B | **Phiếu nạp tiền; GhiCuocGoi (CDR)** | `src/lib/models/naptien.*`<br>`src/lib/models/GhiCuocGoi.*`<br>`src/lib/menus/NapTienMenu.*` | Hoàn thành |
+| 4 | **Phạm Đức Chính** | `B24DCVT047` | D24CQVT01-B | **Phiếu nạp tiền; ghicuocgoi (CDR)** | `src/lib/models/naptien.*`<br>`src/lib/models/ghicuocgoi.*`<br>`src/lib/menus/NapTienMenu.*` | Hoàn thành |
 | 5 | **Nguyễn Minh Quang** | `B24DCVT308` | D24CQVT01-B | **Hóa đơn cước; Phiếu khiếu nại** | `src/lib/models/hoadon.*`<br>`src/lib/models/khieunai.*`<br>`src/lib/menus/HoaDonMenu.*` | Đang tích hợp |
 
 * **Nhánh làm việc chính của phân hệ:** `DucAnh-B24DCVT021`
@@ -56,7 +56,7 @@ Các phân hệ của 5 thành viên được kết nối chặt chẽ theo mô 
 1. **Đăng ký Khách hàng & SIM (Khánh - B24DCVT201):** Khách hàng đăng ký CCCD (eKYC), cấp số thuê bao / SIM `soDienThoai` (10 chữ số).
 2. **Quản lý Gói cước & Thuê bao (Dương - B24DCVT106):** Thiết lập danh mục gói cước di động và quản lý loại hình thuê bao trả trước / trả sau.
 3. **Ký Hợp đồng Dịch vụ & Thiết bị IMEI (Đức Anh - B24DCVT021):** Gắn số thuê bao với `maGoiCuoc` của **Dương (B24DCVT106)** và thiết lập chu kỳ cước, thời hạn `ngayHetHan`; đồng thời quản lý thiết bị di động gửi mã nhận dạng phần cứng **IMEI 15 chữ số** (kiểm tra toàn vẹn bằng thuật toán **3GPP Luhn Checksum Mod-10**) kết nối tới trạm sóng BTS gần nhất.
-4. **Nạp tiền & GhiCuocGoi (Chính - B24DCVT047):** Thuê bao nạp thẻ cào / banking để tăng số dư khả dụng; hệ thống ghi nhận cuộc gọi, SMS và phiên Data thành các bản ghi chi tiết CDR, đồng thời khấu trừ cước phát sinh khi thuê bao trả trước đủ số dư.
+4. **Nạp tiền & ghicuocgoi (Chính - B24DCVT047):** Thuê bao nạp thẻ cào / banking để tăng số dư khả dụng; hệ thống ghi nhận cuộc gọi, SMS và phiên Data thành các bản ghi chi tiết CDR, đồng thời khấu trừ cước phát sinh khi thuê bao trả trước đủ số dư.
 5. **Thanh toán Hóa đơn & Khiếu nại (Quang - B24DCVT308):** Định kỳ tính cước phát sinh lập hóa đơn cước và tiếp nhận, xử lý tra soát khiếu nại cước của khách hàng.
 
 ---
@@ -85,7 +85,7 @@ src/
     │   ├── hopdong.h / .cpp         # Hợp đồng thuê bao (Trần Đức Anh - B24DCVT021)
     │   ├── imei.h / .cpp            # Thiết bị IMEI (Trần Đức Anh - B24DCVT021)
     │   ├── naptien.h / .cpp         # Nạp tiền (Phạm Đức Chính - B24DCVT047)
-    │   ├── GhiCuocGoi.h / .cpp      # GhiCuocGoi (CDR) (Phạm Đức Chính - B24DCVT047)
+    │   ├── ghicuocgoi.h / .cpp      # ghicuocgoi (CDR) (Phạm Đức Chính - B24DCVT047)
     │   ├── hoadon.h / .cpp          # Hóa đơn cước (Nguyễn Minh Quang - B24DCVT308)
     │   └── khieunai.h / .cpp        # Khiếu nại (Nguyễn Minh Quang - B24DCVT308)
     │
@@ -95,7 +95,7 @@ src/
         ├── KhachHangMenu.h / .cpp   # Menu khách hàng & eKYC (Trương Quốc Khánh)
         ├── HopDongMenu.h / .cpp     # Menu hợp đồng dịch vụ (Trần Đức Anh)
         ├── ThietBiIMEIMenu.h / .cpp # Menu thiết bị IMEI (Trần Đức Anh)
-        ├── NapTienMenu.h / .cpp     # Menu nạp tiền & GhiCuocGoi (Phạm Đức Chính)
+        ├── NapTienMenu.h / .cpp     # Menu nạp tiền & ghicuocgoi (Phạm Đức Chính)
         └── HoaDonMenu.h / .cpp      # Menu hóa đơn & khiếu nại (Nguyễn Minh Quang)
 ```
 

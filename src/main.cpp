@@ -8,7 +8,7 @@
 #include "lib/models/khachhang.h"
 #include "lib/models/hoadon.h"
 #include "lib/models/naptien.h"
-#include "lib/models/GhiCuocGoi.h"
+#include "lib/models/ghicuocgoi.h"
 #include "lib/models/khieunai.h"
 #include "lib/menus/HopDongMenu.h"
 #include "lib/menus/ThietBiIMEIMenu.h"
@@ -49,7 +49,7 @@ int main(int argc, char* argv[]) {
     Repository<KhachHang> khachHangStore(dataPath("khachhang.txt"));
     Repository<HoaDon> hoaDonStore(dataPath("hoadon.txt"));
     Repository<NapTien> napTienStore(dataPath("naptien.txt"));
-    Repository<CDR> ghiCuocGoiStore(dataPath("GhiCuocGoi.txt"));
+    Repository<CDR> ghicuocgoiStore(dataPath("ghicuocgoi.txt"));
     Repository<KhieuNai> khieuNaiStore(dataPath("khieunai.txt"));
 
     try {
@@ -60,7 +60,7 @@ int main(int argc, char* argv[]) {
         khachHangStore.loadFromFile();
         hoaDonStore.loadFromFile();
         napTienStore.loadFromFile();
-        ghiCuocGoiStore.loadFromFile();
+        ghicuocgoiStore.loadFromFile();
         khieuNaiStore.loadFromFile();
     } catch (const std::exception& e) {
         std::cerr << "[LOI] Loi khi tai du lieu ban dau: " << e.what() << "\n";
@@ -72,7 +72,7 @@ int main(int argc, char* argv[]) {
     ThueBaoMenu thueBaoMenu(thueBaoStore, goiCuocStore, khachHangStore);
     HopDongMenu hopDongMenu(hopDongStore, khachHangStore, thueBaoStore, goiCuocStore);
     ThietBiIMEIMenu imeiMenu(imeiStore, thueBaoStore);
-    NapTienMenu napTienMenu(napTienStore, thueBaoStore, ghiCuocGoiStore);
+    NapTienMenu napTienMenu(napTienStore, thueBaoStore, ghicuocgoiStore);
     HoaDonMenu hoaDonMenu(hoaDonStore, thueBaoStore, khieuNaiStore);
 
     while (true) {
@@ -104,7 +104,7 @@ int main(int argc, char* argv[]) {
                 khachHangStore.saveToFile();
                 hoaDonStore.saveToFile();
                 napTienStore.saveToFile();
-                ghiCuocGoiStore.saveToFile();
+                ghicuocgoiStore.saveToFile();
                 khieuNaiStore.saveToFile();
                 std::cout << "\n[Luu du lieu] Da dong bo toan bo du lieu he thong thanh cong.\n";
             } catch (const std::exception& e) {

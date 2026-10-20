@@ -1,4 +1,4 @@
-#include "GhiCuocGoi.h"
+#include "ghicuocgoi.h"
 #include "Exceptions.h"
 #include "fileio.h"
 #include "Normalized.h"

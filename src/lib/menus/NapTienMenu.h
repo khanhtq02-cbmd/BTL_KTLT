@@ -4,7 +4,7 @@
 #include "Repository.h"
 #include "naptien.h"
 #include "thuebao.h"
-#include "GhiCuocGoi.h"
+#include "ghicuocgoi.h"
 
 namespace NapTienMenuChoices {
     const int MENU_BACK = 0;
