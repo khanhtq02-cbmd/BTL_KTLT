@@ -94,7 +94,7 @@ ctest --test-dir build --output-on-failure
 ### 2.3 Quản Lý Thiết Bị Đầu Cuối & IMEI (UC02)
 1. Tại **Menu chính**, chọn `[4] Quan ly thiet bi IMEI`.
 2. Lựa chọn các chức năng:
-   - `[1] Them thiet bi moi`: Nhập 15 chữ số IMEI $\to$ Hệ thống tự động xác thực thuật toán **3GPP Luhn Checksum (Mod-10)**; từ chối và yêu cầu nhập lại nếu sai mã kiểm tra.
+   - `[1] Them thiet bi moi`: Chọn nhập IMEI thật do nhà sản xuất cấp hoặc sinh **IMEI mô phỏng** duy nhất cho dữ liệu demo. IMEI nhập tay được hệ thống tự động xác thực bằng thuật toán **3GPP Luhn Checksum (Mod-10)**; IMEI mô phỏng cũng luôn được sinh hợp lệ nhưng không đại diện cho phần cứng thật.
    - `[2] Xem danh sach thiet bi`: Hiển thị danh sách thiết bị kèm trạm BTS và trạng thái mạng.
    - `[3] Tim kiem thiet bi`: Tra cứu theo IMEI, Số điện thoại hoặc Hãng sản xuất.
    - `[4] Danh sach thiet bi bi khoa mang`: Lọc danh sách đen EIR Blacklist (`KhoaMang`).

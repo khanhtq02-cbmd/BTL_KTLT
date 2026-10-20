@@ -5,6 +5,7 @@
 #include "hoadon.h"
 #include "thuebao.h"
 #include "khieunai.h"
+#include "Date.h"
 
 namespace HoaDonMenuChoices {
     const int MENU_BACK = 0;
@@ -39,6 +40,8 @@ private:
     void xemDanhSachKhieuNai();
 
 public:
+    //kiem tra va khoa thue bao no cuoc
+    int kiemTraNo(const Date& ngay = Date::now());
     //tao menu quan ly hoa don va khieu nai
     HoaDonMenu(Repository<HoaDon>& hdRepo,
                Repository<ThueBao>& tbRepo,

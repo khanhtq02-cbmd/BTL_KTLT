@@ -114,6 +114,7 @@ src/lib/
   - `ngayKichHoat`: Ngày thiết bị gắn SIM truy cập mạng lần đầu (`Date`).
   - `trangThai`: Trạng thái trên mạng viễn thông (`HoatDong`, `TamKhoa`, `KhoaMang`).
   - `tramBTSGanNhat`: Mã định danh trạm phát sóng di động gắn kết (`BTS-HN-001`).
+* **Tạo mã trong menu thiết bị:** Quản trị viên có thể nhập IMEI thật do nhà sản xuất cấp hoặc sinh IMEI mô phỏng duy nhất cho dữ liệu demo. Mã mô phỏng vẫn có 15 chữ số và checksum Luhn hợp lệ nhưng không đại diện cho thiết bị phần cứng thật; schema `data/imei.txt` không đổi.
 * **Thuật toán Xác thực 3GPP Luhn Checksum (Mod-10):**
   - IMEI gồm 14 chữ số dữ liệu ($d_1, d_2, \dots, d_{14}$) và 1 chữ số kiểm tra ($d_{15}$).
   - Duyệt từ chữ số cuối (phải qua trái): các chữ số ở vị trí chẵn từ phải sang (tức vị trí có khoảng cách 2 tính từ cuối) được nhân đôi ($2 \times d_i$).
@@ -122,7 +123,13 @@ src/lib/
   - Tính tổng toàn bộ: $S = \sum_{i=1}^{15} f(d_i)$.
   - Nếu $S \pmod{10} == 0$, mã IMEI là **hợp lệ**. Ngược lại là **không hợp lệ**.
 
-### 3.4 Lớp `ghicuocgoi` / `CDR` (`src/lib/models/ghicuocgoi.h` & `src/lib/models/ghicuocgoi.cpp`)
+### 3.4 Lớp `HoaDon` (`src/lib/models/hoadon.h` & `src/lib/models/hoadon.cpp`)
+* **Trạng thái:** `DaThanhToan` hoặc `ChuaThanhToan`; kỳ cước dùng dạng `MM/YYYY`.
+* **Khóa nợ ngắn gọn:** `HoaDon::quaHan()` coi hóa đơn chưa thanh toán của tháng trước là quá hạn. `HoaDonMenu::kiemTraNo()` chỉ áp dụng cho thuê bao `TraSau`, đặt trạng thái `KhoaNo`, chạy lặp lại an toàn và tự mở lại `HoatDong` khi không còn hóa đơn quá hạn. Thuê bao `TraTruoc` và khóa thủ công không bị tác động.
+* **Thời điểm kiểm tra:** chạy một lần sau khi nạp dữ liệu lúc khởi động; thanh toán hóa đơn kiểm tra lại ngay.
+* **Tương thích dữ liệu:** không đổi schema bảy trường hiện tại của `data/hoadon.txt`; trạng thái `KhoaNo` được lưu trong bản ghi thuê bao.
+
+### 3.5 Lớp `ghicuocgoi` / `CDR` (`src/lib/models/ghicuocgoi.h` & `src/lib/models/ghicuocgoi.cpp`)
 
 `CDR` là mã kỹ thuật của **ghicuocgoi**, dùng để lưu một sự kiện sử dụng dịch vụ viễn thông: cuộc gọi thoại, tin nhắn SMS hoặc phiên Data. Mô hình kế thừa `Entity` để dùng chung CRUD, hiển thị và tuần tự hóa của `Repository<T>`.
 

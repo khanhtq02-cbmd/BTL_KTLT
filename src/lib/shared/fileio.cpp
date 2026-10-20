@@ -180,10 +180,17 @@ std::string FileIO::resolveDataDirectory(const std::string& executablePath) {
     }
 
     const std::vector<std::string> requiredFiles = {
-        "hopdong.txt", "imei.txt", "CacGoiCuoc.txt", "thuebao.txt",
-        "khachhang.txt", "hoadon.txt", "naptien.txt", "ghicuocgoi.txt", "khieunai.txt"
+        "hopdong.txt",
+        "imei.txt", 
+        "CacGoiCuoc.txt", 
+        "thuebao.txt",
+        "khachhang.txt", 
+        "hoadon.txt", 
+        "naptien.txt", 
+        "ghicuocgoi.txt", 
+        "khieunai.txt"
     };
-    for (const auto& directory : searchPaths) {
+for (const auto& directory : searchPaths) {
         bool complete = true;
         for (const auto& filename : requiredFiles) {
             std::ifstream file(joinPath(directory, filename));

@@ -722,7 +722,7 @@ void testMenuControllers() {
 
     //test tu choi sdt
     {
-        std::istringstream inputSim("1\n861987654321096\nXiaomi 14\nXiaomi\n0989999999\n\n0\n");
+        std::istringstream inputSim("1\n1\n861987654321096\nXiaomi 14\nXiaomi\n0989999999\n\n0\n");
         std::ostringstream outputCapture;
         std::cin.rdbuf(inputSim.rdbuf());
         std::cout.rdbuf(outputCapture.rdbuf());
@@ -938,6 +938,8 @@ void testHoaDonAndNapTienModels() {
     std::cout << "[RUN] Kiem thu HoaDon va NapTien models...\n";
 
     HoaDon hd("HD01", "0981234567", "01/2024", 50000.0, 100000.0, 150000.0, HoaDonConstants::STATUS_UNPAID);
+    TEST_ASSERT(hd.quaHan(Date(1, 2, 2024)), "Hoa don thang truoc phai qua han");
+    TEST_ASSERT(!hd.quaHan(Date(1, 1, 2024)), "Hoa don cung thang khong qua han");
     TEST_ASSERT(hd.getMaHoaDon() == "HD01", "Ma HD phai la HD01");
     TEST_ASSERT(hd.getTongTien() == 150000.0, "Tong tien phai la 150000");
     TEST_ASSERT(hd.getTrangThai() == HoaDonConstants::STATUS_UNPAID, "Trang thai phai la ChuaThanhToan");
@@ -1148,6 +1150,7 @@ void testRemainingMenuControllers() {
     const std::string GHICUOCGOI_TEST_FILE = "data/test_ghicuocgoi_ctrl.txt";
     const std::string INV_TEST_FILE = "data/test_inv_ctrl.txt";
     const std::string KN_TEST_FILE = "data/test_kn_ctrl.txt";
+    const std::string IMEI_TEST_FILE = "data/test_imei_ctrl.txt";
 
     Repository<KhachHang> khRepo(KH_TEST_FILE);
     khRepo.clear();
@@ -1176,12 +1179,49 @@ void testRemainingMenuControllers() {
     Repository<KhieuNai> knRepo(KN_TEST_FILE);
     knRepo.clear();
 
+    Repository<ThietBiIMEI> imeiRepo(IMEI_TEST_FILE);
+    imeiRepo.clear();
+
     KhachHangMenu khMenu(khRepo, tbRepo, hdRepo);
+    ThietBiIMEIMenu imeiMenu(imeiRepo, tbRepo);
     NapTienMenu ntMenu(ntRepo, tbRepo, cdrRepo);
     HoaDonMenu hdMenu(hoaDonRepo, tbRepo, knRepo);
 
+    ThueBao tbSau("0981234568", "TraSau", "KH0001", "GC001", "15/01/2024", "HoatDong", 0.0);
+    tbRepo.add(tbSau);
+    hoaDonRepo.add(HoaDon("HDNO", "0981234568", "01/2024", 0.0, 100.0, 100.0, HoaDonConstants::STATUS_UNPAID));
+    TEST_ASSERT(hdMenu.kiemTraNo(Date(1, 2, 2024)) == 1, "No cuoc qua han phai khoa mot thue bao");
+    TEST_ASSERT(tbRepo.findById("0981234568")->getTrangThai() == ThueBaoConstants::STATUS_LOCKED_DEBT, "Thue bao tra sau no qua han phai bi khoa no");
+    TEST_ASSERT(hdMenu.kiemTraNo(Date(1, 2, 2024)) == 1, "Kiem tra no lap lai van nhan dien mot khoan no");
+    HoaDon noDaTra = *hoaDonRepo.findById("HDNO");
+    noDaTra.thanhToan();
+    hoaDonRepo.update("HDNO", noDaTra);
+    TEST_ASSERT(hdMenu.kiemTraNo(Date(1, 2, 2024)) == 0, "Thanh toan het no phai xoa danh sach no qua han");
+    TEST_ASSERT(tbRepo.findById("0981234568")->getTrangThai() == ThueBaoConstants::STATUS_ACTIVE, "Thanh toan het no phai mo khoa tu dong");
+
     std::streambuf* origCin = std::cin.rdbuf();
     std::streambuf* origCout = std::cout.rdbuf();
+
+    // 0. Test ThietBiIMEIMenu: sinh IMEI mo phong
+    {
+        std::istringstream inputSim("1\n2\nDemo Phone\nDemo Brand\n\n01/01/2024\nBTS-DEMO-001\n\n0\n");
+        std::ostringstream outputCapture;
+        std::cin.rdbuf(inputSim.rdbuf());
+        std::cout.rdbuf(outputCapture.rdbuf());
+
+        imeiMenu.showMenu();
+
+        TEST_ASSERT(imeiRepo.size() == 1, "ThietBiIMEIMenu phai them thiet bi voi IMEI mo phong");
+        if (!imeiRepo.empty()) {
+            const std::string generated = imeiRepo.getAll().front().getMaIMEI();
+            TEST_ASSERT(generated.length() == IMEIConstants::REQUIRED_IMEI_LENGTH,
+                        "IMEI mo phong phai co dung 15 chu so");
+            TEST_ASSERT(ThietBiIMEI::validateLuhn(generated),
+                        "IMEI mo phong phai hop le theo Luhn");
+            TEST_ASSERT(outputCapture.str().find("MO PHONG") != std::string::npos,
+                        "Menu phai danh dau IMEI mo phong");
+        }
+    }
 
     // 1. Test KhachHangMenu: them khach hang moi
     {
@@ -1263,6 +1303,7 @@ void testRemainingMenuControllers() {
     std::remove(GHICUOCGOI_TEST_FILE.c_str());
     std::remove(INV_TEST_FILE.c_str());
     std::remove(KN_TEST_FILE.c_str());
+    std::remove(IMEI_TEST_FILE.c_str());
 }
 
 int main() {

@@ -1,6 +1,9 @@
 #include <iostream>
+//shared
 #include "lib/shared/fileio.h"
 #include "lib/shared/Repository.h"
+#include "lib/shared/InputHelper.h"
+//models
 #include "lib/models/hopdong.h"
 #include "lib/models/imei.h"
 #include "lib/models/goicuoc.h"
@@ -10,6 +13,7 @@
 #include "lib/models/naptien.h"
 #include "lib/models/ghicuocgoi.h"
 #include "lib/models/khieunai.h"
+//Menu
 #include "lib/menus/HopDongMenu.h"
 #include "lib/menus/ThietBiIMEIMenu.h"
 #include "lib/menus/GoiCuocMenu.h"
@@ -17,7 +21,6 @@
 #include "lib/menus/KhachHangMenu.h"
 #include "lib/menus/NapTienMenu.h"
 #include "lib/menus/HoaDonMenu.h"
-#include "lib/shared/InputHelper.h"
 
 namespace MainMenuChoices {
     const int MENU_EXIT = 0;
@@ -74,6 +77,9 @@ int main(int argc, char* argv[]) {
     ThietBiIMEIMenu imeiMenu(imeiStore, thueBaoStore);
     NapTienMenu napTienMenu(napTienStore, thueBaoStore, ghicuocgoiStore);
     HoaDonMenu hoaDonMenu(hoaDonStore, thueBaoStore, khieuNaiStore);
+    if (hoaDonMenu.kiemTraNo() > 0) {
+        std::cout << "[CANH BAO] Da khoa thue bao no cuoc qua han.\n";
+    }
 
     while (true) {
         std::cout << "\n====================================================================\n"

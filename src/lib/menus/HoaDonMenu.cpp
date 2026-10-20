@@ -2,9 +2,40 @@
 #include "InputHelper.h"
 #include "DisplayHelper.h"
 #include "Normalized.h"
+#include <algorithm>
 #include <iostream>
 
 using namespace HoaDonMenuChoices;
+
+//kiem tra va khoa thue bao no cuoc
+int HoaDonMenu::kiemTraNo(const Date& ngay) {
+    std::vector<std::string> no;
+    for (const auto& hd : hoaDonStore.getAll()) {
+        ThueBao* tb = thueBaoStore.findById(hd.getSoDienThoai());
+        if (tb == nullptr || tb->getLoaiThueBao() != ThueBaoConstants::TYPE_POSTPAID ||
+            hd.getTrangThai() != HoaDonConstants::STATUS_UNPAID || !hd.quaHan(ngay)) {
+            continue;
+        }
+        if (std::find(no.begin(), no.end(), tb->getSoDienThoai()) == no.end()) {
+            no.push_back(tb->getSoDienThoai());
+        }
+    }
+    bool changed = false;
+    for (auto& tb : thueBaoStore.getAll()) {
+        const bool hasDebt = std::find(no.begin(), no.end(), tb.getSoDienThoai()) != no.end();
+        if (hasDebt && tb.getTrangThai() != ThueBaoConstants::STATUS_LOCKED_DEBT) {
+            tb.setTrangThai(ThueBaoConstants::STATUS_LOCKED_DEBT);
+            changed = true;
+        } else if (!hasDebt && tb.getTrangThai() == ThueBaoConstants::STATUS_LOCKED_DEBT) {
+            tb.setTrangThai(ThueBaoConstants::STATUS_ACTIVE);
+            changed = true;
+        }
+    }
+    if (changed) {
+        thueBaoStore.saveToFile();
+    }
+    return static_cast<int>(no.size());
+}
 
 //lap hoa don cuoc phat sinh
 void HoaDonMenu::lapHoaDon() {
@@ -79,6 +110,12 @@ void HoaDonMenu::thanhToanHoaDon() {
         updated.thanhToan();
         try {
             hoaDonStore.update(maHD, updated);
+            ThueBao* tb = thueBaoStore.findById(updated.getSoDienThoai());
+            if (tb != nullptr && tb->getTrangThai() == ThueBaoConstants::STATUS_LOCKED_DEBT &&
+                kiemTraNo(Date::now()) == 0) {
+                tb->setTrangThai(ThueBaoConstants::STATUS_ACTIVE);
+                thueBaoStore.saveToFile();
+            }
             std::cout << "\n[THANH CONG] Da thanh toan hoa don " << maHD << " thanh cong!\n";
         } catch (const std::exception& e) {
             std::cout << "\n[LOI] Khong the cap nhat trang thai thanh toan: " << e.what() << "\n";
@@ -242,7 +279,7 @@ void HoaDonMenu::showMenu() {
             case MENU_LIST_COMPLAINTS:
                 xemDanhSachKhieuNai();
                 break;
-            default:
+                default:
                 break;
         }
     }

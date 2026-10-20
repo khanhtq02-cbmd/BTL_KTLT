@@ -22,13 +22,13 @@ ThueBao::ThueBao()
 
 //tao thue bao va kiem tra thong tin
 ThueBao::ThueBao(
-    const std::string& sdt,
-    const std::string& loaiTB,
-    const std::string& maKH,
-    const std::string& maGC,
-    const std::string& ngayKH,
-    const std::string& tThai,
-    double soDu
+    const std::string& sdt,     //vd 0866776934
+    const std::string& loaiTB,  // tra truoc tra sau
+    const std::string& maKH,    
+    const std::string& maGC,    //vd: SODA155
+    const std::string& ngayKH,  //cd: 19/10/2026
+    const std::string& tThai,   //da thanh toan/chua thanh toan
+    double soDu                 //muny
 ) : Entity(sdt),
     loaiThueBao(loaiTB),
     maKhachHang(maKH),
@@ -47,7 +47,8 @@ ThueBao::ThueBao(
         throw AppException("Loi: Loai thue bao phai la 'TraTruoc' hoac 'TraSau'!");
     }
     if (trangThai != STATUS_ACTIVE && trangThai != STATUS_LOCKED_1WAY &&
-        trangThai != STATUS_LOCKED_2WAY && trangThai != STATUS_CANCELLED) {
+        trangThai != STATUS_LOCKED_2WAY && trangThai != STATUS_LOCKED_DEBT &&
+        trangThai != STATUS_CANCELLED) {
         throw AppException("Loi: Trang thai thue bao khong hop le!");
     }
     if (soDuTaiKhoan < 0.0) {
@@ -101,6 +102,7 @@ void ThueBao::truTien(double tien) {
     if (tien <= 0) {
         throw AppException("Loi: So tien tru phai lon hon 0!");
     }
+    //doi voi thue bao tra truoc
     if (soDuTaiKhoan < tien && loaiThueBao == TYPE_PREPAID) {
         throw AppException("Loi: So du tai khoan khong du de thuc hien tru tien!");
     }

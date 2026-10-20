@@ -81,7 +81,7 @@ Tong so: 3 hop dong.
 --------------------------------------------------------------------
                      QUAN LY THIET BI DAU CUOI (IMEI)
 --------------------------------------------------------------------
-  [1] Them thiet bi moi (Kiem tra Luhn Checksum 3GPP)
+  [1] Them thiet bi moi (Nhap IMEI that / Sinh IMEI mo phong, kiem tra Luhn 3GPP)
   [2] Xem danh sach thiet bi
   [3] Tim kiem thiet bi (Theo IMEI / So DT / Hang SX)
   [4] Danh sach thiet bi bi khoa mang (EIR Blacklist)

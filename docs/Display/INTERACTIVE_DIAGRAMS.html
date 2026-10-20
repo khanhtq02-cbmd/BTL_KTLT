@@ -530,7 +530,7 @@ sequenceDiagram
     participant Repo as Repository&lt;ThietBiIMEI&gt;
 
     User->>Menu: Chon 1 Them thiet bi moi
-    Menu->>Input: getString("Nhap Ma IMEI")
+    Menu->>Input: Chon nhap IMEI that hoac sinh IMEI mo phong
     Menu->>IMEIMod: validateLuhn(imei)
     Menu->>Repo: findById(imei)
     Menu->>Input: getString("Ten thiet bi")

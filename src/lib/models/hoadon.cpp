@@ -49,6 +49,20 @@ HoaDon::HoaDon(
     }
 }
 
+//kiem tra ky cuoc da qua thang hien tai
+bool HoaDon::quaHan(const Date& ngay) const {
+    std::istringstream iss(kyCuoc);
+    int thang = 0;
+    int nam = 0;
+    char sep = 0;
+    std::string trailing;
+    if (!(iss >> thang >> sep >> nam) || sep != '/' || (iss >> trailing) ||
+        thang < 1 || thang > 12) {
+        return false;
+    }
+    return nam < ngay.getYear() || (nam == ngay.getYear() && thang < ngay.getMonth());
+}
+
 //cap nhat trang thai hoa don
 void HoaDon::setTrangThai(const std::string& tThai) {
     trangThai = tThai;

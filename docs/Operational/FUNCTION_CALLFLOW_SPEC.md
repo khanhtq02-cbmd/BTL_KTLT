@@ -233,15 +233,21 @@ sequenceDiagram
     User->>Menu: Chọn 1 Thêm thiết bị mới
     activate Menu
 
-    loop Kiểm tra mã IMEI hợp lệ chuẩn 3GPP
-        Menu->>Input: getString("Nhap Ma IMEI", false)
-        Input-->>Menu: imei = "860123456789014"
-        Menu->>IMEIMod: validateLuhn("860123456789014")
-        activate IMEIMod
-        IMEIMod-->>Menu: return true
-        deactivate IMEIMod
-        Menu->>Repo: findById(imei)
-        Repo-->>Menu: nullptr
+    Menu->>Input: getInt("Chon cach tao IMEI [1-2]")
+    alt Nhap IMEI that
+        loop Kiểm tra mã IMEI hợp lệ chuẩn 3GPP
+            Menu->>Input: getString("Nhap Ma IMEI", false)
+            Input-->>Menu: imei = "860123456789014"
+            Menu->>IMEIMod: validateLuhn("860123456789014")
+            activate IMEIMod
+            IMEIMod-->>Menu: return true
+            deactivate IMEIMod
+            Menu->>Repo: findById(imei)
+            Repo-->>Menu: nullptr
+        end
+    else Sinh IMEI mo phong
+        Menu->>Menu: generateSimulatedImei(store)
+        Menu->>IMEIMod: validateLuhn(generatedImei)
     end
 
     Menu->>Input: getString("Nhap Ten thiet bi", false)

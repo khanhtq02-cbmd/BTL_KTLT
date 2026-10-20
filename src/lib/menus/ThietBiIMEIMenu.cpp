@@ -1,6 +1,37 @@
 #include "ThietBiIMEIMenu.h"
 #include "InputHelper.h"
 #include <iostream>
+#include <random>
+
+namespace {
+std::string generateSimulatedImei(const Repository<ThietBiIMEI>& store) {
+    std::random_device seed;
+    std::mt19937 generator(seed());
+    std::uniform_int_distribution<int> digit(0, 9);// tao imei ngau nhien neu admin luoi:0 de lam placeholder
+    while (true) {
+        std::string prefix;
+        prefix.reserve(14);
+        prefix.push_back(static_cast<char>('3' + digit(generator) % 7));
+        for (int i = 1; i < 14; ++i) {
+            prefix.push_back(static_cast<char>('0' + digit(generator)));
+        }
+
+        int sum = 0;
+        for (int i = 0; i < 14; ++i) {
+            int value = prefix[i] - '0';
+            if ((15 - i) % 2 == 0) {
+                value *= 2;
+                if (value > 9) value -= 9;
+            }
+            sum += value;
+        }
+        const std::string imei = prefix + std::to_string((10 - sum % 10) % 10);
+        if (store.findById(imei) == nullptr && ThietBiIMEI::validateLuhn(imei)) {
+            return imei;
+        }
+    }
+}
+}
 
 using namespace IMEIMenuChoices;
 
@@ -51,26 +82,34 @@ void ThietBiIMEIMenu::showMenu() {
 
 //them thiet bi IMEI moi
 void ThietBiIMEIMenu::themThietBi() {
-    std::cout << "\n>>> THEM THIET BI DAU CUOI MOI (IMEI) <<<\n";
+    std::cout << "\n>>> THEM THIET BI DAU CUOI MOI (IMEI) <<<\n"
+              << "  [1] Nhap IMEI that cua thiet bi\n"
+              << "  [2] Sinh IMEI mo phong cho du lieu demo\n";
+    int imeiChoice = InputHelper::getInt("Chon cach tao IMEI [1-2]: ", 1, 2);
+    if (std::cin.eof()) return;
     std::string imei;
-    while (true) {
-        imei = InputHelper::getString("Nhap Ma IMEI (15 chu so): ", false);
-        if (std::cin.eof()) return;
-        if (imei.length() != IMEIConstants::REQUIRED_IMEI_LENGTH) {
-            std::cout << "  [!] Do dai IMEI phai dung 15 chu so! Vui long nhap lai.\n";
-            continue;
+    if (imeiChoice == 2) {
+        imei = generateSimulatedImei(store);
+        std::cout << "[MO PHONG] Da sinh IMEI duy nhat: " << imei << "\n";
+    } else {
+        while (true) {
+            imei = InputHelper::getString("Nhap Ma IMEI (15 chu so): ", false);
+            if (std::cin.eof()) return;
+            if (imei.length() != IMEIConstants::REQUIRED_IMEI_LENGTH) {
+                std::cout << "  [!] Do dai IMEI phai dung 15 chu so! Vui long nhap lai.\n";
+                continue;
+            }
+            if (!ThietBiIMEI::validateLuhn(imei)) {
+                std::cout << "  [!] Ma IMEI khong hop le. Vui long kiem tra lai.\n";
+                continue;
+            }
+            if (store.findById(imei) != nullptr) {
+                std::cout << "  [!] Ma IMEI '" << imei << "' da ton tai trong he thong! Vui long nhap ma khac.\n";
+                continue;
+            }
+            break;
         }
-        if (!ThietBiIMEI::validateLuhn(imei)) {
-            std::cout << "  [!] Ma IMEI khong hop le. Vui long kiem tra lai.\n";
-            continue;
-        }
-        if (store.findById(imei) != nullptr) {
-            std::cout << "  [!] Ma IMEI '" << imei << "' da ton tai trong he thong! Vui long nhap ma khac.\n";
-            continue;
-        }
-        break;
     }
-
     std::string tenTB = InputHelper::getString("Nhap Ten thiet bi (VD: iPhone 15 Pro, Galaxy S24): ", false);
     if (std::cin.eof() || tenTB.empty()) return;
     std::string hangSX = InputHelper::getString("Nhap Hang san xuat (VD: Apple, Samsung, Xiaomi): ", false);
@@ -126,7 +165,6 @@ void ThietBiIMEIMenu::timKiemThietBi() {
               << "  [0] Quay lai\n";
     int choice = InputHelper::getInt("Nhap lua chon [0-3]: ", 0, SEARCH_BY_BRAND);
     if (choice == 0) return;
-
     if (choice == SEARCH_BY_IMEI) {
         std::string imei = InputHelper::getString("Nhap Ma IMEI can tim: ", false);
         ThietBiIMEI* tb = store.findById(imei);
@@ -230,17 +268,23 @@ void ThietBiIMEIMenu::capNhatThietBi() {
             updated.ganSIM(sdtMoi);
             store.update(imei, updated);
             std::cout << "[THANH CONG] Da cap nhat so SIM gan voi thiet bi " << imei << "!\n";
-        } else if (choice == UPDATE_BTS) {
+        }
+
+        else if (choice == UPDATE_BTS) {
             std::string btsMoi = InputHelper::getString("Nhap Ma tram BTS moi: ", false);
             if (std::cin.eof() || btsMoi.empty()) return;
             updated.capNhatBTS(btsMoi);
             store.update(imei, updated);
             std::cout << "[THANH CONG] Da cap nhat vi tri tram BTS thanh " << btsMoi << "!\n";
-        } else if (choice == UPDATE_LOCK) {
+        }
+
+        else if (choice == UPDATE_LOCK) {
             updated.setBlacklist(true);
             store.update(imei, updated);
             std::cout << "[THANH CONG] Da KHOA MANG thiet bi " << imei << " (EIR Blacklist)!\n";
-        } else if (choice == UPDATE_UNLOCK) {
+        }
+
+        else if (choice == UPDATE_UNLOCK) {
             updated.setBlacklist(false);
             store.update(imei, updated);
             std::cout << "[THANH CONG] Da MO KHOA MANG thiet bi " << imei << " (Trang thai: HoatDong)!\n";

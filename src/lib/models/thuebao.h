@@ -11,6 +11,7 @@ namespace ThueBaoConstants {
     const std::string STATUS_ACTIVE = "HoatDong";
     const std::string STATUS_LOCKED_1WAY = "Khoa1Chieu";
     const std::string STATUS_LOCKED_2WAY = "Khoa2Chieu";
+    const std::string STATUS_LOCKED_DEBT = "KhoaNo";
     const std::string STATUS_CANCELLED = "Huy";
 
     const int COL_WIDTH_PHONE = 15;

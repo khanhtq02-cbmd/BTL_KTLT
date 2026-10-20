@@ -3,6 +3,7 @@
 
 #include <string>
 #include "Entity.h"
+#include "Date.h"
 
 namespace HoaDonConstants {
     const std::string STATUS_PAID = "DaThanhToan";
@@ -54,6 +55,8 @@ public:
     double getTongTien() const { return tongTien; }
     //lay trang thai hoa don
     std::string getTrangThai() const { return trangThai; }
+    //kiem tra ky cuoc da qua thang hien tai
+    bool quaHan(const Date& ngay) const;
 
     //cap nhat trang thai hoa don
     void setTrangThai(const std::string& tThai);
