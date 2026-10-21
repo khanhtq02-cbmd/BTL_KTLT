@@ -1,0 +1,22 @@
+# Binaries and object files
+*.o
+quanlythuebao
+quanlythuebao.exe
+test_runner
+test_runner.exe
+src/main
+
+# Build directories
+build/
+bin/
+workspace/
+# local Envs
+tests/
+# Editor / Agent metadata
+graphify-out/
+.cache/
+.claude/
+.DS_Store
+*.tmp
+.cache/
+.vscode/
