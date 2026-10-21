@@ -24,7 +24,8 @@ Trong đồ án nhóm Kỹ thuật Lập trình (5 thành viên, 10 use cases), 
 ```
                    +------------------------+
                    |  KhachHang / ThueBao   |
-                   | (Thắng - B24DCVT331)   |
+                   | (Khánh B24DCVT201 /    |
+                   |  Dương B24DCVT106)     |
                    +-----------+------------+
                                | 1
                                |
@@ -173,9 +174,9 @@ Dự án áp dụng quy ước ngôn ngữ phân tầng rõ ràng:
 
 ### Câu 3: Làm thế nào để đảm bảo tính an toàn dữ liệu (Atomic Persistence) khi ghi dữ liệu ra file?
 * **Trả lời:**
-  - Trong lớp `Repository<T>`, phương thức `saveToFile(filename)` không ghi đè trực tiếp lên tệp dữ liệu chính mà ghi ra một tệp tạm thời `filename + ".tmp"`.
-  - Chỉ khi toàn bộ dữ liệu được ghi thành công và không phát sinh lỗi I/O, hệ thống mới tiến hành xóa tệp cũ và đổi tên tệp `.tmp` thành tệp chính thức (`std::rename`).
-  - Cơ chế này (Atomic Write) bảo vệ cơ sở dữ liệu không bị hỏng (corrupted) khi chương trình bị tắt đột ngột hoặc xảy ra sự cố mất điện giữa chừng.
+  - Trong lớp `Repository<T>`, phương thức `saveToFile()` định tuyến ghi dữ liệu ra bộ nhớ RAM trung gian `tmps/` (`/dev/shm/ktlt_tmps`), kiểm tra luồng ghi hợp lệ và commit nguyên tử sang ổ đĩa đích (SSD).
+  - Quá trình commit không xóa tệp đích trước khi đổi tên thành công; nếu gặp lỗi ghi hoặc đổi tên, tệp đích cũ và tệp tạm trong `tmps/` đều được bảo toàn trọn vẹn.
+  - Áp dụng cơ chế **Strong Exception Safety (Rollback)**: nếu quá trình lưu gặp lỗi ổ đĩa hoặc bị gián đoạn, mọi thay đổi trong danh sách bộ nhớ (`items`) của `add()`, `update()`, `remove()`, `clear()` đều được hoàn nguyên 100%, bảo đảm dữ liệu RAM và tệp tin luôn đồng nhất.
 
 ### Câu 4: Phân hệ xử lý kiểm tra năm nhuận và ngày hợp lệ như thế nào?
 * **Trả lời:**

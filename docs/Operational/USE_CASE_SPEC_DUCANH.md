@@ -84,11 +84,14 @@
 * **Tác nhân:** Kỹ sư mạng viễn thông / Quản trị viên thiết bị.
 * **Luồng sự kiện chính:**
   1. Người dùng chọn `[1] Them thiet bi moi`.
-  2. Hệ thống yêu cầu nhập `Ma IMEI (15 chu so)`.
-     * *Kiểm tra 2a:* Độ dài khác 15 chữ số hoặc chứa ký tự không phải số $\to$ báo lỗi định dạng.
-     * *Kiểm tra 2b (Thuật toán Luhn Mod-10):* Tính toán checksum. Nếu tổng không chia hết cho 10 $\to$ từ chối: `Loi: Ma IMEI khong hop le theo chuan 3GPP (Sai ma kiem tra Luhn)!`.
-     * *Kiểm tra 2c:* Trùng mã IMEI đã tồn tại $\to$ báo lỗi trùng lặp.
-  3. Yêu cầu nhập `Ten thiet bi` (VD: `iPhone 15 Pro Max`).
+  2. Hệ thống cho chọn cách tạo mã:
+     - `[1] Nhap IMEI that`: nhập IMEI 15 chữ số do nhà sản xuất cấp.
+     - `[2] Sinh IMEI mo phong`: hệ thống sinh mã duy nhất, hợp lệ Luhn để dùng cho dữ liệu demo; mã này không đại diện cho thiết bị phần cứng thật.
+  3. Với IMEI nhập tay, hệ thống kiểm tra:
+     * *Kiểm tra 3a:* Độ dài khác 15 chữ số hoặc chứa ký tự không phải số $\to$ báo lỗi định dạng.
+     * *Kiểm tra 3b (Thuật toán Luhn Mod-10):* Tính toán checksum. Nếu tổng không chia hết cho 10 $\to$ từ chối: `Loi: Ma IMEI khong hop le theo chuan 3GPP (Sai ma kiem tra Luhn)!`.
+     * *Kiểm tra 3c:* Trùng mã IMEI đã tồn tại $\to$ báo lỗi trùng lặp.
+  4. Yêu cầu nhập `Ten thiet bi` (VD: `iPhone 15 Pro Max`).
   4. Yêu cầu nhập `Hang san xuat` (VD: `Apple`).
   5. Yêu cầu nhập `So dien thoai gan kem` (Nếu chưa gắn SIM, nhập `ChuaGan`).
   6. Yêu cầu nhập `Tram BTS gan nhat` (Mã trạm phát sóng định vị thiết bị, VD: `BTS-HN-001`).

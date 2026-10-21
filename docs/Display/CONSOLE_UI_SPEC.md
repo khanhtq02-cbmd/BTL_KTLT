@@ -17,15 +17,16 @@
 ====================================================================
                HE THONG QUAN LY THUE BAO DI DONG
 ====================================================================
-  [1] Quan ly goi cuoc
-  [2] Quan ly thue bao
-  [3] Quan ly hop dong
-  [4] Quan ly thiet bi IMEI
-  [5] Quan ly phieu nap tien
-  [6] Quan ly hoa don
+  [1] Quan ly Khach hang & SIM eKYC
+  [2] Quan ly Goi cuoc di dong
+  [3] Quan ly Thue bao di dong
+  [4] Quan ly Hop dong dich vu
+  [5] Quan ly Thiet bi dau cuoi IMEI
+  [6] Quan ly Nap tien & ghicuocgoi (CDR)
+  [7] Quan ly Hoa don & Khieu nai
   [0] Thoat chuong trinh
 ====================================================================
-Nhap lua chon cua ban [0-6]: 
+Nhap lua chon cua ban [0-7]:
 ```
 
 ---
@@ -45,13 +46,13 @@ Nhap lua chon cua ban [0-6]:
   [6] Xoa hop dong
   [0] Quay lai menu chinh
 --------------------------------------------------------------------
-Nhap lua chon cua ban [0-6]: 
+Nhap lua chon cua ban [0-7]:
 ```
 
 ### 3.2 Định Dạng Bảng Dữ Liệu Hợp Đồng (`<iomanip>`)
 * **Độ rộng các cột:**
   - `Ma HD`: 10 ký tự
-  - `Ma KH`: 10 ký tự
+  - `Ma KH`: tiền tố `KH` + 4 chữ số legacy hoặc 7 chữ số mở rộng (`KH0000001`–`KH9999999`); dữ liệu cũ `KH0001` vẫn được hỗ trợ
   - `So Dien Thoai`: 14 ký tự
   - `Ma Goi`: 10 ký tự
   - `Ngay DK`: 13 ký tự
@@ -80,7 +81,7 @@ Tong so: 3 hop dong.
 --------------------------------------------------------------------
                      QUAN LY THIET BI DAU CUOI (IMEI)
 --------------------------------------------------------------------
-  [1] Them thiet bi moi (Kiem tra Luhn Checksum 3GPP)
+  [1] Them thiet bi moi (Nhap IMEI that / Sinh IMEI mo phong, kiem tra Luhn 3GPP)
   [2] Xem danh sach thiet bi
   [3] Tim kiem thiet bi (Theo IMEI / So DT / Hang SX)
   [4] Danh sach thiet bi bi khoa mang (EIR Blacklist)
@@ -88,7 +89,7 @@ Tong so: 3 hop dong.
   [6] Xoa thiet bi
   [0] Quay lai menu chinh
 --------------------------------------------------------------------
-Nhap lua chon cua ban [0-6]: 
+Nhap lua chon cua ban [0-7]:
 ```
 
 ### 4.2 Định Dạng Bảng Dữ Liệu Thiết Bị IMEI (`<iomanip>`)

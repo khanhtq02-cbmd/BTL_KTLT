@@ -19,17 +19,23 @@ src/lib/
 │
 ├── models/                    # Tier 2: Domain Entities & Business Logic
 │   ├── hopdong.h / .cpp       # Subscription Contract Management (UC01: Pricing, Validity, Lifecycle)
-│   └── imei.h / .cpp          # Terminal Device & IMEI Tracking (UC02: 3GPP Luhn Checksum, EIR Blacklist)
+│   ├── imei.h / .cpp          # Terminal Device & IMEI Tracking (UC02: 3GPP Luhn Checksum, EIR Blacklist)
+│   ├── goicuoc.h / .cpp       # Tariff Packages & Plan Types
+│   ├── thuebao.h / .cpp       # Mobile Subscribers and Account Balance
+│   ├── khachhang.h / .cpp     # Customer eKYC and SIM Ownership
+│   ├── naptien.h / .cpp       # Top-Up Transactions
+│   ├── ghicuocgoi.h / .cpp    # ghicuocgoi (CDR) Usage Records
+│   ├── hoadon.h / .cpp        # Billing Invoices
+│   └── khieunai.h / .cpp      # Customer Dispute Tickets
 │
-├── menus/                     # Tier 3: Console UI Controllers & Interactive Menus
-│   ├── HopDongMenu.h / .cpp   # 0–9 Console Controller for Contract Operations
-│   └── ThietBiIMEIMenu.h / .cpp # 0–9 Console Controller for Terminal & IMEI Tracking
-│
-└── stubs/                     # Tier 4: Team Extension Placeholders (Cross-Member Integration)
-    ├── goicuoc.h / .cpp       # Tariff Packages & Plan Types (Nguyễn Tùng Dương - B24DCVT106)
-    ├── thuebao.h / .cpp       # Customer KYC & SIM Provisioning (Nguyễn Tất Thắng - B24DCVT331)
-    ├── naptien.h / .cpp       # Top-Up Transactions & CDR Raw Records (Nguyễn Mạnh Dũng - B24DCVT094)
-    └── hoadon.h / .cpp        # Billing, Invoicing & Dispute Tickets (Đặng Việt Hùng - B24DCVT167)
+└── menus/                     # Tier 3: Console UI Controllers & Interactive Menus
+    ├── HopDongMenu.h / .cpp   # Contract Operations
+    ├── ThietBiIMEIMenu.h / .cpp # Terminal and IMEI Operations
+    ├── GoiCuocMenu.h / .cpp   # Tariff Package Operations
+    ├── ThueBaoMenu.h / .cpp   # Subscriber Operations
+    ├── KhachHangMenu.h / .cpp # Customer and SIM eKYC Operations
+    ├── NapTienMenu.h / .cpp   # Top-Up and ghicuocgoi Operations
+    └── HoaDonMenu.h / .cpp    # Billing and Dispute Operations
 ```
 
 ---
@@ -87,7 +93,7 @@ src/lib/
 ### 3.2 Lớp `HopDong` (`src/lib/models/hopdong.h` & `src/lib/models/hopdong.cpp`)
 * **Thuộc tính:**
   - `id` (Mã HĐ): Kế thừa từ `Entity`, ví dụ: `HD0001`, `HD0002`.
-  - `maKhachHang`: Mã định danh khách hàng, ví dụ: `KH0001`.
+  - `maKhachHang`: Mã định danh khách hàng với tiền tố `KH`, dùng dạng legacy `KH0001` hoặc dạng mở rộng `KH0000001`–`KH9999999`; dữ liệu legacy vẫn được hỗ trợ.
   - `soDienThoai`: Số điện thoại thuê bao 10 số, ví dụ: `0981234567`.
   - `maGoiCuoc`: Gói cước viễn thông gắn kết, ví dụ: `GC001`, `VD149`.
   - `ngayDangKy`: Ngày ký hợp đồng (`Date`).
@@ -108,6 +114,7 @@ src/lib/
   - `ngayKichHoat`: Ngày thiết bị gắn SIM truy cập mạng lần đầu (`Date`).
   - `trangThai`: Trạng thái trên mạng viễn thông (`HoatDong`, `TamKhoa`, `KhoaMang`).
   - `tramBTSGanNhat`: Mã định danh trạm phát sóng di động gắn kết (`BTS-HN-001`).
+* **Tạo mã trong menu thiết bị:** Quản trị viên có thể nhập IMEI thật do nhà sản xuất cấp hoặc sinh IMEI mô phỏng duy nhất cho dữ liệu demo. Mã mô phỏng vẫn có 15 chữ số và checksum Luhn hợp lệ nhưng không đại diện cho thiết bị phần cứng thật; schema `data/imei.txt` không đổi.
 * **Thuật toán Xác thực 3GPP Luhn Checksum (Mod-10):**
   - IMEI gồm 14 chữ số dữ liệu ($d_1, d_2, \dots, d_{14}$) và 1 chữ số kiểm tra ($d_{15}$).
   - Duyệt từ chữ số cuối (phải qua trái): các chữ số ở vị trí chẵn từ phải sang (tức vị trí có khoảng cách 2 tính từ cuối) được nhân đôi ($2 \times d_i$).
@@ -116,7 +123,37 @@ src/lib/
   - Tính tổng toàn bộ: $S = \sum_{i=1}^{15} f(d_i)$.
   - Nếu $S \pmod{10} == 0$, mã IMEI là **hợp lệ**. Ngược lại là **không hợp lệ**.
 
-### 3.4 Lớp Đối Tượng Ngày Tháng `Date` (`src/lib/shared/Date.h` & `src/lib/shared/Date.cpp`)
+### 3.4 Lớp `HoaDon` (`src/lib/models/hoadon.h` & `src/lib/models/hoadon.cpp`)
+* **Trạng thái:** `DaThanhToan` hoặc `ChuaThanhToan`; kỳ cước dùng dạng `MM/YYYY`.
+* **Khóa nợ ngắn gọn:** `HoaDon::quaHan()` coi hóa đơn chưa thanh toán của tháng trước là quá hạn. `HoaDonMenu::kiemTraNo()` chỉ áp dụng cho thuê bao `TraSau`, đặt trạng thái `KhoaNo`, chạy lặp lại an toàn và tự mở lại `HoatDong` khi không còn hóa đơn quá hạn. Thuê bao `TraTruoc` và khóa thủ công không bị tác động.
+* **Thời điểm kiểm tra:** chạy một lần sau khi nạp dữ liệu lúc khởi động; thanh toán hóa đơn kiểm tra lại ngay.
+* **Tương thích dữ liệu:** không đổi schema bảy trường hiện tại của `data/hoadon.txt`; trạng thái `KhoaNo` được lưu trong bản ghi thuê bao.
+
+### 3.5 Lớp `ghicuocgoi` / `CDR` (`src/lib/models/ghicuocgoi.h` & `src/lib/models/ghicuocgoi.cpp`)
+
+`CDR` là mã kỹ thuật của **ghicuocgoi**, dùng để lưu một sự kiện sử dụng dịch vụ viễn thông: cuộc gọi thoại, tin nhắn SMS hoặc phiên Data. Mô hình kế thừa `Entity` để dùng chung CRUD, hiển thị và tuần tự hóa của `Repository<T>`.
+
+* **Thuộc tính và ý nghĩa:**
+  - `id`: Mã bản ghi, ví dụ `CDR0001`.
+  - `soGoi`: Số thuê bao phát sinh sử dụng dịch vụ.
+  - `soNhan`: Số thuê bao nhận; với Data dùng giá trị quy ước `DATA_SESSION`.
+  - `loaiDichVu`: Một trong `Thoai`, `SMS`, `Data`.
+  - `thoiGianBatDau`: Thời điểm bắt đầu ở dạng văn bản `DD/MM/YYYY HH:MM:SS`.
+  - `thoiLuong`: Số giây với thoại/SMS hoặc số MB với Data.
+  - `cuocPhatSinh`: Cước phát sinh, tính bằng VND.
+
+* **Định dạng lưu trữ:** `data/ghicuocgoi.txt`, mỗi dòng có bảy trường phân cách bằng `|`:
+  ```text
+  CDR0001|0981234567|0912345678|Thoai|15/01/2024 08:30:00|120|2000
+  ```
+
+* **Bất biến:** Mã, số gọi, số nhận, loại dịch vụ và thời gian không được rỗng; thời lượng và cước không được âm. `toFileString()` và `fromFileString()` đảm bảo ghi/đọc cùng một schema.
+
+* **Luồng nghiệp vụ:** `NapTienMenu::ghiNhanCDR()` kiểm tra thuê bao gọi tồn tại, nhận loại dịch vụ và thông số sử dụng, thêm bản ghi vào `Repository<CDR>`, sau đó khấu trừ cước nếu thuê bao trả trước có đủ số dư. `NapTienMenu::xemDanhSachCDR()` hiển thị toàn bộ nhật ký.
+
+* **API hiển thị/chuyển đổi:** `displayHeader()`, `displayRow()`, `displayDetail()`, `toFileString()` và `fromFileString()`.
+
+### 3.5 Lớp Đối Tượng Ngày Tháng `Date` (`src/lib/shared/Date.h` & `src/lib/shared/Date.cpp`)
 * **Thuộc tính:** `day` (1–31), `month` (1–12), `year` ($\ge 1900$).
 * **Xử lý năm nhuận:**
   ```cpp
@@ -151,6 +188,7 @@ src/lib/
 * **Thiết kế:** Namespace thuần túy (Sanitization & Validation Family) chịu trách nhiệm làm sạch chuỗi và xác thực dữ liệu nghiệp vụ không phụ thuộc vào I/O console.
 * **Phương thức chính:**
   - `bool isValidPhoneNumber(const std::string& phone, bool allowUnassigned = false)`: Xác thực số điện thoại di động Việt Nam (đúng 10 chữ số, bắt đầu bằng `0`, thuộc các đầu số `03`, `05`, `07`, `08`, `09`).
+  - `bool isValidCredential(const std::string& cccd)`: Xác thực CCCD đúng 12 chữ số ASCII, có mã tỉnh/thành trong bảng mã triển khai (bao gồm `079`), và không áp đặt năm sinh thực tế lên phần cấu trúc còn lại.
   - `std::string trim(const std::string& str)` / `CollapseSpace(const std::string& str)`: Cắt khoảng trắng đầu/cuối và thu gọn khoảng trắng liên tiếp.
   - `std::string removeSymbols(const std::string& str)`: Loại bỏ các ký tự phân tách nguy hiểm (`|`, `{`, `}`, `<`, `>`, ...) ngăn chặn lỗi format tệp tin.
   - `std::string NormalizedName(const std::string& str)`: Chuẩn hóa họ tên người dùng/khách hàng.
@@ -170,6 +208,7 @@ Kế thừa từ `std::runtime_error` để bắt và hiển thị thông báo l
 - `DuplicateIdException`: Báo lỗi khi tạo đối tượng có mã ID đã tồn tại.
 - `NotFoundException`: Báo lỗi khi không tìm thấy bản ghi theo ID.
 - `InvalidLuhnException`: Báo lỗi khi mã IMEI không vượt qua thuật toán Luhn Mod-10.
+- `InvalidCredentialException`: Báo lỗi khi CCCD không đúng định dạng 12 chữ số hoặc mã tỉnh/thành không thuộc bảng mã triển khai.
 - `InvalidDateException`: Báo lỗi khi ngày tháng không hợp lệ hoặc ngày hết hạn < ngày đăng ký.
 - `FileIOException`: Báo lỗi khi không thể mở hoặc ghi tệp dữ liệu.
 

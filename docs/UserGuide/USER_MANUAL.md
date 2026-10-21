@@ -35,7 +35,7 @@ make run
 # Hoặc dọn dẹp và biên dịch lại từ đầu
 make clean && make
 
-# Chạy bộ kiểm thử tự động (141 assertions, 100% pass)
+# Chạy bộ kiểm thử tự động (259 assertions, 100% pass)
 make test
 ```
 
@@ -48,6 +48,9 @@ Dành cho mọi IDE hỗ trợ CMake (CLion, VS Code, Qt Creator, Xcode):
 # Cấu hình và biên dịch bằng CMake
 cmake -B build -S .
 cmake --build build
+
+# Chạy kiểm thử CTest
+ctest --test-dir build --output-on-failure
 
 # Chạy chương trình
 ./build/quanlythuebao       # Trên Linux/macOS
@@ -77,10 +80,21 @@ cmake --build build
    - `[5] Cap nhat thong tin`: Gia hạn hợp đồng, đổi gói cước, chuyển trạng thái (`HieuLuc`, `TamDung`, `ThanhLy`).
    - `[6] Xoa hop dong`: Xóa an toàn kèm hộp thoại xác nhận `(y/n)`.
 
-### 2.2 Quản Lý Thiết Bị Đầu Cuối & IMEI (UC02)
+### 2.2 ghicuocgoi (CDR) và Phiếu Nạp Tiền
+1. Tại **Menu chính**, chọn `[6] Quan ly Nap tien & Ban ghi CDR`.
+2. Lựa chọn các chức năng:
+   - `[1] Lap phieu nap tien`: Nhập mã giao dịch, số thuê bao, số tiền, hình thức nạp và ngày nạp.
+   - `[2] Xem danh sach phieu nap tien`: Hiển thị lịch sử giao dịch nạp tiền.
+   - `[3] Tra cuu lich su nap tien theo so thue bao`: Lọc giao dịch theo số thuê bao.
+   - `[4] Ghi nhan ban ghi cuoc goi / SMS / Data`: Tạo một bản ghi `ghicuocgoi (CDR)` trong `data/ghicuocgoi.txt`.
+   - `[5] Xem danh sach nhat ky cuoc goi CDR`: Hiển thị toàn bộ bản ghi CDR.
+3. Bản ghi CDR gồm bảy trường: `maCDR`, `soGoi`, `soNhan`, `loaiDichVu`, `thoiGianBatDau`, `thoiLuong` và `cuocPhatSinh`.
+4. Với thuê bao trả trước, hệ thống chỉ khấu trừ cước khi số dư hiện tại đủ lớn; bản ghi CDR vẫn được lưu độc lập.
+
+### 2.3 Quản Lý Thiết Bị Đầu Cuối & IMEI (UC02)
 1. Tại **Menu chính**, chọn `[4] Quan ly thiet bi IMEI`.
 2. Lựa chọn các chức năng:
-   - `[1] Them thiet bi moi`: Nhập 15 chữ số IMEI $\to$ Hệ thống tự động xác thực thuật toán **3GPP Luhn Checksum (Mod-10)**; từ chối và yêu cầu nhập lại nếu sai mã kiểm tra.
+   - `[1] Them thiet bi moi`: Chọn nhập IMEI thật do nhà sản xuất cấp hoặc sinh **IMEI mô phỏng** duy nhất cho dữ liệu demo. IMEI nhập tay được hệ thống tự động xác thực bằng thuật toán **3GPP Luhn Checksum (Mod-10)**; IMEI mô phỏng cũng luôn được sinh hợp lệ nhưng không đại diện cho phần cứng thật.
    - `[2] Xem danh sach thiet bi`: Hiển thị danh sách thiết bị kèm trạm BTS và trạng thái mạng.
    - `[3] Tim kiem thiet bi`: Tra cứu theo IMEI, Số điện thoại hoặc Hãng sản xuất.
    - `[4] Danh sach thiet bi bi khoa mang`: Lọc danh sách đen EIR Blacklist (`KhoaMang`).

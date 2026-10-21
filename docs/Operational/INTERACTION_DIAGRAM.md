@@ -15,13 +15,17 @@ Hệ thống được thiết kế theo mô hình phân lớp rõ ràng, phân t
 
 ```mermaid
 flowchart TD
-    User([Nguoi dung / Giang vien]) -->|Nhap lua chon 0-6| Main["src/main.cpp (Menu Chinh)"]
+    User([Nguoi dung / Giang vien]) -->|Nhap lua chon 0-7| Main["src/main.cpp (Menu Chinh)"]
 
     subgraph UI ["1. TANG GIAO DIEN CONSOLE (src/lib/menus/)"]
         direction TB
-        Main -->|Choice 3| HDMenu["HopDongMenu"]
-        Main -->|Choice 4| IMEIMenu["ThietBiIMEIMenu"]
-        Main -.->|Choice 1,2,5,6| Stubs["Stubs: GoiCuoc, ThueBao, NapTien, HoaDon"]
+        Main -->|Choice 1| KhachHangMenu["KhachHangMenu"]
+        Main -->|Choice 2| GoiCuocMenu["GoiCuocMenu"]
+        Main -->|Choice 3| ThueBaoMenu["ThueBaoMenu"]
+        Main -->|Choice 4| HDMenu["HopDongMenu"]
+        Main -->|Choice 5| IMEIMenu["ThietBiIMEIMenu"]
+        Main -->|Choice 6| NapTienMenu["NapTienMenu: ghicuocgoi (CDR)"]
+        Main -->|Choice 7| HoaDonMenu["HoaDonMenu"]
     end
 
     subgraph Core ["2. TANG NGHIEP VU & TIEN ICH XAC THUC (src/lib/models/ & src/lib/shared/)"]
