@@ -130,8 +130,6 @@ The current CTest suite contains:
 ./build/test_runner
 ```
 
-The current branch verifies **294 passed, 0 failed** assertions. Counts can change when tests are added.
-
 ### Strict C++11 build
 
 To verify the configured standard with stricter diagnostics:
@@ -221,13 +219,13 @@ These are possible future extensions, not required runtime dependencies.
 
 ## Verification summary
 
-Verified on the current development branch:
+Run the verification commands below on the current checkout:
 
-- CMake build: passed
-- CTest: **3/3 passed**
-- Direct test runner: **294 passed, 0 failed**
-- Strict C++11 build: passed
-- Anti-cheat integrity gate: passed with 0 strikes
+- CMake build
+- CTest suite
+- Direct test runner
+- Strict C++11 build
+- Anti-cheat integrity gate
 
 The repository may contain unrelated local working-tree changes. Check before committing:
 
