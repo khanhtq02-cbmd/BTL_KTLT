@@ -188,6 +188,7 @@ src/lib/
 * **Thiết kế:** Namespace thuần túy (Sanitization & Validation Family) chịu trách nhiệm làm sạch chuỗi và xác thực dữ liệu nghiệp vụ không phụ thuộc vào I/O console.
 * **Phương thức chính:**
   - `bool isValidPhoneNumber(const std::string& phone, bool allowUnassigned = false)`: Xác thực số điện thoại di động Việt Nam (đúng 10 chữ số, bắt đầu bằng `0`, thuộc các đầu số `03`, `05`, `07`, `08`, `09`).
+  - `std::string NormalizedCustomerId(const std::string& id)`: Loại bỏ khoảng trắng đầu/cuối và chuyển mã khách hàng về chữ hoa trước khi menu tra cứu hoặc kiểm tra khóa ngoại.
   - `bool isValidCredential(const std::string& cccd)`: Xác thực CCCD đúng 12 chữ số ASCII, có mã tỉnh/thành trong bảng mã triển khai (bao gồm `079`), và không áp đặt năm sinh thực tế lên phần cấu trúc còn lại.
   - `std::string trim(const std::string& str)` / `CollapseSpace(const std::string& str)`: Cắt khoảng trắng đầu/cuối và thu gọn khoảng trắng liên tiếp.
   - `std::string removeSymbols(const std::string& str)`: Loại bỏ các ký tự phân tách nguy hiểm (`|`, `{`, `}`, `<`, `>`, ...) ngăn chặn lỗi format tệp tin.

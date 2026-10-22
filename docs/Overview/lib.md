@@ -291,7 +291,7 @@ public:
 - `bool add(const T& item)`: Inserts new record; throws `DuplicateIdException` if ID already exists.
 - `bool update(const std::string& id, const T& updatedItem)`: Updates existing record by ID; throws `NotFoundException` if absent.
 - `bool remove(const std::string& id)`: Deletes record by ID; throws `NotFoundException` if absent.
-- `T* findById(const std::string& id)`: Linear scan returning pointer to matching record or `nullptr`.
+- `T* findById(const std::string& id)`: Linear scan returning pointer to matching record or `nullptr`; customer-menu inputs are canonicalized before customer-ID lookup.
 - `std::vector<T> filter(std::function<bool(const T&)> predicate) const`: Returns subset of matching records.
 - `void sort(std::function<bool(const T&, const T&)> comparator)`: Sorts in-place via `std::sort`.
 
