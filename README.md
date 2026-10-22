@@ -23,6 +23,8 @@ This course project simulates telecom workflows with local text files. It does n
 
 ### Linux
 
+Required tools:
+
 - GCC/G++ or Clang with C++11 support
 - GNU Make
 - CMake 3.10 or newer
@@ -41,62 +43,128 @@ On Fedora:
 sudo dnf install -y gcc-c++ make cmake git
 ```
 
-Check the installed tools:
+Verify the installation:
 
 ```bash
 g++ --version
 make --version
 cmake --version
+git --version
 ```
 
 ### Windows
 
-Install one of the following toolchains:
+Choose one supported setup:
 
-- MinGW-w64 with `g++` available on `PATH`
-- MSYS2 MinGW-w64
-- Visual Studio with a C++ workload
+1. **MinGW-w64 or MSYS2 MinGW-w64** — provides `g++`, `make`, and optionally CMake. Add the compiler's `bin` directory to `PATH` if using a regular Command Prompt or PowerShell.
+2. **Visual Studio 2019/2022** — install the **Desktop development with C++** workload and the CMake tools component.
+3. **Git for Windows** — recommended for cloning and for the Git Bash commands below.
 
-The included `run_windows.bat` expects `g++` on `PATH` and compiles the application with C++11.
+The included `run_windows.bat` is the simplest MinGW path. It requires `g++` on `PATH`, compiles with C++11 and warnings enabled, then starts `quanlythuebao.exe`.
+
+Check a MinGW/MSYS2 installation in Command Prompt or Git Bash:
+
+```bat
+g++ --version
+cmake --version
+git --version
+```
 
 ## Get the source
+
+Using Git:
 
 ```bash
 git clone <repository-url>
 cd KTLT
 ```
 
-If the project was supplied as an archive, extract it and enter the extracted project directory.
+If the project was supplied as a ZIP archive, extract it and open a terminal in the extracted `KTLT` directory. Keep the `data/` directory beside the source tree; the application needs its text fixtures at startup.
 
-## Build with CMake
+## Build and run on Linux
 
-Configure and build in an out-of-source directory:
+### Option A: GNU Make
 
-```bash
-cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
-cmake --build build --parallel
-```
-
-The build produces:
-
-- `build/quanlythuebao`
-- `build/test_runner`
-- `build/stress_test_runner`
-
-Run the application from the project root:
-
-```bash
-./build/quanlythuebao
-```
-
-The program also resolves `data/` relative to the executable when launched from another directory, provided the complete data directory is present.
-
-## Build with Make
+Run these commands from the repository root:
 
 ```bash
 make clean
 make all
 ./quanlythuebao
+```
+
+For the normal build-and-run shortcut:
+
+```bash
+make run
+```
+
+### Option B: CMake
+
+```bash
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
+cmake --build build --parallel
+./build/quanlythuebao
+```
+
+The program can also be launched from another working directory because it resolves `data/` relative to the executable, provided the complete data directory is present.
+
+## Build and run on Windows
+
+### Option A: MinGW/MSYS2 batch script
+
+1. Open Command Prompt or Git Bash.
+2. Change to the repository root.
+3. Confirm `g++` is available.
+4. Run the script:
+
+```bat
+run_windows.bat
+```
+
+The script creates `quanlythuebao.exe` in the repository root and starts it. Run it from the project root so the relative `data/` directory is available.
+
+To build and run manually from Git Bash with MinGW:
+
+```bash
+g++ -std=c++11 -Wall -Wextra -Isrc -Isrc/lib -Isrc/lib/shared -Isrc/lib/models -Isrc/lib/menus \
+  src/main.cpp src/lib/shared/*.cpp src/lib/models/*.cpp src/lib/menus/*.cpp \
+  -o quanlythuebao.exe
+./quanlythuebao.exe
+```
+
+### Option B: Visual Studio or CMake GUI
+
+From a **Developer PowerShell for VS** or a terminal where CMake is available:
+
+```powershell
+cmake -S . -B build
+cmake --build build --config Debug --parallel
+.\build\Debug\quanlythuebao.exe
+```
+
+Alternatively, open the repository folder in Visual Studio, select the CMake target `quanlythuebao`, choose the `Debug` configuration, and run it. Keep the repository's `data/` directory available beside the source tree.
+
+## Build with CMake on either platform
+
+The CMake targets are:
+
+- `quanlythuebao` — interactive application
+- `test_runner` — direct assertion suite
+- `stress_test_runner` — sanitizer stress runner
+
+Linux:
+
+```bash
+cmake -S . -B build
+cmake --build build --parallel
+```
+
+Windows with a multi-configuration generator:
+
+```powershell
+cmake -S . -B build
+cmake --build build --config Debug --parallel
 ```
 
 Useful targets:
@@ -240,5 +308,6 @@ git diff --check
 - `docs/Overview/lib.md`
 - `docs/Operational/TECHNICAL_DESIGN_SPECIFICATION.md`
 - `docs/Operational/FUNCTION_CALLFLOW_SPEC.md`
+- `docs/Operational/USE_CASE_SPEC_DUCANH.md`
 - `docs/Reports/IMEI_AND_SHARED_LIBRARIES_REPORT.md`
 - `members/*/README.md`
