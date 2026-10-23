@@ -76,7 +76,7 @@ ctest --test-dir build --output-on-failure
    - `[1] Them hop dong moi`: Nhập mã hợp đồng duy nhất (`HDxxxx`), thông tin khách hàng, số điện thoại, gói cước, ngày đăng ký, ngày hết hạn và cước phí.
    - `[2] Xem danh sach hop dong`: Hiển thị bảng định dạng chuẩn `<iomanip>` toàn bộ hợp đồng.
    - `[3] Tim kiem hop dong`: Tra cứu theo Mã HĐ, Số điện thoại hoặc Mã khách hàng.
-   - `[4] Sap xep danh sach`: Sắp xếp theo ngày đăng ký (mới nhất) hoặc giá trị cước (giảm dần).
+   - `[4] Sap xep danh sach`: Sắp xếp theo ngày đăng ký, giá trị cước, hoặc mã hợp đồng tăng/giảm; thứ tự được lưu vào tệp dữ liệu.
    - `[5] Cap nhat thong tin`: Gia hạn hợp đồng, đổi gói cước, chuyển trạng thái (`HieuLuc`, `TamDung`, `ThanhLy`).
    - `[6] Xoa hop dong`: Xóa an toàn kèm hộp thoại xác nhận `(y/n)`.
 
@@ -88,6 +88,7 @@ ctest --test-dir build --output-on-failure
    - `[3] Tra cuu lich su nap tien theo so thue bao`: Lọc giao dịch theo số thuê bao.
    - `[4] Ghi nhan ban ghi cuoc goi / SMS / Data`: Tạo một bản ghi `ghicuocgoi (CDR)` trong `data/ghicuocgoi.txt`.
    - `[5] Xem danh sach nhat ky cuoc goi CDR`: Hiển thị toàn bộ bản ghi CDR.
+   - `[6] Sap xep phieu nap / CDR theo ma`: Chọn mã giao dịch hoặc mã CDR tăng/giảm; thứ tự được lưu vào tệp dữ liệu.
 3. Bản ghi CDR gồm bảy trường: `maCDR`, `soGoi`, `soNhan`, `loaiDichVu`, `thoiGianBatDau`, `thoiLuong` và `cuocPhatSinh`.
 4. Với thuê bao trả trước, hệ thống chỉ khấu trừ cước khi số dư hiện tại đủ lớn; bản ghi CDR vẫn được lưu độc lập.
 

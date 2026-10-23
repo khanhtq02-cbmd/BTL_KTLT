@@ -269,7 +269,7 @@ void ThueBaoMenu::showMenu() {
                   << "====================================================================\n";
 
         int choice = InputHelper::getInt("Nhap lua chon [0-8]: ", MENU_BACK, MENU_SORT);
-        if (choice == MENU_BACK) {
+        if (choice == MENU_BACK || std::cin.eof()) {
             break;
         }
 

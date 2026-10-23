@@ -177,10 +177,12 @@ namespace FileConstants {
 ### `Normalized.h` / `Normalized.cpp` — Sanitization & Validation Engine
 - **Header:** `src/lib/shared/Normalized.h`
 - **Implementation:** `src/lib/shared/Normalized.cpp`
-- **Purpose:** Pure functions for string sanitization, delimiter injection prevention, and strict Vietnamese 10-digit mobile phone validation. Decoupled from interactive I/O.
+- **Purpose:** Pure functions for string sanitization, delimiter injection prevention, name-length validation, and strict Vietnamese 10-digit mobile phone validation. Decoupled from interactive I/O.
 - **Maintenance note (2026-10-13):** `Normalized::trim` is the single shared whitespace helper; `FileIO` keeps splitting and directory/path responsibilities. The redundant `Normalized::Trim` alias and `FileIO::trim` API were removed.
+- **Name boundary (2026-10-23):** `Normalized::isValidName` is the single 50-code-point UTF-8 gate. Interactive name prompts and customer, package, and device model constructors/setters use it, so persisted rows cannot bypass the limit.
 
 #### Key Functions (`Normalized` Namespace)
+- `bool isValidName(const std::string& str)`: Rejects empty or pipe-delimited names and limits valid UTF-8 names to 50 code points.
 - `bool isValidPhoneNumber(const std::string& phone, bool allowUnassigned = false)`: Validates 10-digit mobile phone number starting with `03`, `05`, `07`, `08`, `09`.
 - `std::string trim(const std::string& str)`: The single shared leading/trailing whitespace helper used by input, file splitting, and persistence loading.
 - `std::string CollapseSpace(const std::string& str)`: Collapses multiple consecutive spaces into a single space.
@@ -194,7 +196,7 @@ namespace FileConstants {
 ### `InputHelper.h` / `InputHelper.cpp` — Safe Console Input Handler (Console Input Family)
 - **Header:** `src/lib/shared/InputHelper.h`
 - **Implementation:** `src/lib/shared/InputHelper.cpp`
-- **Purpose:** Prevents `std::cin` buffer lockups, handles invalid input types gracefully, enforces numeric ranges, sanitizes delimiter injection, and delegates phone validation to `Normalized::isValidPhoneNumber`.
+- **Purpose:** Prevents `std::cin` buffer lockups, handles invalid input types gracefully, enforces numeric ranges, validates names through `Normalized::isValidName`, sanitizes delimiter injection, and delegates phone validation to `Normalized::isValidPhoneNumber`.
 
 #### Key Constants (`InputLimits` Namespace)
 ```cpp
@@ -293,7 +295,11 @@ public:
 - `bool remove(const std::string& id)`: Deletes record by ID; throws `NotFoundException` if absent.
 - `T* findById(const std::string& id)`: Linear scan returning pointer to matching record or `nullptr`; customer-menu inputs are canonicalized before customer-ID lookup.
 - `std::vector<T> filter(std::function<bool(const T&)> predicate) const`: Returns subset of matching records.
-- `void sort(std::function<bool(const T&, const T&)> comparator)`: Sorts in-place via `std::sort`.
+- `void sort(std::function<bool(const T&, const T&)> comparator)`: Sorts in-memory via `std::sort`.
+- `bool sortAndSave(std::function<bool(const T&, const T&)> comparator)`: Sorts and persists atomically; restores the previous order if saving fails.
+- `bool sortById(bool ascending = true)`: Reusable ascending/descending ID sort that persists through `sortAndSave`.
+
+All model menus expose ascending and descending ID sorting. Existing field-based sorts (price/date/data) also persist their selected order; composite menus provide separate sort choices for each owned repository (for example, `NapTien`/`CDR` and `HoaDon`/`KhieuNai`).
 
 ---
 
@@ -416,7 +422,7 @@ bool ThietBiIMEI::validateLuhn(const std::string& imeiStr) {
   - `[1]` Thêm mới hợp đồng đăng ký (Add Contract)
   - `[2]` Xem danh sách hợp đồng (List Contracts)
   - `[3]` Tìm kiếm hợp đồng (Search by ID, Phone, Customer Code)
-  - `[4]` Sắp xếp danh sách (Sort by Registration Date, Price Descending)
+  - `[4]` Sắp xếp danh sách (Registration Date, Price, or Contract ID Ascending/Descending; persisted)
   - `[5]` Cập nhật hợp đồng (Update Package, Extend Expiry, Change Status)
   - `[6]` Xóa hợp đồng (Delete Contract with confirmation)
   - `[0]` Quay lại menu chính (Return)

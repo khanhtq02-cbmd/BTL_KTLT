@@ -385,13 +385,17 @@ sequenceDiagram
     participant Repo as Repository<HopDong>
     participant StdSort as std::sort
 
-    Menu->>Input: getInt("Lua chon sap xep", 0, 2)
+    Menu->>Input: getInt("Lua chon sap xep", 0, 4)
     Input-->>Menu: choice = 2
 
-    Menu->>Repo: sort([](const HopDong& a, const HopDong& b) { return a.getGiaTriGoi() > b.getGiaTriGoi(); })
+    Menu->>Repo: sortAndSave([](const HopDong& a, const HopDong& b) { return a.getGiaTriGoi() > b.getGiaTriGoi(); })
     activate Repo
     Repo->>StdSort: std::sort(items.begin(), items.end(), comparator)
     StdSort-->>Repo: Hoàn tất sắp xếp trong RAM
+    Repo->>Repo: saveToFile() qua staging nguyên tử
+    alt Lưu thất bại
+        Repo->>Repo: Khôi phục thứ tự cũ
+    end
     deactivate Repo
 
     Menu->>Menu: xemDanhSach()

@@ -44,6 +44,6 @@ Khi ghi nhận, menu kiểm tra thuê bao gọi tồn tại, kiểm tra mã CDR 
 
 ## Kiểm tra và lưu trữ
 
-Constructor từ chối trường bắt buộc rỗng, thời lượng âm và cước âm. `fromFileString()` yêu cầu đủ bảy trường và giá trị số hợp lệ. `Repository<CDR>` dùng chung cơ chế staging và lưu nguyên tử của `Repository<T>`.
+Constructor từ chối trường bắt buộc rỗng, loại dịch vụ không xác định, số điện thoại không hợp lệ, thời gian không hợp lệ, thời lượng âm và cước âm hoặc không hữu hạn. `fromFileString()` yêu cầu đúng bảy trường, chuyển đổi số đầy đủ và tạo một `CDR` tạm qua constructor trước khi cập nhật đối tượng đích. `Repository<CDR>` dùng chung cơ chế staging và lưu nguyên tử của `Repository<T>`.
 
-Kiểm thử liên quan nằm trong `tests/test_runner.cpp`, gồm khởi tạo, getter, tuần tự hóa, đọc lại bản ghi và các trường hợp thời lượng/cước âm. Tên file/module và fixture dùng chữ thường `ghicuocgoi`; lớp C++ vẫn là `CDR`. Lần kiểm tra gần nhất: **283 passed, 0 failed**; CTest **3/3 passed**.
+Kiểm thử liên quan nằm trong `tests/test_runner.cpp`, gồm khởi tạo, getter, tuần tự hóa, đọc lại bản ghi, các trường hợp thời lượng/cước âm và sáu dạng dòng CDR sai cấu trúc hoặc sai miền giá trị. Tên file/module và fixture dùng chữ thường `ghicuocgoi`; lớp C++ vẫn là `CDR`. Lần kiểm tra gần nhất: **314 passed, 0 failed**; CTest **3/3 passed**.

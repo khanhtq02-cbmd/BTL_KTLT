@@ -16,6 +16,12 @@ namespace HoaDonMenuChoices {
     const int MENU_ADD_COMPLAINT = 5;
     const int MENU_PROCESS_COMPLAINT = 6;
     const int MENU_LIST_COMPLAINTS = 7;
+    const int MENU_SORT = 8;
+
+    const int SORT_INVOICE_ID_ASC = 1;
+    const int SORT_INVOICE_ID_DESC = 2;
+    const int SORT_COMPLAINT_ID_ASC = 3;
+    const int SORT_COMPLAINT_ID_DESC = 4;
 }
 
 class HoaDonMenu {
@@ -32,6 +38,8 @@ private:
     void thanhToanHoaDon();
     //tra cuu hoa don theo so dien thoai
     void traCuuTheoSoDienThoai();
+    //sap xep hoa don hoac khieu nai theo ma
+    void sapXepDanhSach();
     //tiep nhan phieu khieu nai
     void tiepNhanKhieuNai();
     //xu ly phieu khieu nai

@@ -54,7 +54,7 @@ void ThietBiIMEIMenu::showMenu() {
                   << "--------------------------------------------------------------------\n";
 
         int choice = InputHelper::getInt("Nhap lua chon cua ban [0-7]: ", MENU_BACK, MENU_DELETE);
-        if (choice == MENU_BACK) {
+        if (choice == MENU_BACK || std::cin.eof()) {
             break;
         }
 
@@ -116,9 +116,9 @@ void ThietBiIMEIMenu::themThietBi() {
             break;
         }
     }
-    std::string tenTB = InputHelper::getString("Nhap Ten thiet bi (VD: iPhone 15 Pro, Galaxy S24): ", false);
+    std::string tenTB = InputHelper::getName("Nhap Ten thiet bi (VD: iPhone 15 Pro, Galaxy S24): ", false);
     if (std::cin.eof() || tenTB.empty()) return;
-    std::string hangSX = InputHelper::getString("Nhap Hang san xuat (VD: Apple, Samsung, Xiaomi): ", false);
+    std::string hangSX = InputHelper::getName("Nhap Hang san xuat (VD: Apple, Samsung, Xiaomi): ", false);
     if (std::cin.eof() || hangSX.empty()) return;
     std::string sdt = InputHelper::getPhoneNumber("Nhap So dien thoai gan kem: ", true);
     if (std::cin.eof()) return;

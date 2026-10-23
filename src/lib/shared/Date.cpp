@@ -82,8 +82,10 @@ bool Date::isValid(int d, int m, int y) {
 Date Date::parse(const std::string& str) {
     int d = 0, m = 0, y = 0;
     char sep1 = 0, sep2 = 0;
+    //phep trich xuat tu luong kiem tra ngu phap ngay ma khong chap nhan du lieu nhap dang do.
     std::istringstream iss(str);
     std::string trailing;
+    //doc phan con lai de tu choi ngay hop le nhung bi noi them chuoi thua.
     //kiem tra dau gach,chan ky tu thua phia sau
     if (!(iss >> d >> sep1 >> m >> sep2 >> y) || (sep1 != '/' && sep1 != '-') || (sep1 != sep2) || (iss >> trailing)) {
         throw InvalidDateException("Dinh dang ngay phai la DD/MM/YYYY (Chuoi nhap: '" + str + "')");

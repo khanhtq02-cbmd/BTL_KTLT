@@ -153,6 +153,8 @@ src/lib/
 
 * **API hiển thị/chuyển đổi:** `displayHeader()`, `displayRow()`, `displayDetail()`, `toFileString()` và `fromFileString()`.
 
+* **Toàn vẹn liên kết thuê bao–thiết bị:** `ThueBaoMenu::xoaThueBao()` từ chối xóa thuê bao nếu `ThietBiIMEI` vẫn gắn cùng số điện thoại; người vận hành phải gỡ SIM trước, không có cascade delete.
+
 ### 3.5 Lớp Đối Tượng Ngày Tháng `Date` (`src/lib/shared/Date.h` & `src/lib/shared/Date.cpp`)
 * **Thuộc tính:** `day` (1–31), `month` (1–12), `year` ($\ge 1900$).
 * **Xử lý năm nhuận:**
@@ -166,15 +168,19 @@ src/lib/
 ### 3.5 Lớp Generic Database Engine `Repository<T>` (`src/lib/shared/Repository.h`)
 * **Thiết kế:** Template class quản lý danh sách bộ nhớ `std::vector<T>` liên kết với tệp văn bản đĩa cứng `data/*.txt`.
 * **Phương thức chính:**
-  - `bool loadFromFile()`: Đọc từng dòng tệp tin, phân tách bằng `|`, tạo đối tượng và nạp vào vector.
-  - `bool saveToFile()`: Ghi dữ liệu an toàn (ghi vào `.tmp`, kiểm tra ghi thành công, sau đó đổi tên ghi đè tệp chính).
+  - `bool loadFromFile()`: Đọc từng dòng tệp tin, phân tách bằng `|`, tạo đối tượng và nạp vào vector; gặp dòng sai định dạng thì trả về thất bại và không công bố dữ liệu đọc dở.
+  - `bool saveToFile()`: Ghi dữ liệu an toàn (ghi vào `.tmp`, kiểm tra ghi thành công, sau đó đổi tên ghi đè tệp chính); không được gọi sau khi nạp dữ liệu thất bại.
   - `bool add(const T& item)`: Kiểm tra trùng ID trước khi thêm.
   - `bool update(const std::string& id, const T& item)`: Cập nhật bản ghi theo khóa chính.
   - `bool remove(const std::string& id)`: Xóa bản ghi theo khóa chính.
   - `T* findById(const std::string& id)`: Tìm kiếm con trỏ bản ghi theo ID.
   - `std::vector<T>& getAll()`: Trả về tham chiếu toàn bộ danh sách.
   - `std::vector<T> filter(std::function<bool(const T&)> predicate)`: Lọc dữ liệu linh hoạt.
-  - `void sort(std::function<bool(const T&, const T&)> comparator)`: Sắp xếp theo tiêu chí tùy biến.
+  - `void sort(std::function<bool(const T&, const T&)> comparator)`: Sắp xếp trong bộ nhớ theo tiêu chí tùy biến.
+  - `bool sortAndSave(std::function<bool(const T&, const T&)> comparator)`: Sắp xếp và lưu nguyên tử; khôi phục thứ tự cũ nếu lưu thất bại.
+  - `bool sortById(bool ascending = true)`: Sắp xếp ID tăng hoặc giảm dùng chung cho mọi model.
+
+Các menu model đều có lựa chọn sắp xếp ID tăng dần/giảm dần. Các lựa chọn sắp xếp theo giá, ngày hoặc dung lượng hiện có cũng được lưu xuống `data/*.txt`; menu dùng chung nhiều repository hiển thị lựa chọn riêng cho từng loại bản ghi.
 
 ### 2.6 Thư Viện Tiện Ích Giao Diện Console `DisplayHelper` (`src/lib/shared/DisplayHelper.h`)
 * **Thiết kế:** Namespace chứa các hàm tiện ích định dạng bảng ASCII và thẻ chi tiết (card layout), loại bỏ mã lặp `<iomanip>` trong các lớp thực thể `HopDong` và `ThietBiIMEI`.

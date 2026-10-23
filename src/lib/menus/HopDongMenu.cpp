@@ -21,7 +21,7 @@ void HopDongMenu::showMenu() {
                   << "--------------------------------------------------------------------\n";
 
         int choice = InputHelper::getInt("Nhap lua chon cua ban [0-6]: ", MENU_BACK, MENU_DELETE);
-        if (choice == MENU_BACK) {
+        if (choice == MENU_BACK || std::cin.eof()) {
             break;
         }
 
@@ -198,20 +198,29 @@ void HopDongMenu::sapXepDanhSach() {
     std::cout << "\n>>> SAP XEP DANH SACH HOP DONG <<<\n"
               << "  [" << SORT_BY_DATE_DESC << "] Theo Ngay dang ky (Moi nhat -> Cu nhat)\n"
               << "  [" << SORT_BY_PRICE_DESC << "] Theo Gia tri goi cuoc (Giam dan)\n"
+              << "  [" << SORT_BY_ID_ASC << "] Theo Ma hop dong (Tang dan)\n"
+              << "  [" << SORT_BY_ID_DESC << "] Theo Ma hop dong (Giam dan)\n"
               << "  [0] Quay lai\n";
-    int choice = InputHelper::getInt("Nhap lua chon [0-2]: ", 0, SORT_BY_PRICE_DESC);
+    int choice = InputHelper::getInt("Nhap lua chon [0-4]: ", 0, SORT_BY_ID_DESC);
     if (choice == 0) return;
 
-    if (choice == SORT_BY_DATE_DESC) {
-        store.sort([](const HopDong& a, const HopDong& b) {
-            return b.getNgayDangKy() < a.getNgayDangKy();
-        });
-        std::cout << "[THANH CONG] Da sap xep danh sach theo ngay dang ky giam dan!\n";
-    } else if (choice == SORT_BY_PRICE_DESC) {
-        store.sort([](const HopDong& a, const HopDong& b) {
-            return a.getGiaTriGoi() > b.getGiaTriGoi();
-        });
-        std::cout << "[THANH CONG] Da sap xep danh sach theo gia tri goi cuoc giam dan!\n";
+    try {
+        if (choice == SORT_BY_DATE_DESC) {
+            store.sortAndSave([](const HopDong& a, const HopDong& b) {
+                return b.getNgayDangKy() < a.getNgayDangKy();
+            });
+            std::cout << "[THANH CONG] Da sap xep danh sach theo ngay dang ky giam dan!\n";
+        } else if (choice == SORT_BY_PRICE_DESC) {
+            store.sortAndSave([](const HopDong& a, const HopDong& b) {
+                return a.getGiaTriGoi() > b.getGiaTriGoi();
+            });
+            std::cout << "[THANH CONG] Da sap xep danh sach theo gia tri goi cuoc giam dan!\n";
+        } else {
+            store.sortById(choice == SORT_BY_ID_ASC);
+            std::cout << "[THANH CONG] Da sap xep danh sach theo ma hop dong!\n";
+        }
+    } catch (const std::exception& e) {
+        std::cout << "[LOI] Khong the luu thu tu sap xep: " << e.what() << "\n";
     }
     xemDanhSach();
 }

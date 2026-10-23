@@ -405,6 +405,9 @@ Bộ kiểm thử nằm trong tests/test_runner.cpp. Các nhóm kiểm thử g�
 - Kiểm tra CRUD và lưu file của Repository<T>.
 - Kiểm tra DisplayHelper.
 - Kiểm tra các menu hợp đồng và thiết bị IMEI.
+- Kiểm tra các model GoiCuoc, ThueBao, KhachHang, NapTien, HoaDon, CDR và KhieuNai.
+- Kiểm tra BTSRegister, đường dẫn dữ liệu chữ thường và cơ chế nạp lại dữ liệu sau khi ghi.
+- Kiểm tra chuẩn hóa mã khách hàng không phân biệt hoa thường ở các điểm nhập khóa ngoại.
 
 Lệnh chạy kiểm thử:
 
@@ -412,11 +415,44 @@ make test
 
 Kết quả hiện tại:
 
-Ket qua kiem thu: 139 passed, 0 failed.
+Ket qua kiem thu: 308 passed, 0 failed.
 
-Tất cả kiểm thử đã vượt qua thành công, đạt 100% trong phạm vi bộ test hiện có.
+Tất cả kiểm thử đã vượt qua thành công, đạt 100% trong phạm vi bộ test hiện có. CTest xác nhận 3/3 bài kiểm thử đăng ký trong CMake, gồm bộ unit test, kiểm tra stress nhanh và kiểm tra khởi động từ thư mục khác. Kiểm tra biên dịch nghiêm ngặt với C++11, `-pedantic-errors`, `-Wall` và `-Wextra` được dùng để phát hiện khác biệt giữa cấu hình Makefile và mã nguồn.
 
-Lệnh make all hiện báo target đã up-to-date. Kết quả này cho biết chương trình đã được biên dịch trước đó và không cần biên dịch lại, không được hiểu là một lần clean build mới.
+3.6.1. Ma trận kiểm chứng theo đường đi dữ liệu
+
+Mỗi bản ghi mẫu đi qua cùng một đường xử lí với dữ liệu nhập từ menu: file văn bản được mở bởi `Repository<T>::loadFromFile`, tách trường bằng `FileIO::split`, sau đó gọi `fromFileString` của model. Model tạo đối tượng hoặc từ chối bản ghi khi thiếu trường, sai ngày, sai số điện thoại, sai IMEI hoặc sai trạng thái. Chỉ các đối tượng đã được chấp nhận mới được đưa vào vector trong repository.
+
+Khi người dùng thêm, sửa hoặc xóa bản ghi, menu gọi thao tác của repository. Repository thay đổi vector trước, gọi `saveToFile`, rồi khôi phục vector nếu thao tác ghi thất bại. `saveToFile` ghi ra đường dẫn tạm trong vùng staging, kiểm tra flush và close, sau đó commit sang file chính. Vì vậy báo cáo phân biệt rõ ba trạng thái: kiểm tra trong bộ nhớ, ghi file tạm và commit file chính.
+
+3.6.2. Kiểm chứng dữ liệu mẫu sau khi bổ sung
+
+Các file `data/imei.txt`, `data/naptien.txt`, `data/ghicuocgoi.txt`, `data/hoadon.txt` và `data/khieunai.txt` được bổ sung đến mười bản ghi hợp lệ mỗi file. Các số điện thoại mới đều lấy từ `data/thuebao.txt`, do đó vẫn nằm trong tập thuê bao đã đăng kí. Các mã IMEI mới có 15 chữ số và được tạo bằng cùng quy tắc Luhn mà model sử dụng.
+
+Bảng kiểm tra số lượng tối thiểu:
+
+- `data/imei.txt`: 10 thiết bị, gồm thiết bị đã gán SIM, chưa gán SIM, hoạt động và tạm khóa.
+- `data/naptien.txt`: 10 giao dịch, gồm các phương thức ngân hàng, thẻ cào và ví điện tử; có cả giao dịch thành công và thất bại.
+- `data/ghicuocgoi.txt`: 10 CDR, gồm thoại, SMS và data; trường số gọi, số nhận và thời điểm được giữ ở dạng chuỗi mà model hiện hỗ trợ.
+- `data/hoadon.txt`: 10 hóa đơn, liên kết với các số thuê bao hiện có và có cả trạng thái đã thanh toán/chưa thanh toán.
+- `data/khieunai.txt`: 10 phiếu, gồm nhiều loại phản ánh và các trạng thái tiếp nhận, đang xử lí, đã giải quyết.
+
+Việc tăng dữ liệu mẫu không thay đổi schema. Mục đích là làm cho các thao tác đọc danh sách, tìm kiếm, lọc, sắp xếp và hiển thị có đủ dữ liệu để quan sát; dữ liệu mẫu không được dùng để chứng minh kết nối với hệ thống nhà mạng thật.
+
+3.6.3. Các trường hợp biên đã kiểm tra
+
+- File hợp lệ có thể mở, parse và nạp lại sau khi ghi.
+- Dòng IMEI sai định dạng bị bỏ qua thay vì tạo đối tượng không hợp lệ.
+- File không tồn tại làm `loadFromFile` trả về `false`; dữ liệu đang có trong bộ nhớ không bị xóa.
+- Mã định danh trùng bị từ chối bằng `DuplicateIdException`.
+- Cập nhật hoặc xóa mã không tồn tại bị từ chối bằng `NotFoundException`.
+- Đường dẫn không thể ghi làm phát sinh `FileIOException` và kích hoạt rollback bộ nhớ.
+- Nhập EOF trong menu dừng thao tác hiện tại thay vì lặp vô hạn.
+- Thiết bị có `ChuaGan` không bị coi là số điện thoại lỗi; khi gán SIM, số điện thoại phải qua cùng quy tắc hợp lệ với menu thuê bao.
+
+3.6.4. Giới hạn của kết quả kiểm thử
+
+303 assertion chỉ chứng minh các đường đi đã được viết trong `tests/test_runner.cpp`; nó không phải chứng nhận triển khai nhà mạng, hiệu năng tải lớn, tính sẵn sàng cao hoặc an toàn tuyệt đối. CTest 3/3 xác nhận các test target hiện đăng ký trong CMake, không thay thế cho kiểm thử triển khai trên máy chủ. Dữ liệu mẫu là fixture offline, không đại diện cho dữ liệu khách hàng thật và không chứa thông tin xác thực.
 
 3.7 Cơ hội phát triển hệ thống
 
