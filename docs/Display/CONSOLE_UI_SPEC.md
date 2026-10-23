@@ -41,7 +41,7 @@ Nhap lua chon cua ban [0-7]:
   [1] Them hop dong moi
   [2] Xem danh sach hop dong
   [3] Tim kiem hop dong
-  [4] Sap xep danh sach
+  [4] Sap xep danh sach (ngay, gia, ma tang/giam)
   [5] Cap nhat thong tin hop dong
   [6] Xoa hop dong
   [0] Quay lai menu chinh
@@ -84,9 +84,10 @@ Tong so: 3 hop dong.
   [1] Them thiet bi moi (Nhap IMEI that / Sinh IMEI mo phong, kiem tra Luhn 3GPP)
   [2] Xem danh sach thiet bi
   [3] Tim kiem thiet bi (Theo IMEI / So DT / Hang SX)
-  [4] Danh sach thiet bi bi khoa mang (EIR Blacklist)
-  [5] Cap nhat thiet bi (Gan SIM / Doi BTS / Khoa may)
-  [6] Xoa thiet bi
+  [4] Sap xep thiet bi theo Ma IMEI
+  [5] Danh sach thiet bi bi khoa mang (EIR Blacklist)
+  [6] Cap nhat thiet bi (Gan SIM / Doi BTS / Khoa may)
+  [7] Xoa thiet bi
   [0] Quay lai menu chinh
 --------------------------------------------------------------------
 Nhap lua chon cua ban [0-7]:
