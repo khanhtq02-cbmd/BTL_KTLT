@@ -45,19 +45,23 @@ public:
             return false;
         }
 
+        //giu nguyen bo suu tap hien tai cho den khi doc xong toan bo tep.
         std::vector<T> loadedItems;
         std::string line;
         while (std::getline(inFile, line)) {
             std::string trimmedLine = Normalized::trim(line);
             if (trimmedLine.empty() || trimmedLine[0] == FileConstants::COMMENT_PREFIX) continue;
             T item;
-            if (!item.fromFileString(trimmedLine)) continue;
+            if (!item.fromFileString(trimmedLine)) {
+                return false;
+            }
             loadedItems.push_back(item);
         }
         if (inFile.bad()) {
             return false;
         }
         inFile.close();
+        //chi cap nhat bo suu tap moi sau khi doc va kiem tra luong tep thanh cong.
         items.swap(loadedItems);
         return true;
     }
@@ -65,6 +69,7 @@ public:
     bool saveToFile() const {
         FileIO::ensureDirectoryExists(filePath);
         std::string tempPath = FileIO::getTempStagingPath(filePath);
+        //ghi day du ban thay the vao tep tam truoc khi doi tep du lieu dang dung.
         std::ofstream outFile(tempPath);
         if (!outFile.is_open()) {
             throw FileIOException("Khong the mo tep tin tam tren tmps/ de ghi: " + tempPath);
@@ -102,6 +107,7 @@ public:
         try {
             return saveToFile();
         } catch (...) {
+            //khoi phuc bo nho neu buoc luu ban ghi moi bi tu choi.
             items.pop_back();
             throw;
         }
@@ -116,6 +122,7 @@ public:
                 try {
                     return saveToFile();
                 } catch (...) {
+                    //ban ghi truoc do la moc khoi phuc trong bo nho.
                     items[i] = previous;
                     throw;
                 }
@@ -134,6 +141,7 @@ public:
                 try {
                     return saveToFile();
                 } catch (...) {
+                    //chen lai tai vi tri cu neu thao tac xoa khong the luu xuong tep.
                     items.insert(items.begin() + index, previous);
                     throw;
                 }
