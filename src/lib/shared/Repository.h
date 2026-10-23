@@ -178,6 +178,25 @@ public:
         std::sort(items.begin(), items.end(), comparator);
     }
 
+    //sap xep danh sach va luu lai tep, khoi phuc neu luu that bai
+    bool sortAndSave(std::function<bool(const T&, const T&)> comparator) {
+        std::vector<T> previous = items;
+        sort(comparator);
+        try {
+            return saveToFile();
+        } catch (...) {
+            items.swap(previous);
+            throw;
+        }
+    }
+
+    //sap xep ma dinh danh tang dan hoac giam dan va luu lai tep
+    bool sortById(bool ascending = true) {
+        return sortAndSave([ascending](const T& first, const T& second) {
+            return ascending ? first.getId() < second.getId() : first.getId() > second.getId();
+        });
+    }
+
     //xoa toan bo ban ghi va luu tep
     void clear() {
         std::vector<T> previous = items;
