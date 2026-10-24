@@ -131,3 +131,39 @@ Tong so: 3 thiet bi.
 [LOI] Ngay het han (15/01/2023) khong duoc nho hon ngay dang ky (15/01/2024)!
 [LOI] Gia tri nhap vao khong dung dinh dang so! Vui long thu lai.
 ```
+
+---
+
+## 6. Quy Chuẩn Bảng Điều Hướng & Đánh Số Menu
+
+Tất cả 7 menu phân hệ tuân thủ cấu trúc đồng nhất:
+* Khung viền trên/dưới: 68 dấu bằng (`====================================================================`).
+* Đánh số thứ tự chức năng nghiệp vụ tuần tự từ `[1..N]`.
+* Tùy chọn thoát/quay lại luôn là `[0]` (`[0] Quay lai menu chinh` hoặc `[0] Thoat chuong trinh`).
+* Lệnh nhắc nhập chuẩn: `Nhap lua chon cua ban [0-N]: `.
+* Tùy chọn submenu (tìm kiếm, sắp xếp, cập nhật) luôn có `[0] Quay lai` hoặc `[0] Huy bo thao tac`.
+
+---
+
+## 7. Giao Thức Nhập Ngày Tháng Đồng Nhất Toàn Hệ Thống
+
+Tất cả các trường ngày tháng trên toàn bộ 7 phân hệ đều hỗ trợ ba chế độ nhập trực tiếp:
+1. **Thời gian hiện tại (`time = now`):** Nhập `now` hoặc `NOW` để hệ thống tự động gán ngày hệ thống hiện tại thông qua `Date::now()`.
+2. **Hủy bỏ thao tác (`0` to quit):** Nhập `0` để hủy bỏ thao tác ngay tại bước nhập ngày mà không lưu thay đổi.
+3. **Nhập thủ công chuẩn (`DD/MM/YYYY`):** Nhập chuỗi ngày định dạng chuẩn kiểm tra chặt chẽ tính hợp lệ (năm nhuận, số ngày từng tháng).
+
+---
+
+## 8. Tiền Tố Thông Báo Trạng Thái Chuẩn Hóa
+
+| Tiền tố | Mục đích | Ví dụ |
+| :--- | :--- | :--- |
+| `[THANH CONG]` | Giao dịch, thêm, sửa, xóa, thanh toán thành công | `[THANH CONG] Da them thue bao moi thanh cong!` |
+| `[LOI]` | Lỗi nghiệp vụ, vi phạm ràng buộc khóa ngoại, sai định dạng | `[LOI] Ma khach hang khong ton tai trong he thong!` |
+| `[CANH BAO]` | Cảnh báo trùng lặp, cảnh báo nợ cước | `[CANH BAO] Ma hoa don da ton tai trong he thong!` |
+| `[THONG TIN]` | Dữ liệu đối soát, trừ tiền cước phát sinh | `[THONG TIN] Da tru 15000 VND tu tai khoan.` |
+| `[THONG BAO]` | Danh sách rỗng, kết quả tra cứu không tìm thấy | `[THONG BAO] Danh sach hop dong hien dang trong!` |
+| `[DA HUY]` | Thao tác bị người dùng chủ động hủy bỏ | `[DA HUY] Thao tac xoa da duoc huy bo.` |
+| `  [!]` | Nhắc lại nhập liệu khi chuỗi/số không hợp lệ | `  [!] Gia tri khong duoc de trong! Vui long nhap lai.` |
+| `[MO PHONG]` | Đánh dấu tạo mã mô phỏng demo | `[MO PHONG] Da sinh IMEI duy nhat: ...` |
+

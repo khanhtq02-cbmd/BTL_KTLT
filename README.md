@@ -198,6 +198,23 @@ The CTest suite contains:
 ./build/test_runner
 ```
 
+### Dynamic Stream Tracing with GDB (RAM tmpfs → SSD)
+
+To trace and audit the two-tier atomic persistence pipeline in real time (temporary staging in RAM `/dev/shm/ktlt_tmps` via `tmps/`, intermediate `.ssd_swap` write, and atomic `rename` onto SSD):
+
+```bash
+gdb -batch \
+  -ex "file ./build/test_runner" \
+  -ex "break FileIO::getTempStagingPath" \
+  -ex "break FileIO::commitFromTmp" \
+  -ex "run" \
+  -ex "print targetFilePath" \
+  -ex "continue" \
+  -ex "print tmpPath" \
+  -ex "print targetPath" \
+  -ex "quit"
+```
+
 ### Strict C++11 build
 
 ```bash
