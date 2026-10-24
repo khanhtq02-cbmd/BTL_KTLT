@@ -5,6 +5,7 @@
 #include "hoadon.h"
 #include "thuebao.h"
 #include "khieunai.h"
+#include "ghicuocgoi.h"
 #include "Date.h"
 
 namespace HoaDonMenuChoices {
@@ -29,6 +30,7 @@ private:
     Repository<HoaDon>& hoaDonStore;
     Repository<ThueBao>& thueBaoStore;
     Repository<KhieuNai>& khieuNaiStore;
+    Repository<CDR>& cdrStore;
 
     //lap hoa don cuoc phat sinh
     void lapHoaDon();
@@ -53,8 +55,9 @@ public:
     //tao menu quan ly hoa don va khieu nai
     HoaDonMenu(Repository<HoaDon>& hdRepo,
                Repository<ThueBao>& tbRepo,
-               Repository<KhieuNai>& knRepo)
-        : hoaDonStore(hdRepo), thueBaoStore(tbRepo), khieuNaiStore(knRepo) {}
+               Repository<KhieuNai>& knRepo,
+               Repository<CDR>& cdrRepo)
+        : hoaDonStore(hdRepo), thueBaoStore(tbRepo), khieuNaiStore(knRepo), cdrStore(cdrRepo) {}
 
     //hien thi menu quan ly hoa don va khieu nai
     void showMenu();

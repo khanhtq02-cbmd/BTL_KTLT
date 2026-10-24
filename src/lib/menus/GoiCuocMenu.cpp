@@ -125,7 +125,7 @@ void GoiCuocMenu::capNhatGoiCuoc() {
     if (!tenMoi.empty()) updated.setTenGoi(tenMoi);
 
     std::cout << "Ban co muon thay doi gia cuoc khong? (1: Co, 0: Khong): ";
-    int doiGia = InputHelper::getInt("", 0, 1);
+    int doiGia = InputHelper::getInt("Nhap lua chon [0-1]: ", 0, 1);
     if (std::cin.eof()) return;
     if (doiGia == 1) {
         double giaMoi = InputHelper::getDouble("Nhap gia cuoc moi (VND): ", 0.0);

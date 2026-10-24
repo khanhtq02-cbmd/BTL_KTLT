@@ -1,6 +1,7 @@
 #include "HopDongMenu.h"
 #include "InputHelper.h"
 #include "Normalized.h"
+#include "Date.h"
 #include <iostream>
 
 using namespace HopDongMenuChoices;
@@ -73,7 +74,7 @@ void HopDongMenu::themHopDong() {
         return;
     }
 
-    std::string sdt = InputHelper::getPhoneNumber("Nhap So dien thoai (10 chu so): ", false);
+    std::string sdt = InputHelper::getPhoneNumber("Nhap So dien thoai thue bao da dang ky (phai co san trong he thong): ", false);
     if (std::cin.eof() || sdt.empty()) return;
     //kiem tra so dien thoai thue bao da dang ky
     if (thueBaoStore.findById(sdt) == nullptr) {
@@ -89,11 +90,14 @@ void HopDongMenu::themHopDong() {
         return;
     }
 
+
     Date ngayDK = InputHelper::getDate("Nhap Ngay dang ky (DD/MM/YYYY): ");
+
     if (std::cin.eof()) return;
+
     Date ngayHH;
     while (true) {
-        ngayHH = InputHelper::getDate("Nhap Ngay het han (DD/MM/YYYY): ");
+        ngayHH = ngayDK;
         if (std::cin.eof()) return;
         if (ngayHH < ngayDK) {
             std::cout << "  [!] Ngay het han khong duoc nho hon ngay dang ky (" << ngayDK.toString() << ")!\n";

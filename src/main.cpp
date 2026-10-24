@@ -80,7 +80,7 @@ int main(int argc, char* argv[]) {
     HopDongMenu hopDongMenu(hopDongStore, khachHangStore, thueBaoStore, goiCuocStore);
     ThietBiIMEIMenu imeiMenu(imeiStore, thueBaoStore);
     NapTienMenu napTienMenu(napTienStore, thueBaoStore, ghicuocgoiStore);
-    HoaDonMenu hoaDonMenu(hoaDonStore, thueBaoStore, khieuNaiStore);
+    HoaDonMenu hoaDonMenu(hoaDonStore, thueBaoStore, khieuNaiStore, ghicuocgoiStore);
     if (hoaDonMenu.kiemTraNo() > 0) {
         std::cout << "[CANH BAO] Da khoa thue bao no cuoc qua han.\n";
     }

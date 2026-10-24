@@ -9,15 +9,19 @@ using namespace ThueBaoMenuChoices;
 //them thue bao moi va kiem tra lien ket
 void ThueBaoMenu::themThueBao() {
     std::cout << "\n--- THEM THUE BAO MOI ---\n";
-    std::string sdt = InputHelper::getString("Nhap so dien thoai (10 so): ");
-    if (std::cin.eof() || sdt.empty()) return;
-    if (!Normalized::isValidPhoneNumber(sdt)) {
-        std::cout << "[LOI] So dien thoai khong hop le theo quy chuan Viet Nam!\n";
-        return;
-    }
-    if (store.findById(sdt) != nullptr) {
-        std::cout << "[CANH BAO] So dien thoai da ton tai trong he thong!\n";
-        return;
+    std::string sdt = InputHelper::getString("Nhap so dien thoai cap phat (bo trong neu chua co SIM): ", true);
+    if (std::cin.eof()) return;
+    if (sdt.empty()) {
+        sdt = "ChuaGan";
+    } else {
+        if (!Normalized::isValidPhoneNumber(sdt)) {
+            std::cout << "[LOI] So dien thoai khong hop le theo quy chuan Viet Nam!\n";
+            return;
+        }
+        if (store.findById(sdt) != nullptr) {
+            std::cout << "[CANH BAO] So dien thoai da ton tai trong he thong!\n";
+            return;
+        }
     }
 
     std::cout << "Chon loai thue bao:\n  [1] Tra truoc (Prepaid)\n  [2] Tra sau (Postpaid)\n";

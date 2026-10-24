@@ -46,8 +46,8 @@ void KhachHangMenu::themKhachHang() {
     std::string noiCap = InputHelper::getString("Nhap noi cap (VD: Cuc C06): ");
     if (std::cin.eof() || noiCap.empty()) return;
 
-    std::string sdt = InputHelper::getPhoneNumber("Nhap so dien thoai lien he: ", false);
-    if (std::cin.eof() || sdt.empty()) return;
+    std::string sdt = InputHelper::getPhoneNumber("Nhap so dien thoai lien he (bo trong neu chua co): ", true);
+    if (std::cin.eof()) return;
 
     std::string diaChi = InputHelper::getString("Nhap dia chi thuong tru: ");
     if (std::cin.eof() || diaChi.empty()) return;
