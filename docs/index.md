@@ -7,9 +7,9 @@ Welcome to the institutional technical documentation for the **Mobile Subscriber
 ## Document Index & Core Specifications
 
 ### 1. Canonical Technical Specifications
-* **[Technical Manual & System Architecture Specification](Reports/KTLT_TECHNICAL_MANUAL_AND_SYSTEM_SPECIFICATION.md)**: Comprehensive, publication-grade technical manual covering 3GPP IMEI/EIR compliance, POSIX atomic storage engine, C++11 OOP layered design, verification pyramid, and defense runbooks.
 * **[Architecture & Requirements Overview](Overview/ARCHITECTURE_AND_REQUIREMENTS.md)**: Baseline functional requirements, domain entities, and data relationships.
 * **[Technical Design Specification](Operational/TECHNICAL_DESIGN_SPECIFICATION.md)**: Component breakdown, inheritance diagrams, and class responsibilities.
+* **[IMEI & Shared Libraries Report](Reports/IMEI_AND_SHARED_LIBRARIES_REPORT.md)**: Core architectural report covering 3GPP IMEI validation, generic Repository persistence, and shared infrastructure.
 
 ### 2. Operational & Protocol Specifications
 * **[Function Callflow Specification](Operational/FUNCTION_CALLFLOW_SPEC.md)**: High-fidelity call flows from console menu controllers down to low-level persistence.

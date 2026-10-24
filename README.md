@@ -29,18 +29,25 @@ Required tools:
 - GNU Make
 - CMake 3.10 or newer
 - Git, if cloning the repository
+- GDB (GNU Debugger) for runtime inspection and stream tracing
 
 On Debian/Ubuntu:
 
 ```bash
 sudo apt update
-sudo apt install -y build-essential cmake git
+sudo apt install -y build-essential cmake git gdb
 ```
 
 On Fedora:
 
 ```bash
-sudo dnf install -y gcc-c++ make cmake git
+sudo dnf install -y gcc-c++ make cmake git gdb
+```
+
+On Arch Linux:
+
+```bash
+sudo pacman -S base-devel cmake git gdb
 ```
 
 Verify the installation:
@@ -50,6 +57,7 @@ g++ --version
 make --version
 cmake --version
 git --version
+gdb --version
 ```
 
 ### Windows
@@ -68,6 +76,13 @@ Check a MinGW/MSYS2 installation in Command Prompt or Git Bash:
 g++ --version
 cmake --version
 git --version
+gdb --version
+```
+
+To install GDB on Windows via MSYS2:
+
+```bash
+pacman -S mingw-w64-x86_64-gdb
 ```
 
 ## Get the source
@@ -198,9 +213,66 @@ The CTest suite contains:
 ./build/test_runner
 ```
 
-### Dynamic Stream Tracing with GDB (RAM tmpfs → SSD)
+### Debugging and Tracing with GDB
 
-To trace and audit the two-tier atomic persistence pipeline in real time (temporary staging in RAM `/dev/shm/ktlt_tmps` via `tmps/`, intermediate `.ssd_swap` write, and atomic `rename` onto SSD):
+GDB (GNU Debugger) allows inspecting program state, setting breakpoints, stepping through execution, analyzing crash stack traces, and auditing the atomic persistence pipeline.
+
+#### 1. Compile with Debug Symbols
+
+Ensure the binaries are built with debug flags (`-g`), enabled by default in `Debug` builds:
+
+```bash
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
+cmake --build build --parallel
+```
+
+#### 2. Interactive GDB Session
+
+Launch the interactive debugger with the main executable or test runner:
+
+```bash
+gdb ./build/quanlythuebao
+```
+
+Common GDB commands:
+
+| Command | Shortcut | Description | Example |
+|---|---|---|---|
+| `break <location>` | `b` | Set a breakpoint at function or file:line | `b main`, `b FileIO::commitFromTmp`, `b KhachHangMenu.cpp:45` |
+| `run [args]` | `r` | Start program execution | `r` |
+| `next` | `n` | Step over next line of code | `n` |
+| `step` | `s` | Step into function call | `s` |
+| `continue` | `c` | Resume execution until next breakpoint | `c` |
+| `finish` | `fin` | Run until current function returns | `fin` |
+| `print <expr>` | `p` | Print variable value or evaluate expression | `p targetPath`, `p *tb`, `p hoaDonStore.size()` |
+| `display <expr>` | `disp` | Automatically print expression on each step | `disp sdt` |
+| `backtrace` | `bt` | Print call stack backtrace | `bt`, `bt full` |
+| `frame <n>` | `f` | Switch to stack frame `<n>` | `f 2` |
+| `info locals` | `i lo` | Print all local variables in current frame | `info locals` |
+| `info breakpoints` | `i b` | List all active breakpoints | `info breakpoints` |
+| `delete <n>` | `d` | Delete breakpoint `<n>` | `d 1` |
+| `quit` | `q` | Exit GDB | `q` |
+
+Example interactive debugging workflow:
+
+```text
+$ gdb ./build/quanlythuebao
+(gdb) b KhachHangMenu::themKhachHang
+Breakpoint 1 at 0x4a1230: file src/lib/menus/KhachHangMenu.cpp, line 38.
+(gdb) run
+[... select menu option 1 ...]
+Breakpoint 1, KhachHangMenu::themKhachHang (this=0x7fffffffd980) at src/lib/menus/KhachHangMenu.cpp:38
+(gdb) n
+(gdb) print maKH
+$1 = "KH0011"
+(gdb) c
+Continuing...
+(gdb) quit
+```
+
+#### 3. Automated Stream Tracing (RAM tmpfs → SSD)
+
+Run a scripted non-interactive GDB trace to audit the two-tier atomic persistence pipeline (staging in RAM `/dev/shm/ktlt_tmps` via `tmps/`, intermediate `.ssd_swap` write, and atomic `rename` onto SSD):
 
 ```bash
 gdb -batch \
@@ -327,4 +399,3 @@ git diff --check
 - `docs/Operational/FUNCTION_CALLFLOW_SPEC.md`
 - `docs/Operational/USE_CASE_SPEC_DUCANH.md`
 - `docs/Reports/IMEI_AND_SHARED_LIBRARIES_REPORT.md`
-- `members/*/README.md`
