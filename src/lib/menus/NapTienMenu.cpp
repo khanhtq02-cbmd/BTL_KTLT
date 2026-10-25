@@ -1,7 +1,7 @@
 /**
  * @file NapTienMenu.cpp
- * Thanh vien phu trach: Phạm Đức Chính (B24DCVT047)
- * Hoc phan: Ky thuat lap trinh (KTLT) - PTIT
+ * Thành viên phụ trách: Phạm Đức Chính (B24DCVT047)
+ * Học phần: Kỹ thuật lập trình (KTLT) - PTIT
  */
 
 #include "NapTienMenu.h"
@@ -12,7 +12,7 @@
 
 using namespace NapTienMenuChoices;
 
-//lap phieu nap tien va cap nhat so du
+// Lập phiếu nạp tiền và cập nhật số dư
 void NapTienMenu::lapPhieuNapTien() {
     std::cout << "\n>>> LAP PHIEU NAP TIEN VAO TAI KHOAN <<<\n";
     std::string maGD = InputHelper::getString("Nhap ma giao dich (VD: GD0010): ");
@@ -62,7 +62,7 @@ void NapTienMenu::lapPhieuNapTien() {
         NapTien nt(maGD, sdt, ngayNap, soTien, hinhThuc, NapTienConstants::STATUS_SUCCESS);
         napTienStore.add(nt);
 
-        // Cong tien truc tiep vao so du thue bao
+        // Cộng tiền trực tiếp vào số dư thuê bao
         ThueBao updated = *tb;
         try {
             updated.congTien(soTien);
@@ -80,7 +80,7 @@ void NapTienMenu::lapPhieuNapTien() {
     }
 }
 
-//hien thi danh sach phieu nap tien
+// Hiển thị danh sách phiếu nạp tiền
 void NapTienMenu::xemDanhSachPhieu() {
     std::cout << "\n>>> DANH SACH PHIEU NAP TIEN <<<\n";
     if (napTienStore.empty()) {
@@ -91,7 +91,7 @@ void NapTienMenu::xemDanhSachPhieu() {
     std::cout << "Tong so: " << napTienStore.size() << " phieu nap tien.\n";
 }
 
-//tra cuu lich su nap tien theo so dien thoai
+// Tra cứu lịch sử nạp tiền theo số điện thoại
 void NapTienMenu::traCuuTheoSoDienThoai() {
     std::cout << "\n>>> TRA CUU LICH SU NAP TIEN THEO SO THUE BAO <<<\n";
     std::string sdt = InputHelper::getPhoneNumber("Nhap so dien thoai: ", false);
@@ -109,146 +109,52 @@ void NapTienMenu::traCuuTheoSoDienThoai() {
     }
 }
 
-//sap xep phieu nap hoac CDR theo ma
+// Sắp xếp danh sách phiếu nạp theo mã
 void NapTienMenu::sapXepDanhSach() {
-    std::cout << "\n>>> SAP XEP DU LIEU NAP TIEN / CDR <<<\n"
-              << "  [" << SORT_NAPTIEN_ID_ASC << "] Ma giao dich nap tien tang dan\n"
-              << "  [" << SORT_NAPTIEN_ID_DESC << "] Ma giao dich nap tien giam dan\n"
-              << "  [" << SORT_CDR_ID_ASC << "] Ma CDR tang dan\n"
-              << "  [" << SORT_CDR_ID_DESC << "] Ma CDR giam dan\n"
+    std::cout << "\n>>> SAP XEP DU LIEU NAP TIEN <<<\n"
+              << "  [1] Ma giao dich nap tien tang dan\n"
+              << "  [2] Ma giao dich nap tien giam dan\n"
               << "  [0] Quay lai\n";
-    int choice = InputHelper::getInt("Nhap lua chon [0-4]: ", 0, SORT_CDR_ID_DESC);
+    int choice = InputHelper::getInt("Nhap lua chon [0-2]: ", 0, 2);
     if (choice == 0) return;
     try {
-        if (choice == SORT_NAPTIEN_ID_ASC || choice == SORT_NAPTIEN_ID_DESC) {
-            napTienStore.sortById(choice == SORT_NAPTIEN_ID_ASC);
-        } else {
-            cdrStore.sortById(choice == SORT_CDR_ID_ASC);
-        }
+        napTienStore.sortById(choice == 1);
         std::cout << "[THANH CONG] Da sap xep va luu du lieu.\n";
     } catch (const std::exception& e) {
         std::cout << "[LOI] Khong the luu thu tu sap xep: " << e.what() << "\n";
     }
-    if (choice == SORT_NAPTIEN_ID_ASC || choice == SORT_NAPTIEN_ID_DESC) {
-        xemDanhSachPhieu();
-    } else {
-        xemDanhSachCDR();
-    }
+    xemDanhSachPhieu();
 }
 
-//ghi nhan ban ghi cuoc goi hoac phien data
-void NapTienMenu::ghiNhanCDR() {
-    std::cout << "\n>>> GHI NHAN BAN GHI CUOC GOI / PHIEN DATA (CDR) <<<\n";
-    std::string maCDR = InputHelper::getString("Nhap ma ban ghi CDR (VD: CDR0001): ");
-    if (std::cin.eof() || maCDR.empty()) return;
-    if (cdrStore.findById(maCDR) != nullptr) {
-        std::cout << "[CANH BAO] Ma ban ghi CDR da ton tai!\n";
-        return;
-    }
-
-    std::string soGoi = InputHelper::getPhoneNumber("Nhap so thue bao chu goi: ", false);
-    if (std::cin.eof() || soGoi.empty()) return;
-    ThueBao* tbGoi = thueBaoStore.findById(soGoi);
-    if (tbGoi == nullptr) {
-        std::cout << "[LOI] Thue bao chu goi '" << soGoi << "' khong ton tai trong he thong!\n";
-        return;
-    }
-
-    std::cout << "Chon loai dich vu CDR:\n"
-              << "  [1] " << CDRConstants::TYPE_VOICE << " (Cuoc goi thoai)\n"
-              << "  [2] " << CDRConstants::TYPE_SMS << " (Tin nhan SMS)\n"
-              << "  [3] " << CDRConstants::TYPE_DATA << " (Truy cap Data)\n";
-    int typeChoice = InputHelper::getInt("Nhap lua chon [1-3]: ", 1, 3);
-    if (std::cin.eof()) return;
-    std::string loaiDV = (typeChoice == 1) ? CDRConstants::TYPE_VOICE
-                       : (typeChoice == 2) ? CDRConstants::TYPE_SMS
-                                           : CDRConstants::TYPE_DATA;
-
-    std::string soNhan = "DATA_SESSION";
-    if (loaiDV != CDRConstants::TYPE_DATA) {
-        soNhan = InputHelper::getPhoneNumber("Nhap so thue bao nhan: ", false);
-        if (std::cin.eof() || soNhan.empty()) return;
-    }
-
-    std::string timeStr = InputHelper::getString("Nhap thoi gian bat dau (DD/MM/YYYY HH:MM:SS): ");
-    if (std::cin.eof() || timeStr.empty()) return;
-
-    int duration = InputHelper::getInt((loaiDV == CDRConstants::TYPE_DATA ? "Nhap dung luong (MB): " : "Nhap thoi luong (giay): "), 0);
-    if (std::cin.eof()) return;
-
-    double cost = InputHelper::getDouble("Nhap cuoc phat sinh (VND): ", 0.0);
-    if (std::cin.eof()) return;
-
-    try {
-        CDR cdr(maCDR, soGoi, soNhan, loaiDV, timeStr, duration, cost);
-        cdrStore.add(cdr);
-
-        // Neu thue bao tra truoc va co cuoc phat sinh -> tru tien tai khoan
-        if (tbGoi->getLoaiThueBao() == ThueBaoConstants::TYPE_PREPAID && cost > 0.0) {
-            ThueBao updated = *tbGoi;
-            if (updated.getSoDuTaiKhoan() >= cost) {
-                updated.truTien(cost);
-                thueBaoStore.update(soGoi, updated);
-                std::cout << "[THONG TIN] Da tru " << DisplayHelper::formatCurrency(cost, "VND")
-                          << " tu tai khoan. So du con lai: "
-                          << DisplayHelper::formatCurrency(updated.getSoDuTaiKhoan(), "VND") << "\n";
-            }
-        }
-
-        std::cout << "[THANH CONG] Da ghi nhan ban ghi CDR " << maCDR << " vao he thong!\n";
-    } catch (const std::exception& e) {
-        std::cout << "[LOI] Khong the ghi nhan CDR: " << e.what() << "\n";
-    }
-}
-
-//hien thi danh sach ban ghi CDR
-void NapTienMenu::xemDanhSachCDR() {
-    std::cout << "\n>>> DANH SACH BAN GHI CUOC GOI / PHIEN DATA (CDR) <<<\n";
-    if (cdrStore.empty()) {
-        std::cout << "[THONG BAO] Danh sach ban ghi CDR hien dang trong!\n";
-        return;
-    }
-    DisplayHelper::printTable(cdrStore.getAll());
-    std::cout << "Tong so: " << cdrStore.size() << " ban ghi CDR.\n";
-}
-
-//hien thi menu nap tien va CDR
+// Hiển thị menu nạp tiền riêng biệt
 void NapTienMenu::showMenu() {
     while (true) {
         std::cout << "\n====================================================================\n"
-                  << "          QUAN LY PHIEU NAP TIEN & BAN GHI CUOC GOI (CDR)\n"
+                  << "                      QUAN LY PHIEU NAP TIEN\n"
                   << "====================================================================\n"
-                  << "  [" << MENU_TOPUP << "] Lap phieu nap tien (The cao, Banking, Vi)\n"
-                  << "  [" << MENU_LIST_VOUCHERS << "] Xem danh sach phieu nap tien\n"
-                  << "  [" << MENU_SEARCH_BY_PHONE << "] Tra cuu lich su nap tien theo so thue bao\n"
-                  << "  [" << MENU_ADD_CDR << "] Ghi nhan ban ghi cuoc goi / SMS / Data (CDR)\n"
-                  << "  [" << MENU_LIST_CDR << "] Xem danh sach nhat ky cuoc goi CDR\n"
-                  << "  [" << MENU_SORT << "] Sap xep phieu nap / CDR theo ma\n"
-                  << "  [" << MENU_BACK << "] Quay lai menu chinh\n"
+                  << "  [1] Lap phieu nap tien (The cao, Banking, Vi)\n"
+                  << "  [2] Xem danh sach phieu nap tien\n"
+                  << "  [3] Tra cuu lich su nap tiền theo so thue bao\n"
+                  << "  [4] Sap xep phieu nap theo ma\n"
+                  << "  [0] Quay lai menu chinh\n"
                   << "====================================================================\n";
 
-        int choice = InputHelper::getInt("Nhap lua chon cua ban [0-6]: ", MENU_BACK, MENU_SORT);
-        if (choice == MENU_BACK || std::cin.eof()) {
+        int choice = InputHelper::getInt("Nhap lua chon cua ban [0-4]: ", 0, 4);
+        if (choice == 0 || std::cin.eof()) {
             break;
         }
 
         switch (choice) {
-            case MENU_TOPUP:
+            case 1:
                 lapPhieuNapTien();
                 break;
-            case MENU_LIST_VOUCHERS:
+            case 2:
                 xemDanhSachPhieu();
                 break;
-            case MENU_SEARCH_BY_PHONE:
+            case 3:
                 traCuuTheoSoDienThoai();
                 break;
-            case MENU_ADD_CDR:
-                ghiNhanCDR();
-                break;
-            case MENU_LIST_CDR:
-                xemDanhSachCDR();
-                break;
-            case MENU_SORT:
+            case 4:
                 sapXepDanhSach();
                 break;
             default:
